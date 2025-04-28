@@ -5,20 +5,3 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     pass 
 
-#LOGIN
-
-#DASHBOARD
-
-
-#TRANSACTION
-
-#ANALYTICS
-
-#EXPENSES
-
-#INCOME
-
-
-#SAVINGS
-
-# Create your models here.

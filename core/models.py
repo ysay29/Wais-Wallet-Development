@@ -21,3 +21,5 @@ class User(AbstractUser):
 
 #SAVINGS
 
+# Create your models here.
+

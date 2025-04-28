@@ -36,14 +36,13 @@ def login(request):
             return redirect('/home/')
     
     # Render the login page template (GET request)
-    return render(request, 'login.html')
+    return render(request, 'login.html') #change name
 
 # Define a view function for the registration page
 def register(request):
     # Check if the HTTP request method is POST (form submission)
     if request.method == 'POST':
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
         username = request.POST.get('username')
         password = request.POST.get('password')
         
@@ -57,8 +56,7 @@ def register(request):
         
         # Create a new User object with the provided information
         user = User.objects.create_user(
-            first_name=first_name,
-            last_name=last_name,
+            email=email,
             username=username
         )
         

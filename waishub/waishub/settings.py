@@ -36,13 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-<<<<<<< Updated upstream
     'django.contrib.staticfiles',
     'login'
-=======
-    'django.contrib.staticfiles'
-     'core',
->>>>>>> Stashed changes
 ]
 
 MIDDLEWARE = [
@@ -60,7 +55,7 @@ ROOT_URLCONF = 'waishub.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [CORE_DIR / "Template"],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

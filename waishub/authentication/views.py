@@ -6,10 +6,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import *
 
-# Define a view function for the home page
-def home(request):
-    return render(request, 'home.html') #change html name
-
 # Define a view function for the login page
 def login(request):
     # Check if the HTTP request method is POST (form submission)

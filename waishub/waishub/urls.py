@@ -29,6 +29,7 @@ urlpatterns = [
     path('register/', register, name='register'),  # Registration page
     path('logout/', logout, name='logout'),  # Registration page
     path('dashboard/', include('dashboard.urls')), #Dashboard page
+    path('add/', include('Transaction.urls')),
 ]
 
 # Serve media files if DEBUG is True (development mode)

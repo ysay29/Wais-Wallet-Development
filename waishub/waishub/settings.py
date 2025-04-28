@@ -36,13 +36,10 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-<<<<<<< Updated upstream
     'django.contrib.staticfiles',
-    'login'
-=======
-    'django.contrib.staticfiles'
-     'core',
->>>>>>> Stashed changes
+    'core',
+    'authentication',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
@@ -60,7 +57,7 @@ ROOT_URLCONF = 'waishub.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [CORE_DIR / "Template"],
+        'DIRS': [BASE_DIR / "Template"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -126,3 +123,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+import os 
+STATIC_URL = '/static/'
+STATIC_ROOT= os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIR = {
+    os.path.join(BASE_DIR, 'public/static')
+}
+MEDIA_ROOT = os.path.join(BASE_DIR, 'public/static')
+MEDIA_URL = '/media/'

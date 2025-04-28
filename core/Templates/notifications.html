@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wais Wallet - Notifications</title>
+    <link rel="icon" type="image/png" href="images/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6fc;
+            display: flex;
+            min-height: 100vh;
+        }
+            
+        /* Notifications Content */
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #003366;
+        }
+        
+        h2 {
+            margin-top: 30px;
+            color: #333;
+            font-size: 22px;
+        }
+        
+        .notification {
+            display: flex;
+            align-items: center;
+            background: #f4f4f4;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 6px;
+            position: relative;
+        }
+        
+        .icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 15px;
+        }
+        
+        .text {
+            flex-grow: 1;
+        }
+        
+        .title {
+            font-weight: bold;
+            margin: 0;
+            font-size: 16px;
+        }
+        
+        .time {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: blue;
+            border-radius: 50%;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .no-notifications {
+            text-align: center;
+            color: #888;
+            margin-top: 50px;
+            font-size: 1.2rem;
+        }
+        
+        .notification.unread {
+            background-color: #e0f0ff;
+        }
+        
+        .badge {
+            background-color: red;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 50%;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Notifications Content -->
+    <div class="content">
+        <div class="container">
+            <span>
+                <h1>Notifications <span id="notif-count" class="badge">2</span></h1>
+            </span>
+        
+            <section>
+                <h2>Today</h2>
+                <div class="notification unread">
+                    <img src="https://cdn-icons-png.flaticon.com/512/992/992700.png" alt="coins" class="icon">
+                    <div class="text">
+                        <p class="title">It's time to input your expenses for today</p>
+                        <p class="time">08:17 PM</p>
+                    </div>
+                    <div class="dot"></div>
+                </div>
+            </section>
+        
+            <section>
+                <h2>Yesterday</h2>
+                <div class="notification unread">
+                    <img src="https://cdn-icons-png.flaticon.com/512/564/564619.png" alt="warning" class="icon">
+                    <div class="text">
+                        <p class="title">Overspending Warning</p>
+                        <p class="time">05:29 PM</p>
+                    </div>
+                    <div class="dot"></div>
+                </div>
+        
+                <div class="notification">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2784/2784459.png" alt="analytics" class="icon">
+                    <div class="text">
+                        <p class="title">View your past month analytics</p>
+                        <p class="time">10:05 PM</p>
+                    </div>
+                </div>
+        
+                <div class="no-notifications">
+                    You're all caught up!
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        const notifCount = document.getElementById('notif-count');
+        const notifications = document.querySelectorAll('.notification');
+        
+        function updateNotifCount() {
+            const unread = document.querySelectorAll('.notification.unread').length;
+            notifCount.textContent = unread;
+        }
+        
+        updateNotifCount();
+        
+        notifications.forEach(notification => {
+            notification.addEventListener('click', () => {
+                notification.classList.remove('unread');
+                updateNotifCount();
+            });
+        });
+    </script>
+</body>
+</html>

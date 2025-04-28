@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wais Wallet - About Us</title>
+  <link rel="icon" href="/favicon.png" sizes="any">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <style>
+    /* Global Styles */
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f7fb;
+      color: #0c4160;
+      overflow-x: hidden;
+    }
+    
+    /* About Us Section */
+    .page-section {
+      text-align: center;
+      padding: 200px 100px;
+      margin: 10px; 
+    }
+    
+    .logo {
+      width: 150px;
+      margin: 10px 0;
+    }
+    
+    h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+    
+    h2 {
+      font-size: 36px;
+      margin: 10px 0;
+    }
+    
+    p {
+      font-size: 20px;
+      margin: 5px 0;
+    }
+    
+    nav {
+      margin-top: 20px;
+    }
+    
+    nav a {
+      display: inline-block;
+      background: #ffffff;
+      padding: 12px 24px;
+      margin: 10px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 20px;
+      color: #333;
+      transition: background 0.3s;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    nav a:hover {
+      background: #a4c1df;
+    }
+    
+    .delete-button {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 8px;
+      font-size: 20px;
+      margin-top: 30px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    
+    .delete-button:hover {
+      transform: scale(1.05);
+    }
+    
+    .section-title {
+      font-size: 36px;
+      margin-top: 50px;
+      color: #0057B8;
+      cursor: pointer;
+    }
+    
+    /* Team Section */
+    .team-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 30px;
+    }
+    
+    .team-box {
+      background: #ffffff;
+      padding: 20px;
+      margin: 10px;
+      border-radius: 12px;
+      width: 250px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .team-box h3 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    
+    .team-box p {
+      font-size: 18px;
+      margin: 4px 0;
+    }
+    
+    /* FAQ Section */
+    .faq-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px;
+      font-family: 'Segoe UI', sans-serif;
+      color: #0c4160;
+    }
+    
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px; 
+      background-color: #f9f9f9; 
+    }
+    
+    .left-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .logo-small {
+      width: 50px;
+      height: auto;
+    }
+    
+    .faq-title {
+      font-size: 28px;
+      margin: 0;
+    }
+    
+    .right-section {
+      flex-shrink: 0;
+    }
+    
+    .search-bar {
+      padding: 10px 15px;
+      font-size: 16px;
+      width: 250px; 
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    
+    .subtitle {
+      text-align: center;
+      margin-top: 10px;
+    }
+    
+    .subtitle hr {
+      margin-top: 10px;
+    }
+    
+    /* Popup Styles */
+    .popup {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      text-align: center;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+    }
+    
+    .popup-buttons {
+      margin-top: 20px;
+    }
+    
+    .popup-buttons button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .popup-buttons button:hover {
+      transform: scale(1.05);
+      transition: transform 0.2s;
+    }  
+    
+    .yes-btn {
+      background-color: #28a745; 
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.1s;
+    }
+    
+    #confirm-yes:hover {
+      background-color: #218838; 
+    }
+    
+    .cancel-btn {
+      background-color: #dc3545; 
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.1s;
+    }
+    
+    #confirm-cancel:hover {
+      background-color: #c82333;
+    }
+    
+    .success-icon {
+      font-size: 50px;
+      color: #28a745;
+      margin-bottom: 10px;
+    }
+    
+    .dismiss-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #0057B8;
+      color: rgb(255, 255, 255);
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .stars {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+    
+    .star {
+      font-size: 30px;
+      color: lightgray;
+      cursor: pointer;
+    }
+    
+    .star.selected {
+      color: gold;
+    }
+    
+    #feedback-text {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      resize: none;
+    }
+    
+    .popup.active {
+      display: block;
+    }
+    
+    .button {
+      background-color: #0057B8;
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 8px;
+      font-size: 20px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.3s;
+    }
+    
+    .button:hover {
+      transform: scale(1.05);
+      background-color: #0047a0;
+    }
+    
+    /* FAQ Content Styles */
+    .faq-content {
+      line-height: 1.8;
+      font-size: 18px;
+    }
+    
+    .faq-content strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+    
+    .quick-links {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .quick-links a {
+      color: #007BFF;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    
+    .contact-section {
+      text-align: center;
+    }
+    
+    .contact-button {
+      background-color: #007BFF;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 18px;
+      display: inline-block;
+      margin-top: 20px;
+    }
+    
+    hr {
+      border: 0;
+      height: 1px;
+      background-color: #ddd;
+      margin: 40px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- About Us Section -->
+  <section id="about-us" class="page-section">
+    <h1>About Us</h1>
+    <img src="assets/logo.png" alt="Wais Wallet" class="logo">
+    <h2>Wais Wallet</h2>
+    <p>v1.1.1</p>
+
+    <nav>
+      <a href="#faq-section">FAQ, Guides, and Help</a>
+      <a href="#" id="open-feedback">Feedback</a>
+      <a href="#policy-section">Privacy Policy and Terms of Use</a>
+    </nav>
+
+    <div class="popup" id="feedback-popup">
+      <h2 style="color: #991B1B;">Your feedback is important to us!</h2>
+      <p style="margin-top: 10px;">Help us enhance your experience by providing your valuable feedback.</p>
+
+      <div class="stars">
+        <span class="star" data-value="1">&#9733;</span>
+        <span class="star" data-value="2">&#9733;</span>
+        <span class="star" data-value="3">&#9733;</span>
+        <span class="star" data-value="4">&#9733;</span>
+        <span class="star" data-value="5">&#9733;</span>
+      </div>     
+
+      <label for="feedback-text" style="display:block; margin-bottom:5px;">Tell us what you think</label>
+      <textarea id="feedback-text" placeholder="Enter text..." rows="4"></textarea>
+
+      <div class="popup-buttons" style="margin-top: 15px;">
+        <button id="submit-feedback">Send Reply</button>
+        <button id="cancel-feedback" style="background-color: #991B1B;">Cancel</button>
+      </div>
+    </div>
+
+    <div class="popup" id="feedback-success-popup">
+      <div class="success-icon">✅</div>
+      <h2>Thank you for your feedback!</h2>
+      <p>We appreciate you helping us improve.</p>
+      <button id="dismiss-feedback-success" class="dismiss-btn">Dismiss</button>
+    </div>
+
+    <button class="delete-button">Delete all data</button>
+
+    <div class="popup" id="confirm-popup">
+      <p>Are you sure you want to delete all your data?</p>
+      <div class="popup-buttons">
+        <button id="confirm-yes">Yes</button>
+        <button id="confirm-cancel">Cancel</button>
+      </div>
+    </div>
+
+    <div class="popup" id="success-popup">
+      <div class="success-icon">✅</div>
+      <h2>Success!</h2>
+      <p>Your data has been deleted successfully.</p>
+      <button id="dismiss-success" class="dismiss-btn">Dismiss</button>
+    </div>
+
+    <a href="#team" style="text-decoration: none;">
+      <h2 class="section-title">Development Team</h2>
+    </a>
+  </section>
+
+  <!-- Team Section -->
+  <section id="team" class="page-section">
+    <h2 style="font-size: 42px;">Meet the Development Team</h2>
+    <div class="team-container">
+      <div class="team-box">
+        <h3>Frontend</h3>
+        <p>Nina Ysabelle Frigillana</p>
+        <p>Elena Vale Lanuza</p>
+        <p>Karl Joseph Esteban</p>
+        <p>Lee Shailan Tuangco</p>
+      </div>
+
+      <div class="team-box">
+        <h3>Backend</h3>
+        <p>Franchezca Banayad</p>
+        <p>Princess Mae Sanchez</p>
+        <p>Kenshin Dizon</p>
+      </div>
+
+      <div class="team-box">
+        <h3>Data Management</h3>
+        <p>Recson Avielle Rojo</p>
+        <p>John Benedict Listangco</p>
+        <p>Achilles Pajes</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq-section" class="page-section">
+    <div class="faq-container">
+      <div class="top-bar">
+        <div class="left-section">
+          <img src="assets/logo.png" alt="Wais Wallet Logo" class="logo-small">
+          <h1 class="faq-title">Wais Wallet</h1>
+        </div>
+        <div class="right-section">
+          <input type="text" class="search-bar" placeholder="Search FAQs...">
+        </div>
+      </div>
+      
+      <div class="subtitle">
+        <p>FAQ, Guide, and Help</p>
+        <hr>
+      </div>
+      
+      <hr style="margin-bottom: 40px;">
+    
+      <div class="faq-content">
+        <p><strong>1. How do I view my Dashboard?</strong><br>
+        Click "Dashboard" to view your main financial overview.</p>
+    
+        <p><strong>2. How do I view my Transactions?</strong><br>
+        Click "Transactions" to view all your expenses and income.</p>
+    
+        <p><strong>3. How do I see Analytics?</strong><br>
+        Click "Analytics" to see charts and graphs of your financial data.</p>
+    
+        <p><strong>4. How do I check my Total Income?</strong><br>
+        Click "Total Income" to view detailed records of your earnings.</p>
+    
+        <p><strong>5. How do I check my Total Expenses?</strong><br>
+        Click "Total Expenses" to manage and review your spending.</p>
+    
+        <p><strong>6. How do I view my Savings?</strong><br>
+        Click "Savings" to view and manage your savings progress.</p>
+      </div>
+    
+      <hr>
+    
+      <div class="quick-links">
+        <h2 style="font-size: 24px; margin-bottom: 10px;">Quick Links</h2>
+        <p style="font-size: 16px;">
+          <a href="#" style="color: #007BFF; text-decoration: none;">Dashboard Overview</a> |
+          <a href="#" style="color: #007BFF; text-decoration: none;">Set Up Savings Goals</a> |
+          <a href="#" style="color: #007BFF; text-decoration: none;">Manage Expenses</a>
+        </p>
+      </div>
+    
+      <hr>
+    
+      <div class="contact-section">
+        <h2 style="font-size: 28px;">Still have questions?</h2>
+        <p style="font-size: 18px; color: #666; margin-bottom: 20px;">We're here to help. Get in touch with our support team!</p>
+        <a href="mailto:support@waiswallet.com" class="contact-button">
+          Contact Us
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Privacy Policy Section -->
+  <section id="policy-section" class="page-section">
+    <h1>Privacy Policy and Terms of Use</h1>
+    <div class="policy-content">
+      <h2>Privacy Policy</h2>
+      <p>Last updated: [Date]</p>
+      
+      <p>Wais Wallet ("us", "we", or "our") operates the Wais Wallet application (the "Service").</p>
+      
+      <p>This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.</p>
+      
+      <h3>Information Collection And Use</h3>
+      <p>We collect several different types of information for various purposes to provide and improve our Service to you.</p>
+      
+      <h3>Types of Data Collected</h3>
+      <p><strong>Personal Data:</strong> While using our Service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you ("Personal Data").</p>
+      
+      <p><strong>Usage Data:</strong> We may also collect information on how the Service is accessed and used ("Usage Data").</p>
+      
+      <h2>Terms of Use</h2>
+      <p>By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the terms then you may not access the Service.</p>
+      
+      <h3>Accounts</h3>
+      <p>When you create an account with us, you must provide us information that is accurate, complete, and current at all times.</p>
+      
+      <h3>Termination</h3>
+      <p>We may terminate or suspend access to our Service immediately, without prior notice or liability, for any reason whatsoever.</p>
+    </div>
+  </section>
+
+  <script>
+    // Scroll Reveal Animation
+    ScrollReveal({
+      reset: false,
+      distance: '80px',
+      duration: 2000,
+      delay: 200
+    });
+
+    ScrollReveal().reveal('#about-us', { origin: 'top' });
+    ScrollReveal().reveal('#team', { origin: 'bottom' });
+    ScrollReveal().reveal('#faq-section', { origin: 'left' });
+    ScrollReveal().reveal('#policy-section', { origin: 'right' });
+
+    // Feedback Popup Functionality
+    const openFeedbackBtn = document.getElementById('open-feedback');
+    const feedbackPopup = document.getElementById('feedback-popup');
+    const submitFeedbackBtn = document.getElementById('submit-feedback');
+    const cancelFeedbackBtn = document.getElementById('cancel-feedback');
+    const feedbackSuccessPopup = document.getElementById('feedback-success-popup');
+    const dismissFeedbackSuccessBtn = document.getElementById('dismiss-feedback-success');
+
+    openFeedbackBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      feedbackPopup.style.display = 'flex';
+    });
+
+    cancelFeedbackBtn.addEventListener('click', () => {
+      feedbackPopup.style.display = 'none';
+    });
+
+    submitFeedbackBtn.addEventListener('click', () => {
+      const feedbackText = document.getElementById('feedback-text').value.trim();
+      if (feedbackText) {
+        feedbackPopup.style.display = 'none';
+        feedbackSuccessPopup.style.display = 'flex';
+        document.getElementById('feedback-text').value = '';
+        
+        // Reset stars
+        document.querySelectorAll('.star').forEach(star => {
+          star.classList.remove('selected');
+        });
+      } else {
+        showPopup('Please write your feedback before submitting.');
+      }
+    });
+
+    dismissFeedbackSuccessBtn.addEventListener('click', () => {
+      feedbackSuccessPopup.style.display = 'none';
+    });
+
+    // Star Rating Functionality
+    const stars = document.querySelectorAll('.star');
+
+    stars.forEach((star, index) => {
+      star.addEventListener('click', () => {
+        stars.forEach((s, i) => {
+          if (i <= index) {
+            s.classList.add('selected');
+          } else {
+            s.classList.remove('selected');
+          }
+        });
+      });
+    });
+
+    // Data Deletion Functionality
+    const deleteButton = document.querySelector('.delete-button');
+    const confirmPopup = document.getElementById('confirm-popup');
+    const successPopup = document.getElementById('success-popup');
+    const confirmYesBtn = document.getElementById('confirm-yes');
+    const confirmCancelBtn = document.getElementById('confirm-cancel');
+    const dismissSuccessBtn = document.getElementById('dismiss-success');
+
+    deleteButton.addEventListener('click', () => {
+      confirmPopup.style.display = 'flex';
+    });
+
+    confirmCancelBtn.addEventListener('click', () => {
+      confirmPopup.style.display = 'none';
+    });
+
+    confirmYesBtn.addEventListener('click', () => {
+      confirmPopup.style.display = 'none';
+      successPopup.style.display = 'flex';
+      // Here you would typically add code to actually delete the data
+    });
+
+    dismissSuccessBtn.addEventListener('click', () => {
+      successPopup.style.display = 'none';
+    });
+
+    // Helper function to show temporary popup messages
+    function showPopup(message) {
+      const popup = document.createElement('div');
+      popup.className = 'dynamic-popup';
+      popup.textContent = message;
+      
+      popup.style.position = 'fixed';
+      popup.style.top = '50%';
+      popup.style.left = '50%';
+      popup.style.transform = 'translate(-50%, -50%)';
+      popup.style.backgroundColor = '#fff';
+      popup.style.padding = '20px 30px';
+      popup.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+      popup.style.borderRadius = '10px';
+      popup.style.zIndex = '9999';
+      
+      document.body.appendChild(popup);
+
+      setTimeout(() => {
+        popup.remove();
+      }, 2000);
+    }
+  </script>
+
+</body>
+</html>

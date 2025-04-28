@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Transaction</title>
+  <link rel="icon" href="/favicon.png" sizes="any">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    
+    .container {
+      background-color: white;
+      padding: 40px 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      width: 400px;
+    }
+    
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #003147;
+    }
+    
+    form label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #333;
+    }
+    
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      font-size: 14px;
+    }
+    
+    input:focus, select:focus {
+      border-color: #003147;
+    }
+    
+    .save-btn {
+      width: 100%;
+      margin-top: 25px;
+      background-color: #003147;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    
+    .save-btn:hover {
+      background-color: #001f2f;
+    }
+    
+    /* Pop-up styles */
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 35px 25px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      border-radius: 15px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      z-index: 100;
+      width: 320px;
+    }
+    
+    .popup p {
+      font-size: 16px;
+      margin-bottom: 25px;
+      text-align: center;
+      color: #003147;
+    }
+    
+    .popup-buttons {
+      display: flex;
+      justify-content: center;
+    }
+    
+    #confirm-yes {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-right: 10px;
+      box-shadow: inset 0 0 0 2px #1e7e34;
+    }
+    
+    #confirm-yes:hover {
+      background-color: #218838;
+    }
+    
+    #confirm-cancel {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: inset 0 0 0 2px #bd2130;
+    }
+    
+    #confirm-cancel:hover {
+      background-color: #c82333;
+    }
+    
+    #close-popup {
+      background-color: #003147;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    #close-popup:hover {
+      background-color: #001f2f;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2><strong>Add Transaction</strong></h2>
+    <form id="transaction-form">
+      <label for="type"><strong>Type</strong></label>
+      <select id="type" required>
+        <option value="">Select type</option>
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
+
+      <label for="category"><strong>Category</strong></label>
+      <input type="text" id="category" placeholder="e.g. Food, Bills" required />
+
+      <label for="amount"><strong>Amount (₱)</strong></label>
+      <input type="number" id="amount" required />
+
+      <label for="date"><strong>Date</strong></label>
+      <input type="date" id="date" required />
+
+      <button type="submit" class="save-btn">Save Transaction</button>
+    </form>
+  </div>
+
+  <!-- Confirmation Pop-up -->
+  <div class="popup" id="confirm-popup">
+    <p>Are you sure you want to save this transaction?</p>
+    <div class="popup-buttons">
+      <button id="confirm-yes">Yes</button>
+      <button id="confirm-cancel">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Saved Pop-up -->
+  <div class="popup" id="saved-popup">
+    <p>Your Transaction is saved</p>
+    <button id="close-popup">Close</button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('transaction-form');
+      const confirmPopup = document.getElementById('confirm-popup');
+      const savedPopup = document.getElementById('saved-popup');
+      const closeSavedPopup = document.getElementById('close-popup');
+      const confirmYes = document.getElementById('confirm-yes');
+      const confirmCancel = document.getElementById('confirm-cancel');
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        confirmPopup.style.display = 'flex';
+      });
+
+      confirmYes.addEventListener('click', () => {
+        confirmPopup.style.display = 'none';
+        savedPopup.style.display = 'flex';
+        form.reset();
+      });
+
+      confirmCancel.addEventListener('click', () => {
+        confirmPopup.style.display = 'none';
+      });
+
+      closeSavedPopup.addEventListener('click', () => {
+        savedPopup.style.display = 'none';
+      });
+    });
+  </script>
+</body>
+</html>

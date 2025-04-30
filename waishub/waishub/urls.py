@@ -25,7 +25,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns  # Static fi
 # Define URL patterns
 urlpatterns = [
     path("admin/", admin.site.urls),          # Admin interface
-    path('login/', login, name='login_page'),    # Login page
+    path('login/', login, name='login.html'),    # Login page
     path('register/', register, name='register'),  # Registration page
     path('logout/', logout, name='logout'),  # Registration page
     path('dashboard/', include('dashboard.urls')), #Dashboard page

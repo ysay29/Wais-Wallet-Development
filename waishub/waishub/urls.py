@@ -14,10 +14,27 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
+# Import necessary modules
+from django.contrib import admin  # Django admin module
+from django.urls import path, include      # URL routing
+from authentication.views import *  # Import views from the authentication app
+from django.conf.urls.static import static
+from django.conf import settings   # Application settings
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns  # Static files serving
 
-
+# Define URL patterns
 urlpatterns = [
-    path('admin/', admin.site.urls), 
+    path("admin/", admin.site.urls),          # Admin interface
+    path('login/', login, name='login_page'),    # Login page
+    path('register/', register, name='register'),  # Registration page
+    path('logout/', logout, name='logout'),  # Registration page
+    path('dashboard/', include('dashboard.urls')), #Dashboard page
+    path('add/', include('Transaction.urls')),
 ]
+
+# Serve media files if DEBUG is True (development mode)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Serve static files using staticfiles_urlpatterns
+urlpatterns += staticfiles_urlpatterns()

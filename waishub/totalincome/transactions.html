@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transactions</title>
+  <style>
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
+    
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6fc;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      height: 100vh;
+      width: 250px;
+      position: relative;
+      background: #a4c1df;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 1px solid #ddd;
+      overflow-x: hidden;
+      transition: width 0.3s;
+    }
+
+    .sidebar.closed {
+      width: 80px;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      background-color: transparent;
+      margin-bottom: 20px;
+    }
+
+    .navbar-logo {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .welcome-texts {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.3;
+    }
+
+    .hello-text {
+      font-size: 12px;
+      color: #fff;
+      font-weight: normal;
+      margin-bottom: 2px;
+      text-align: left;
+    }
+
+    .wallet-name {
+      font-size: 20px;
+      font-weight: bold;
+      color: #0c4160;
+      text-transform: capitalize;
+      letter-spacing: 1px;
+    }
+
+    .nav-links a, .dropbtn {
+      display: block;
+      color: #333;
+      padding: 10px 0;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover, .dropbtn:hover {
+      color: #0c4160;
+    }
+
+    .nav-links a[href="index.html"],
+    .nav-links a.active {
+      color: #0c4160;
+      font-weight: bold;
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    .dropbtn {
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      font-size: 95%;
+    }
+
+    .dropdown-img {
+      width: 15px;
+      height: 15px;
+    }
+
+    .dropdown-content {
+      display: none;
+      flex-direction: column;
+      margin-top: 5px;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: flex;
+    }
+
+    /* Account Section */
+    .account-section {
+      display: flex;
+      align-items: center;
+      margin-top: auto;
+      padding: 10px 15px;
+      background: #0c4160;
+      border-radius: 10px;
+      gap: 12px;
+    }
+
+    .account-icon {
+      width: 36px;
+      height: 36px;
+      background: #f0f4f8;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #0c4160;
+    }
+
+    .account-info {
+      flex: 1;
+    }
+
+    .account-label {
+      font-size: 11px;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .account-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      margin-top: 2px;
+    }
+
+    /* Main content */
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .content-header {
+      font-size: 24px;
+      font-weight: bold;
+      color: #0c4160;
+      margin-bottom: 20px;
+    }
+
+    /* Month Tabs */
+    .month-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    margin: 0 20px 20px 20px; /* <-- 20px space on left and right */
+    padding: 0 10px; /* optional: little breathing room inside */
+}
+
+
+    .month-tab {
+      padding: 10px 15px;
+      cursor: pointer;
+      color: #666;
+      font-weight: 500;
+    }
+
+    .month-tab:hover {
+      color: #0c4160;
+    }
+
+    .month-tab.active {
+      color: #0c4160;
+      border-bottom: 2px solid #0c4160;
+    }
+
+    /* Empty State */
+    .empty-state {
+    text-align: center;
+    color: #666;
+    font-size: 18px;
+    
+    /* Add these for vertical centering */
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 500px; /* or adjust this height depending on how low you want it */
+}
+
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div>
+      <div class="navbar">
+        <img src="assets/logo.png" alt="Logo" class="navbar-logo">
+        <div class="welcome-texts">
+          <p class="hello-text">Hello, User! Welcome to</p>
+          <p class="wallet-name">Wais Wallet</p>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="index.html">Dashboard</a>
+        <a href="transactions.html" class="active">Transactions</a>
+
+        <div class="dropdown">
+          <button class="dropbtn">
+            Evaluation
+            <img src="assets/dropdown.png" alt="Dropdown Icon" class="dropdown-img">
+          </button>
+          <div class="dropdown-content">
+            <a href="analytics.html">Analytics</a>
+            <a href="totalincome.html">Total Income</a>
+            <a href="totalexpenses.html">Total Expenses</a>
+            <a href="savings.html">Savings</a>
+          </div>
+        </div>
+
+        <a href="budgets.html">Budgets</a>
+        <a href="settings.html">Settings</a>
+        <a href="aboutus.html">About Us</a>
+      </nav>
+    </div>
+
+    <div class="account-section">
+      <a href="login.html" style="display: flex; align-items: center; gap: 12px;">
+        <div class="account-icon">👤</div>
+        <div class="account-info">
+          <div class="account-label">Account</div>
+          <div class="account-name">Ysa Frigillana</div>
+        </div>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="content-header">Transactions</div>
+
+    <div class="month-tabs">
+      <div class="month-tab active">January</div>
+      <div class="month-tab">February</div>
+      <div class="month-tab">March</div>
+      <div class="month-tab">April</div>
+      <div class="month-tab">May</div>
+      <div class="month-tab">June</div>
+      <div class="month-tab">July</div>
+      <div class="month-tab">August</div>
+      <div class="month-tab">September</div>
+      <div class="month-tab">October</div>
+      <div class="month-tab">November</div>
+      <div class="month-tab">December</div>
+    </div>
+    
+    <div class="empty-state">
+      No transactions for January.
+    </div>
+  </div>
+
+  <script>
+    // Tab switching
+    const tabs = document.querySelectorAll('.month-tab');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        const emptyState = document.querySelector('.empty-state');
+        emptyState.textContent = `No transactions for ${tab.textContent}`;
+      });
+    });
+  </script>
+</body>
+</html>

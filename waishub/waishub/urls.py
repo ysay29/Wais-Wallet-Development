@@ -19,5 +19,17 @@ from django.urls import path, include
 
 
 urlpatterns = [
+<<<<<<< Updated upstream
     path('admin/', admin.site.urls), 
+=======
+    path("admin/", admin.site.urls),          # Admin interface
+    path('login/', login, name='login.html'),    # Login page
+    path('register/', register, name='register'),  # Registration page
+    path('logout/', logout, name='logout'),  # Registration page
+    path('dashboard/', include('dashboard.urls')), #Dashboard page
+    path('add/', include('Transaction.urls')), #Add transaction page
+    path('transactions/', include('TransactionsList.urls')), #Transactions list page
+    path('totalincome/',  include('totalincome.urls')), #Total income page
+    path('totalexpenses/', include('totalexpenses.urls')), #Total expenses page
+>>>>>>> Stashed changes
 ]

@@ -173,6 +173,41 @@
     #close-popup:hover {
       background-color: #001f2f;
     }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      transition: background-color 0.2s;
+    }
+
+    .add-btn {
+      background-color: #8e44ad;
+      color: white;
+    }
+
+    .add-btn:hover {
+      background-color: #71368a;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 300px;
+    }
+
+    .add-category-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .add-category-row input {
+      flex: 1;
+    }
   </style>
 </head>
 
@@ -191,6 +226,23 @@
       <label>Maximum Savings (₱)</label>
       <input type="number" placeholder="e.g., 10000">
       <p class="example-text">Enter your target amount</p>
+    </div>
+
+    <h2>Saving Category</h2>
+    <div class="input-group">
+      <select id="categorySelect">
+          <option value="">Select Category</option>
+          <option value="main-salary">Main Salary</option>
+          <option value="sideline">Sideline</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Add New Category:</label>
+      <div class="add-category-row">
+          <input type="text" id="newCategory" placeholder="Enter new category">
+          <button type="button" class="add-btn" onclick="addCategory()">Add</button>
+      </div>
     </div>
 
     <h2>Goal Term</h2>
@@ -267,6 +319,40 @@
         window.close(); // or you can redirect somewhere else if needed
       });
     });
+
+    function addCategory() {
+      const newCatInput = document.getElementById('newCategory');
+      const categorySelect = document.getElementById('categorySelect');
+      const newCategory = newCatInput.value.trim();
+
+      if (newCategory !== "") {
+        // Check if category already exists
+        const options = Array.from(categorySelect.options);
+        const exists = options.some(option => option.text.toLowerCase() === newCategory.toLowerCase());
+        
+        if (exists) {
+          alert("This category already exists!");
+          return;
+        }
+
+        // Create new option
+        const option = document.createElement("option");
+        option.text = newCategory;
+        option.value = newCategory.toLowerCase().replace(/\s+/g, '-');
+        categorySelect.add(option);
+        
+        // Select the newly added category
+        option.selected = true;
+        
+        // Clear input
+        newCatInput.value = "";
+        
+        // Optional: Show success message
+        alert("Category added successfully!");
+      } else {
+        alert("Please enter a valid category name.");
+      }
+    }
   </script>
 
 </body>

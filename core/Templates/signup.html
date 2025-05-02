@@ -51,7 +51,7 @@
         button {
             width: 100%;
             padding: 10px;
-            background-color: #0c4160;
+            background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 4px;
@@ -61,49 +61,36 @@
         }
         
         button:hover {
-            background-color: #146da0;
-        }
-        
-        .signup-link {
-            text-align: center;
-            margin-top: 15px;
-        }
-        
-        .signup-link a {
-            color: #0c4160;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        
-        .signup-link a:hover {
-            text-decoration: underline;
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h1>Login</h1>
+        <h1>Sign up</h1>
         <div class="form-group">
             <label for="username">Username</label>
             <input type="text" id="username" placeholder="Enter your name">
         </div>
         <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Enter your email">
+        </div>
+        <div class="form-group">
             <label for="password">Password</label>
             <input type="password" id="password" placeholder="Enter your password">
         </div>
-        <button id="loginBtn">Login</button>
-        <div class="signup-link">
-            Don't have an account? <a href="signup.html" id="signupLink">Sign up</a>
-        </div>
+        <button id="loginBtn">Sign up</button>
     </div>
 
     <script>
         document.getElementById('loginBtn').addEventListener('click', function() {
             const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            if (username && password) {
-                alert('Login attempt with username: ' + username);
+            if (username && email && password) {
+                alert('Login attempt with username: ' + username + ', email: ' + email);
                 // Here you would typically send the data to a server for authentication
             } else {
                 alert('Please fill in all fields');

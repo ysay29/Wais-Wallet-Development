@@ -21,12 +21,11 @@ from authentication.views import *  # Import views from the authentication app
 from django.conf.urls.static import static
 from django.conf import settings   # Application settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns  # Static files serving
+from Transaction import views
 
 # Define URL patterns
 urlpatterns = [
-<<<<<<< Updated upstream
-    path('admin/', admin.site.urls), 
-    path("admin/", admin.site.urls),          # Admin interface
+    path('admin/', admin.site.urls),         # Admin interface
     path('login/', login, name='login.html'),    # Login page
     path('register/', register, name='register'),  # Registration page
     path('logout/', logout, name='logout'),  # Registration page

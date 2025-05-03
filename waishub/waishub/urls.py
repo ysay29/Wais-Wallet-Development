@@ -35,15 +35,6 @@ urlpatterns = [
     path('register/', register, name='register'),  # Registration page
     path('logout/', logout, name='logout'),  # Registration page
     path('dashboard/', include('dashboard.urls')), #Dashboard page
-<<<<<<< HEAD
-    path('add/', include('Transaction.urls')), #Add transaction page
-    path('transactions/', include('TransactionsList.urls')), #Transactions list page
-    path('totalincome/',  include('totalincome.urls')), #Total income page
-    path('totalexpenses/', include('totalexpenses.urls')), #Total expenses page
->>>>>>> Stashed changes
-=======
-    path('add/', include('Transaction.urls')),
->>>>>>> 3c171b68f2c77a28cde8ffc3c8f5c205b0ce04c0
 ]
 
 # Serve media files if DEBUG is True (development mode)

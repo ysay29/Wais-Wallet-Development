@@ -37,25 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-    'login'
-=======
+    'login',
     'core',
     'authentication',
     'dashboard',
-    'Transaction',
-    'TransactionsList',
-    'totalincome',
-    'totalexpenses',
->>>>>>> Stashed changes
-=======
-
-    'core',
-    'authentication',
-    'dashboard',
-    'transaction',
->>>>>>> 3c171b68f2c77a28cde8ffc3c8f5c205b0ce04c0
 ]
 
 MIDDLEWARE = [

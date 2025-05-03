@@ -24,17 +24,14 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns  # Static fi
 
 # Define URL patterns
 urlpatterns = [
-<<<<<<< HEAD
 <<<<<<< Updated upstream
     path('admin/', admin.site.urls), 
-=======
-=======
->>>>>>> 3c171b68f2c77a28cde8ffc3c8f5c205b0ce04c0
     path("admin/", admin.site.urls),          # Admin interface
     path('login/', login, name='login.html'),    # Login page
     path('register/', register, name='register'),  # Registration page
     path('logout/', logout, name='logout'),  # Registration page
     path('dashboard/', include('dashboard.urls')), #Dashboard page
+    path('add/', include('Transaction.urls')), #Add Transaction page
 ]
 
 # Serve media files if DEBUG is True (development mode)

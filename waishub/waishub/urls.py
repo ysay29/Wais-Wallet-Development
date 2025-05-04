@@ -26,7 +26,7 @@ from Transaction import views
 # Define URL patterns
 urlpatterns = [
     path('admin/', admin.site.urls),         # Admin interface
-    path('login/', login, name='login.html'),    # Login page
+    path('', login, name='login.html'),    # Login page
     path('register/', register, name='register'),  # Registration page
     path('logout/', logout, name='logout'),  # Registration page
     path('dashboard/', include('dashboard.urls')), #Dashboard page

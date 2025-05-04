@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'core',
     'authentication',
     'dashboard',
-    'Transaction',
+    'transaction',
 ]
 
 MIDDLEWARE = [

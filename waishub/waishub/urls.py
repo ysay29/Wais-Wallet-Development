@@ -21,7 +21,7 @@ from authentication.views import *  # Import views from the authentication app
 from django.conf.urls.static import static
 from django.conf import settings   # Application settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns  # Static files serving
-from Transaction import views
+from transaction import views
 
 # Define URL patterns
 urlpatterns = [
@@ -31,7 +31,7 @@ urlpatterns = [
     path('register/', register, name='register'),  # Registration page
     path('logout/', logout, name='logout'),  # Registration page
     path('dashboard/', include('dashboard.urls')), #Dashboard page
-    path('add/', include('Transaction.urls')), #Add Transaction page
+    path('add/', include('transaction.urls')), #Add Transaction page
 ]
 
 # Serve media files if DEBUG is True (development mode)

@@ -1,72 +1,47 @@
-# Import necessary modules and models
 from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.models import User
-from .models import *
+from django.contrib import messages
+from django.contrib.auth import logout as django_logout
 
-# Define a view function for the login page
-def login(request):
-    # Check if the HTTP request method is POST (form submission)
+def login_view(request):
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
-        
-        # Check if a user with the provided username exists
-        if not User.objects.filter(username=username).exists():
-            # Display an error message if the username does not exist
-            messages.error(request, 'Invalid Username')
-            return redirect('/login/')
-        
-        # Authenticate the user with the provided username and password
-        user = authenticate(username=username, password=password)
-        
-        if user is None:
-            # Display an error message if authentication fails (invalid password)
-            messages.error(request, "Invalid Password")
-            return redirect('/login/')
-        else:
-            # Log in the user and redirect to the home page upon successful login
-            login(request, user)
-            return redirect('/home/')
-    
-    # Render the login page template (GET request)
-    return render(request, 'login.html') #change name
 
-# Define a view function for the registration page
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            auth_login(request, user)
+            return redirect('/dashboard/')  # Redirect to your dashboard
+        else:
+            messages.error(request, "Invalid username or password")
+            return redirect('/login/')
+
+    return render(request, 'login.html')
+
+
 def register(request):
-    # Check if the HTTP request method is POST (form submission)
     if request.method == 'POST':
         email = request.POST.get('email')
         username = request.POST.get('username')
         password = request.POST.get('password')
         
-        # Check if a user with the provided username already exists
-        user = User.objects.filter(username=username)
-        
-        if user.exists():
-            # Display an information message if the username is taken
+        if User.objects.filter(username=username).exists():
             messages.info(request, "Username already taken!")
             return redirect('/register/')
         
-        # Create a new User object with the provided information
         user = User.objects.create_user(
             email=email,
-            username=username
+            username=username,
+            password=password
         )
-        
-        # Set the user's password and save the user object
-        user.set_password(password)
-        user.save()
-        
-        # Display an information message indicating successful account creation
-        messages.info(request, "Account created Successfully!")
-        return redirect('/register/')
+        messages.info(request, "Account created successfully!")
+        return redirect('/login/')
     
-    # Render the registration page template (GET request)
     return render(request, 'signup.html')
 
-def logout(request):
-    logout(request)
+
+def logout_view(request):
+    django_logout(request)
     return redirect('/login/')

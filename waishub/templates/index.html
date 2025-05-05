@@ -468,7 +468,7 @@
     <div class="navbar">
       <img src="assets/logo.png" alt="Logo" class="navbar-logo">
       <div class="welcome-texts">
-        <p class="hello-text">Hello, User! Welcome to</p>
+        <p class="hello-text">Hello, {{ user.get_full_name|default:user.username }}! Welcome to</p>
         <p class="wallet-name">Wais Wallet</p>
       </div>
     </div>
@@ -722,6 +722,7 @@ const expensesChart = new Chart(ctx, {
     // You'll need to call showManageExpenses() when your "Manage Expenses" button is clicked
     // Example: document.getElementById('your-manage-button').addEventListener('click', showManageExpenses);
   });
+  
 // Logout button functionality
   document.getElementById("logout-button").addEventListener("click", function () {
     const confirmLogout = confirm("Are you sure you want to logout?");

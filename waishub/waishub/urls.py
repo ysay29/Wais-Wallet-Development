@@ -21,7 +21,6 @@ from authentication.views import *  # Import views from the authentication app
 from django.conf.urls.static import static
 from django.conf import settings   # Application settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns  # Static files serving
-from Transaction import views
 
 # Define URL patterns
 urlpatterns = [
@@ -36,6 +35,7 @@ urlpatterns = [
     path('totalincome/',  include('totalincome.urls')), #Total income page
     path('totalexpenses/', include('totalexpenses.urls')), #Total expenses page
     path('savings/', include('savings.urls')), #Total savings page
+    path('add/', include('transaction.urls')), #Add Transaction page
 ]
 
 # Serve media files if DEBUG is True (development mode)

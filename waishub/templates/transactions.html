@@ -266,7 +266,7 @@
         <div class="dropdown">
           <button class="dropbtn">
             Evaluation
-            <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
+            <img src="{% static '/assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
           </button>
           <div class="dropdown-content">
             <a href="analytics.html">Analytics</a>
@@ -287,7 +287,7 @@
         <div class="account-icon">👤</div>
         <div class="account-info">
           <div class="account-label">Account</div>
-          <div class="account-name">Ysa Frigillana</div>
+          <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
         </div>
       </a>
     </div>

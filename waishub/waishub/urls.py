@@ -27,12 +27,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),         # Admin interface
     #path('', home, name='home.html'),        #Let's create a page where users get redirected first
     path('', include('authentication.urls')),  # handles /login/, /register/, /logout/.
-    path('dashboard/', include('dashboard.urls')), #Dashboard page
-    path('add/', include('Transaction.urls')), #Add Transaction page
-    path('Transactions/', include('TransactionsList.urls')), #Transactions page
-    path('totalincome/',  include('totalincome.urls')), #Total income page
-    path('totalexpenses/', include('totalexpenses.urls')), #Total expenses page
-    path('savings/', include('savings.urls')), #Total savings page
+    #path('dashboard/', include('dashboard.urls')), #Dashboard page
+    #path('add/', include('Transaction.urls')), #Add Transaction page
+    #path('Transactions/', include('TransactionsList.urls')), #Transactions page
+    #path('totalincome/',  include('totalincome.urls')), #Total income page
+    #path('totalexpenses/', include('totalexpenses.urls')), #Total expenses page
+    #path('savings/', include('savings.urls')), #Total savings page
 ]
 
 # Serve media files if DEBUG is True (development mode)

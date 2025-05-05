@@ -36,7 +36,6 @@ urlpatterns = [
     path('totalincome/',  include('totalincome.urls')), #Total income page
     path('totalexpenses/', include('totalexpenses.urls')), #Total expenses page
     path('savings/', include('savings.urls')), #Total savings page
-    path('add/', include('transaction.urls')), #Add Transaction page
 ]
 
 # Serve media files if DEBUG is True (development mode)

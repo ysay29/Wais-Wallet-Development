@@ -500,10 +500,10 @@
 
   <div class="account-section">
     <a href="login.html">
-    <div class="account-icon">👤</div> <!-- You can replace with an icon/image -->
+    <div class="account-icon" id="logout-button">👤</div> 
     <div class="account-info">
       <div class="account-label">Account</div>
-      <div class="account-name">Ysa Frigillana</div> 
+      <div class="account-name">{{ user.get_full_name|default:user.username }}</div> <!-- change -->
     </a>
     </div>
   </div>
@@ -537,7 +537,7 @@
     <div class="card">
       <a href="totalincome.html">
       <h3>Total Income</h3>
-      <p>₱ 0.00</p>
+      <p>₱ {{ income|floatformat:2 }}</p>
       <img src="assets/increase.png" alt="increase" class="arrow-icon">
       <span class="increase"> 1.7% from last month</span>
       </a>
@@ -546,7 +546,7 @@
       <div class="card">
         <a href="totalexpenses.html">
         <h3>Total Expenses</h3>
-        <p>₱ 0.00</p>
+        <p>₱ {{ expenses|floatformat:2 }}</p>
           <img src="assets/increase.png" alt="increase" class="arrow-icon">
       <span class="increase"> 1.7% from last month</span>
       </a>
@@ -555,7 +555,7 @@
       <div class="card">
         <a href="savings.html">
         <h3>Savings</h3>
-        <p>₱ 0.00</p>
+        <p>₱ {{ savings|floatformat:2 }}</p>
           <img src="assets/decrease.png" alt="decrease" class="arrow-icon">
       <span class="decrease"> 1.7% from last month</span>
         </a>
@@ -721,6 +721,13 @@ const expensesChart = new Chart(ctx, {
 
     // You'll need to call showManageExpenses() when your "Manage Expenses" button is clicked
     // Example: document.getElementById('your-manage-button').addEventListener('click', showManageExpenses);
+  });
+// Logout button functionality
+  document.getElementById("logout-button").addEventListener("click", function () {
+    const confirmLogout = confirm("Are you sure you want to logout?");
+    if (confirmLogout) {
+      window.location.href = "{% url 'logout' %}";
+    }
   });
 
 </script>

@@ -30,8 +30,3 @@ def register(request):
         return redirect('dashboard')
 
     return render(request, 'signup.html')
-
-
-def logout_view(request):
-    django_logout(request)
-    return redirect('/login/')

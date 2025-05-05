@@ -13,32 +13,22 @@ def login_view(request):
 
         if user is not None:
             auth_login(request, user)
-            return redirect('/dashboard/')  # Redirect to your dashboard
+            return redirect('dashboard')  # Use name='dashboard'
         else:
             messages.error(request, "Invalid username or password")
-            return redirect('/login/')
+            return redirect('login')
 
     return render(request, 'login.html')
 
 
 def register(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        
-        if User.objects.filter(username=username).exists():
-            messages.info(request, "Username already taken!")
-            return redirect('/register/')
-        
-        user = User.objects.create_user(
-            email=email,
-            username=username,
-            password=password
-        )
+        ...
+        user = User.objects.create_user(...)
         messages.info(request, "Account created successfully!")
-        return redirect('/login/')
-    
+        auth_login(request, user)  # Auto-login after sign-up
+        return redirect('dashboard')
+
     return render(request, 'signup.html')
 
 

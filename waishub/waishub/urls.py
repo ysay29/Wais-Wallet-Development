@@ -28,7 +28,7 @@ urlpatterns = [
     #path('', home, name='home.html'),        #Let's create a page where users get redirected first
     path('', lambda request: redirect('login')),  # Root URL redirects to login
     path('login/', include('authentication.urls')),# handles /login/, /register/, /logout/.
-    #path('dashboard/', include('dashboard.urls')), #Dashboard page
+    path('dashboard/', include('dashboard.urls')), #Dashboard page
     #path('add/', include('Transaction.urls')), #Add Transaction page
     #path('Transactions/', include('TransactionsList.urls')), #Transactions page
     #path('totalincome/',  include('totalincome.urls')), #Total income page

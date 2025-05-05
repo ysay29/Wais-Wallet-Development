@@ -65,7 +65,7 @@ def register(request):
         return redirect('/register/')
     
     # Render the registration page template (GET request)
-    return render(request, 'register.html')
+    return render(request, 'signup.html')
 
 def logout(request):
     logout(request)

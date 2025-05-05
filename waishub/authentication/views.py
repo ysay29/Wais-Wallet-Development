@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -23,10 +24,19 @@ def login_view(request):
 
 def register(request):
     if request.method == 'POST':
-        ...
-        user = User.objects.create_user(...)
+        email = request.POST.get('email')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        if User.objects.filter(username=username).exists():
+            messages.info(request, "Username already taken!")
+            return redirect('/register/')
+
+        user = User.objects.create_user(email=email, username=username)
+        user.set_password(password)
+        user.save()
+
         messages.info(request, "Account created successfully!")
         auth_login(request, user)  # Auto-login after sign-up
-        return redirect('dashboard')
-
+        return redirect(reverse('dashboard'))  # safer than just 'dashboard'
     return render(request, 'signup.html')

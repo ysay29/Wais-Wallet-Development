@@ -25,9 +25,8 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns  # Static fi
 # Define URL patterns
 urlpatterns = [
     path('admin/', admin.site.urls),         # Admin interface
-    path('', include('dashboard.urls')), #Dashboard page
     path('', include('authentication.urls')),# handles /login/, /register/
-
+    path('', include('dashboard.urls')), #Dashboard page
     #path('add/', include('Transaction.urls')), #Add Transaction page
     #path('Transactions/', include('TransactionsList.urls')), #Transactions page
     #path('totalincome/',  include('totalincome.urls')), #Total income page

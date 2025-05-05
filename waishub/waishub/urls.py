@@ -26,7 +26,8 @@ from Transaction import views
 # Define URL patterns
 urlpatterns = [
     path('admin/', admin.site.urls),         # Admin interface
-    path('login/', login, name='login.html'),    # Login page
+    #path('', home, name='home.html'),        #Let's create a page where users get redirected first
+    path('', login, name='login.html'),    # Login page
     path('register/', register, name='register'),  # Registration page
     path('logout/', logout, name='logout'),  # Registration page
     path('dashboard/', include('dashboard.urls')), #Dashboard page
@@ -35,6 +36,7 @@ urlpatterns = [
     path('totalincome/',  include('totalincome.urls')), #Total income page
     path('totalexpenses/', include('totalexpenses.urls')), #Total expenses page
     path('savings/', include('savings.urls')), #Total savings page
+    path('add/', include('transaction.urls')), #Add Transaction page
 ]
 
 # Serve media files if DEBUG is True (development mode)

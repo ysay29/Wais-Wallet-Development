@@ -31,6 +31,10 @@ urlpatterns = [
     path('logout/', logout, name='logout'),  # Registration page
     path('dashboard/', include('dashboard.urls')), #Dashboard page
     path('add/', include('Transaction.urls')), #Add Transaction page
+    path('transactions/', include('TransactionsList.urls')), #Transactions page
+    path('totalincome/',  include('totalincome.urls')), #Total income page
+    path('totalexpenses/', include('totalexpenses.urls')), #Total expenses page
+    path('savings/', include('savings.urls')), #Total savings page
 ]
 
 # Serve media files if DEBUG is True (development mode)

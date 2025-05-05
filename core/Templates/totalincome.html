@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Wais Wallet - Income</title>
+  <title>Wais Wallet – Total Income</title>
   <link rel="icon" href="/favicon.png" sizes="any">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -299,128 +299,82 @@
   <div class="main-content">
     <div id="incomePage" class="content-box">
       <div class="header"><strong>Total Income</strong></div>
-      <div class="form-inline">
-        <input type="date" id="incomeDate">
-        <input type="text" id="incomeCategory" placeholder="Category">
-        <input type="number" id="incomeAmount" placeholder="Amount">
-        <button onclick="addIncome()">Add Income</button>
-      </div>
-      <div class="filter-box">
-        <label for="incomeMonthFilter">Filter by month:</label>
-        <select id="incomeMonthFilter" onchange="filterTable('income')">
-          <option value="">All</option>
-          <option value="01">January</option>
-          <option value="02">February</option>
-          <option value="03">March</option>
-          <option value="04">April</option>
-          <option value="05">May</option>
-          <option value="06">June</option>
-          <option value="07">July</option>
-          <option value="08">August</option>
-          <option value="09">September</option>
-          <option value="10">October</option>
-          <option value="11">November</option>
-          <option value="12">December</option>
-        </select>
-      </div>
+      <!-- Income Table -->
       <table id="incomeTable">
         <thead>
-          <tr><th>DATE</th><th>CATEGORY</th><th>AMOUNT</th><th></th></tr>
+          <tr><th>Date</th><th>Category</th><th>Amount</th></tr>
         </thead>
         <tbody>
-          <tr><td>1/1/24</td><td>Salary</td><td>₽50,000</td><td>...</td></tr>
-          <tr><td>1/15/24</td><td>Freelance</td><td>₽50,000</td><td>...</td></tr>
-          <tr><td>05/27/24</td><td>Gift</td><td>₽10,000</td><td>...</td></tr>
-          <tr><td>2/1/24</td><td>Salary</td><td>₽50,000</td><td>...</td></tr>
-          <tr><td>3/1/24</td><td>Salary</td><td>₽50,000</td><td>...</td></tr>
-          <tr><td>2/15/24</td><td>Freelance</td><td>₽50,000</td><td>...</td></tr>
-          <tr><td>06/27/24</td><td>Gift</td><td>₽10,000</td><td>...</td></tr>
-          <tr><td>4/1/24</td><td>Salary</td><td>₽50,000</td><td>...</td></tr>
-          <tr><td>2/15/24</td><td>Freelance</td><td>₽50,000</td><td>...</td></tr>
+          {% for inc in incomes %}
+          <tr>
+            <td>{{ inc.date }}</td>
+            <td>{{ inc.category }}</td>
+            <td>₱{{ inc.amount }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3">No income records yet.</td></tr>
+          {% endfor %}
         </tbody>
       </table>
-      <div class="summary" id="totalIncome">Total Income this month: ₽320,000</div>
-      <div style="margin-top: 20px;">
-        <span>Item 1</span>
-        <span style="margin-left: 10px;">Item 2</span>
-        <span style="margin-left: 10px;">Item 3</span>
-        <span style="margin-left: 10px;">Item 4</span>
-        <span style="margin-left: 10px;">Item 5</span>
-      </div>
+
+      <!-- Total Summary -->
+      <div class="summary">Total Income: ₱{{ total }}</div>
+
+      <!-- Chart -->
       <canvas id="incomeChart" height="100"></canvas>
     </div>
   </div>
 
-<script>
-let incomeData = [
-  { date: '1/1/24', category: 'Salary', amount: 50000 },
-  { date: '1/15/24', category: 'Freelance', amount: 50000 },
-  { date: '05/27/24', category: 'Gift', amount: 10000 },
-  { date: '2/1/24', category: 'Salary', amount: 50000 },
-  { date: '3/1/24', category: 'Salary', amount: 50000 },
-  { date: '2/15/24', category: 'Freelance', amount: 50000 },
-  { date: '06/27/24', category: 'Gift', amount: 10000 },
-  { date: '4/1/24', category: 'Salary', amount: 50000 },
-  { date: '2/15/24', category: 'Freelance', amount: 50000 }
-];
-
-let incomeChart;
-
-function addIncome() {
-  const date = document.getElementById('incomeDate').value;
-  const category = document.getElementById('incomeCategory').value;
-  const amount = parseFloat(document.getElementById('incomeAmount').value);
-  
-  if (date && category && !isNaN(amount)) {
-    incomeData.push({ date, category, amount });
-    localStorage.setItem('incomeData', JSON.stringify(incomeData));
-    renderTable('income');
-    updateTotals();
+<script id="income-data" type="application/json">
+  {
+    "labels": [{% for inc in incomes %}"{{ inc.date|date:'M d' }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+    "data": [{% for inc in incomes %}{{ inc.amount }}{% if not forloop.last %},{% endif %}{% endfor %}]
   }
-}
-
-function renderTable(type) {
-  const data = type === 'income' ? incomeData : [];
-  const table = document.getElementById(type + 'Table').querySelector('tbody');
-  table.innerHTML = '';
-  const monthFilter = document.getElementById(type + 'MonthFilter').value;
-  data.forEach(item => {
-    const month = item.date.split('/')[0].padStart(2, '0');
-    if (!monthFilter || monthFilter === month) {
-      const row = table.insertRow();
-      row.innerHTML = `<td>${item.date}</td><td>${item.category}</td><td>₽${item.amount.toLocaleString()}</td><td>...</td>`;
-    }
-  });
-}
-
-function filterTable(type) {
-  renderTable(type);
-}
-
-function updateTotals() {
-  const totalIncome = incomeData.reduce((sum, item) => sum + item.amount, 0);
-  document.getElementById('totalIncome').innerText = `Total Income this month: ₽${totalIncome.toLocaleString()}`;
-  updateChart();
-}
-
-function updateChart() {
-  if (incomeChart) incomeChart.destroy();
-
-  incomeChart = new Chart(document.getElementById('incomeChart').getContext('2d'), {
-    type: 'line',
-    data: {
-      labels: incomeData.map(i => i.date),
-      datasets: [{ label: 'Income', data: incomeData.map(i => i.amount), borderColor: '#4CAF50', fill: false }]
-    }
-  });
-}
-
-// Initialize on load
-document.addEventListener('DOMContentLoaded', function() {
-  renderTable('income');
-  updateTotals();
-  updateChart();
-});
 </script>
+
+<script>
+  const incomeData = JSON.parse(document.getElementById('income-data').textContent);
+  const labels = incomeData.labels;
+  const data = incomeData.data;
+
+  if (labels.length > 0 && data.length > 0) {
+    new Chart(
+      document.getElementById('incomeChart').getContext('2d'),
+      {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Income',
+            data: data,
+            borderColor: '#2ecc71',
+            fill: false,
+            tension: 0.3,
+            pointBackgroundColor: '#2ecc71'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { beginAtZero: true }
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return '₱' + context.parsed.y;
+                }
+              }
+            }
+          }
+        }
+      }
+    );
+  } else {
+    document.getElementById('incomeChart').insertAdjacentHTML('afterend', '<p class="no-data">No data available for chart.</p>');
+  }
+</script>
+
 </body>
 </html>

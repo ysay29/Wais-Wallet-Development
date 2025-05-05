@@ -8,18 +8,19 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     /* navbar */
-    * { 
-      margin: 0; 
-      padding: 0; 
-      box-sizing: border-box; 
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    
+   
     body {
       font-family: 'Segoe UI', sans-serif;
       background: #f4f6fc;
       display: flex;
       min-height: 100vh;
     }
+
 
     a {
       text-decoration: none;
@@ -40,10 +41,11 @@
       transition: width 0.3s;
     }
 
+
     .sidebar.closed{
       width: 80px;
     }
-    
+   
     .navbar {
       display: flex;
       align-items: center;
@@ -52,17 +54,20 @@
       margin-bottom: 20px;
     }
 
+
     .navbar-logo {
       width: 40px;
       height: 40px;
       margin-right: 10px;
     }
 
+
     .welcome-texts {
       display: flex;
       flex-direction: column;
       line-height: 1.3;
     }
+
 
     .hello-text {
       font-size: 12px;
@@ -72,6 +77,7 @@
       text-align: left;
     }
 
+
     .wallet-name {
       font-size: 20px;
       font-weight: bold;
@@ -79,6 +85,7 @@
       text-transform: capitalize;
       letter-spacing: 1px;
     }
+
 
     .nav-links a, .dropbtn {
       display: block;
@@ -88,9 +95,11 @@
       transition: color 0.3s;
     }
 
+
     .nav-links a:hover, .dropbtn:hover {
       color: #0056d2;
     }
+
 
     .nav-links a[href="index.html"],
     .nav-links a.active {
@@ -107,10 +116,12 @@
       font-size: 95%;
     }
 
+
     .dropdown-img {
       width: 15px;
       height: 15px;
     }
+
 
     .dropdown-content {
       display: none;
@@ -131,6 +142,7 @@
       gap: 12px;
     }
 
+
     .account-icon {
       width: 36px;
       height: 36px;
@@ -143,9 +155,11 @@
       color: #0c4160;
     }
 
+
     .account-info {
       flex: 1;
     }
+
 
     .account-label {
       font-size: 11px;
@@ -154,12 +168,14 @@
       letter-spacing: 0.5px;
     }
 
+
     .account-name {
       font-size: 14px;
       font-weight: 600;
       color: #fff;
       margin-top: 2px;
     }
+
 
     .main-content {
       flex: 1;
@@ -234,6 +250,7 @@
   </style>
 </head>
 
+
 <body>
 <!-- Sidebar -->
 <aside class="sidebar">
@@ -245,11 +262,11 @@
         <p class="wallet-name">Wais Wallet</p>
       </div>
     </div>
-    
+   
     <nav class="nav-links">
       <a href="index.html">Dashboard</a>      
       <a href="transactions.html">Transactions</a>
-    
+   
       <div class="dropdown">
         <button class="dropbtn">
           Evaluation
@@ -262,13 +279,13 @@
           <a href="savings.html">Savings</a>
         </div>
       </div>
-    
+   
       <a href="budgets.html">Budgets</a>
       <a href="settings.html">Settings</a>
       <a href="aboutus.html">About Us</a>
     </nav>
   </div>
-  
+ 
   <div class="account-section">
     <a href="login.html">
       <div class="account-icon">👤</div>
@@ -279,6 +296,7 @@
     </a>
   </div>
 </aside>
+
 
   <div class="main-content">
     <div id="expensesPage" class="content-box">
@@ -328,6 +346,7 @@
     </div>
   </div>
 
+
 <script>
 let expensesData = [
   { date: '1/1/24', category: 'Food', amount: 50000 },
@@ -341,13 +360,15 @@ let expensesData = [
   { date: '2/15/24', category: 'Rent', amount: 50000 }
 ];
 
+
 let expensesChart;
+
 
 function addExpense() {
   const date = document.getElementById('expenseDate').value;
   const category = document.getElementById('expenseCategory').value;
   const amount = parseFloat(document.getElementById('expenseAmount').value);
-  
+ 
   if (date && category && !isNaN(amount)) {
     expensesData.push({ date, category, amount });
     localStorage.setItem('expensesData', JSON.stringify(expensesData));
@@ -355,6 +376,7 @@ function addExpense() {
     updateTotals();
   }
 }
+
 
 function renderTable(type) {
   const data = type === 'expenses' ? expensesData : [];
@@ -370,9 +392,11 @@ function renderTable(type) {
   });
 }
 
+
 function filterTable(type) {
   renderTable(type);
 }
+
 
 function updateTotals() {
   const totalExpenses = expensesData.reduce((sum, item) => sum + item.amount, 0);
@@ -380,8 +404,10 @@ function updateTotals() {
   updateChart();
 }
 
+
 function updateChart() {
   if (expensesChart) expensesChart.destroy();
+
 
   expensesChart = new Chart(document.getElementById('expensesChart').getContext('2d'), {
     type: 'line',
@@ -391,6 +417,7 @@ function updateChart() {
     }
   });
 }
+
 
 // Initialize on load
 document.addEventListener('DOMContentLoaded', function() {

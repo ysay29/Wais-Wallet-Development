@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -182,14 +183,13 @@
 
     /* Month Tabs */
     .month-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    border-bottom: 1px solid #ddd;
-    margin: 0 20px 20px 20px; /* <-- 20px space on left and right */
-    padding: 0 10px; /* optional: little breathing room inside */
-}
-
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      border-bottom: 1px solid #ddd;
+      margin: 0 20px 20px 20px;
+      padding: 0 10px;
+    }
 
     .month-tab {
       padding: 10px 15px;
@@ -209,17 +209,41 @@
 
     /* Empty State */
     .empty-state {
-    text-align: center;
-    color: #666;
-    font-size: 18px;
-    
-    /* Add these for vertical centering */
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 500px; /* or adjust this height depending on how low you want it */
-}
+      text-align: center;
+      color: #666;
+      font-size: 18px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 500px;
+    }
+
+    /* Pop-up Confirmation */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .popup-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .popup-buttons button {
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+    }
 
   </style>
 </head>
@@ -228,7 +252,7 @@
   <aside class="sidebar">
     <div>
       <div class="navbar">
-        <img src="assets/logo.png" alt="Logo" class="navbar-logo">
+        <img src="{% static 'assets/logo.png' %}" alt="Logo" class="navbar-logo">
         <div class="welcome-texts">
           <p class="hello-text">Hello, User! Welcome to</p>
           <p class="wallet-name">Wais Wallet</p>
@@ -242,7 +266,7 @@
         <div class="dropdown">
           <button class="dropbtn">
             Evaluation
-            <img src="assets/dropdown.png" alt="Dropdown Icon" class="dropdown-img">
+            <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
           </button>
           <div class="dropdown-content">
             <a href="analytics.html">Analytics</a>
@@ -293,6 +317,17 @@
     </div>
   </div>
 
+  <!-- Pop-up Confirmation -->
+  <div class="popup" id="confirm-popup">
+    <div class="popup-content">
+      <p>Are you sure you want to save this transaction?</p>
+      <div class="popup-buttons">
+        <button id="confirm-yes">Yes</button>
+        <button id="confirm-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // Tab switching
     const tabs = document.querySelectorAll('.month-tab');
@@ -304,6 +339,32 @@
         
         const emptyState = document.querySelector('.empty-state');
         emptyState.textContent = `No transactions for ${tab.textContent}`;
+      });
+    });
+
+    // Pop-up confirmation
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('transaction-form');
+      const confirmPopup = document.getElementById('confirm-popup');
+      const yesBtn = document.getElementById('confirm-yes');
+      const cancelBtn = document.getElementById('confirm-cancel');
+      let allowSubmit = false;
+
+      form.addEventListener('submit', function(e) {
+        if (!allowSubmit) {
+          e.preventDefault();
+          confirmPopup.style.display = 'flex';
+        }
+      });
+
+      yesBtn.addEventListener('click', () => {
+        allowSubmit = true;
+        confirmPopup.style.display = 'none';
+        form.submit();
+      });
+
+      cancelBtn.addEventListener('click', () => {
+        confirmPopup.style.display = 'none';
       });
     });
   </script>

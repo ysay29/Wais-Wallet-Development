@@ -261,7 +261,7 @@
 
       <nav class="nav-links">
         <a href="index.html">Dashboard</a>
-        <a href="transactions.html" class="active">Transactions</a>
+        <a href="{% url 'transactions'%}" class="active">Transactions</a>
 
         <div class="dropdown">
           <button class="dropbtn">
@@ -269,21 +269,21 @@
             <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
           </button>
           <div class="dropdown-content">
-            <a href="analytics.html">Analytics</a>
-            <a href="totalincome.html">Total Income</a>
+            <a href="{% url 'analytics'%}">Analytics</a>
+            <a href="{% url 'totalincome'%}">Total Income</a>
             <a href="{% url 'totalexpenses'%}">Total Expenses</a>
-            <a href="savings.html">Savings</a>
+            <a href="{% url 'savings'%}">Savings</a>
           </div>
         </div>
 
-        <a href="budgets.html">Budgets</a>
-        <a href="settings.html">Settings</a>
-        <a href="aboutus.html">About Us</a>
+        <a href="{% url 'budgets'%}">Budgets</a>
+        <a href="{% url 'settings'%}">Settings</a>
+        <a href="{% url 'aboutus'%}">About Us</a>
       </nav>
     </div>
 
     <div class="account-section">
-      <a href="login.html" style="display: flex; align-items: center; gap: 12px;">
+      <a href="{% url 'login'%}" style="display: flex; align-items: center; gap: 12px;">
         <div class="account-icon">👤</div>
         <div class="account-info">
           <div class="account-label">Account</div>

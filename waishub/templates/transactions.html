@@ -266,12 +266,12 @@
         <div class="dropdown">
           <button class="dropbtn">
             Evaluation
-            <img src="{% static '/assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
+            <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
           </button>
           <div class="dropdown-content">
             <a href="analytics.html">Analytics</a>
             <a href="totalincome.html">Total Income</a>
-            <a href="totalexpenses.html">Total Expenses</a>
+            <a href="{% url 'totalexpenses'%}">Total Expenses</a>
             <a href="savings.html">Savings</a>
           </div>
         </div>

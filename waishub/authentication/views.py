@@ -38,9 +38,9 @@ def register(request):
         messages.info(request, "Account created successfully!")
         login(request, user)  # Auto-login after sign-up
         return redirect('/')  # safer than just 'dashboard'
-    return render(request, 'signup.html')
+    return render(request, 'signup.html', {})
 
 def logout_user(request):
     logout(request)
-    messages.success(request, ("Successfuly logged out!"))
-    return redirect('login.html')
+    messages.success(request, ("Successfuly Logged Out!"))
+    return redirect('login')

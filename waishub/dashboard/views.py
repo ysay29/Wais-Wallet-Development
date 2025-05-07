@@ -6,6 +6,6 @@ from django.contrib.auth import logout
 def index(request):
     return render(request, 'index.html')  # Your dashboard template
 
-def logout_view(request):
+def logout_user(request):
     logout(request)
     return redirect('login') 

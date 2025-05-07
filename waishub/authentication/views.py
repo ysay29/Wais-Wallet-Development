@@ -26,10 +26,15 @@ def register(request):
         email = request.POST.get('email')
         username = request.POST.get('username')
         password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if password != confirm_password:
+            messages.error(request, "Passwords do not match!")
+            return redirect('register')
 
         if User.objects.filter(username=username).exists():
             messages.info(request, "Username already taken!")
-            return redirect('/register/')
+            return redirect('register')
 
         user = User.objects.create_user(email=email, username=username)
         user.set_password(password)

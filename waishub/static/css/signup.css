@@ -71,3 +71,25 @@ button:hover {
 .signup-link a:hover {
     text-decoration: underline;
 }
+.message {
+    position: relative;
+    padding: 12px 40px 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: #f8a3a3; 
+    color: #c23a3a; 
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.close-btn {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: #571515;
+    cursor: pointer;
+}

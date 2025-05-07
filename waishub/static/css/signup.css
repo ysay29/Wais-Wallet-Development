@@ -71,3 +71,13 @@ button:hover {
 .signup-link a:hover {
     text-decoration: underline;
 }
+.message {
+    position: relative;
+    padding: 12px 40px 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: #d4edda; /* green success bg */
+    color: #155724; /* green text */
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

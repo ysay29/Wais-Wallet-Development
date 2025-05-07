@@ -7,7 +7,7 @@ def total_income(request):
     incomes = Transaction.objects.filter(type='income').order_by('-date')
     # Sum their amounts
     total = incomes.aggregate(total_amount=Sum('amount'))['total_amount'] or 0
-    return render(request, 'totalincome/totalincome.html', {
+    return render(request, 'totalincome.html', {
         'incomes': incomes,
         'total': total,
     })

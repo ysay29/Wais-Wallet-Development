@@ -497,17 +497,27 @@
       <a href="{% url 'aboutus' %}">About Us</a>
     </nav>
     
-  </div>
-
+  {% if user.is_authenticated %}
   <div class="account-section">
-    <a href="{% url 'login' %}">
+    <a href="{% url 'logout' %}">
     <div class="account-icon" id="logout-button">👤</div> 
     <div class="account-info">
-      <div class="account-label">Account</div>
+      <div class="account-label">LOGOUT</div>
       <div class="account-name">{{ user.get_full_name|default:user.username }}</div> <!-- change -->
     </a>
     </div>
   </div>
+  {% else %}
+  <div class="account-section">
+    <a href="{% url 'login' %}">
+    <div class="account-icon" id="logout-button">👤</div> 
+    <div class="account-info">
+      <div class="account-label">LOGIN</div>
+      <div class="account-name">{{ user.get_full_name|default:user.username }}</div> <!-- change -->
+    </a>
+    </div>
+  </div>
+  {% endif %}
   
   
 </aside>
@@ -536,28 +546,28 @@
   <!-- Cards -->
   <div class="cards">
     <div class="card">
-      <a href="totalincome.html">
+      <a href="{% url 'totalincome' %}">
       <h3>Total Income</h3>
       <p>₱ {{ income|floatformat:2 }}</p>
-      <img src="assets/increase.png" alt="increase" class="arrow-icon">
+      <img src="{% static 'assets/increase.png' %}" alt="increase" class="arrow-icon">
       <span class="increase"> 1.7% from last month</span>
       </a>
       </div>
     
       <div class="card">
-        <a href="totalexpenses.html">
+        <a href="{% url 'totalexpenses' %}">
         <h3>Total Expenses</h3>
         <p>₱ {{ expenses|floatformat:2 }}</p>
-          <img src="assets/increase.png" alt="increase" class="arrow-icon">
+          <img src="{% static 'assets/increase.png' %}" alt="increase" class="arrow-icon">
       <span class="increase"> 1.7% from last month</span>
       </a>
       </div>
  
       <div class="card">
-        <a href="savings.html">
+        <a href="{% url 'savings' %}">
         <h3>Savings</h3>
         <p>₱ {{ savings|floatformat:2 }}</p>
-          <img src="assets/decrease.png" alt="decrease" class="arrow-icon">
+          <img src="{% static 'assets/decrease.png' %}" alt="decrease" class="arrow-icon">
       <span class="decrease"> 1.7% from last month</span>
         </a>
       </div>
@@ -572,7 +582,7 @@
       <div class="chart-header">
         <h4>Total Expenses</h4>
         <a href="analytics.html">
-          <img src="/assets/arrow-up.png" alt="Arrow Icon" style="width:20px;">
+          <img src="{% static 'assets/arrow-up.png' %}" alt="Arrow Icon" style="width:20px;">
         </a>
       </div>
       <canvas id="expensesChart"></canvas>
@@ -608,15 +618,15 @@
 
 <!-- Plus Button -->
 <div class="plus-button">
-  <img src="/assets/add-icon.png" alt="Plus Icon" id="plus-icon">
+  <img src="{% static 'assets/add-icon.png' %}" alt="Plus Icon" id="plus-icon">
   <div class="plus-menu" id="plus-menu">
-    <a href="add.html">Add Transaction</a>
+    <a href="{% url 'add_transaction' %}">Add Transaction</a>
     <a href="addexpenses.html">Manage Expenses</a>
     <a href="addsavings.html">Savings</a>
   </div>
 </div>
 
-<script src="addButton.js" defer></script>
+<script src="{% static 'js/addButton.js' %}" defer></script>
 
 <script>
   // Expenses Chart

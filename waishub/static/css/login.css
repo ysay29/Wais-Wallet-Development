@@ -73,26 +73,32 @@ button:hover {
 }
 
 .message-list {
-list-style-type: none;
-padding: 0;
-margin-bottom: 15px;
-}
-
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+  }
+  
 .message {
-padding: 10px;
-border-radius: 5px;
-margin-bottom: 10px;
-}
-
-.message.success {
-background-color: #d4edda;
-color: #155724;
-}
-
-.message.error {
-background-color: #f8d7da;
-color: #721c24;
+    position: relative;
+    padding: 12px 40px 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background-color: #d4edda; /* green success bg */
+    color: #155724; /* green text */
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
   
-  
+.close-btn {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: #155724;
+    cursor: pointer;
+}
   

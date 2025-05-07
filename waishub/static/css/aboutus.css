@@ -1,0 +1,336 @@
+html {
+scroll-behavior: smooth;
+}
+
+body {
+margin: 0;
+font-family: 'Segoe UI', sans-serif;
+background-color: #f5f7fb;
+color: #0c4160;
+overflow-x: hidden;
+}
+
+/* About Us Section */
+.page-section {
+text-align: center;
+padding: 200px 100px;
+margin: 10px; 
+}
+
+.logo {
+width: 150px;
+margin: 10px 0;
+}
+
+h1 {
+font-size: 48px;
+margin-bottom: 10px;
+}
+
+h2 {
+font-size: 36px;
+margin: 10px 0;
+}
+
+p {
+font-size: 20px;
+margin: 5px 0;
+}
+
+nav {
+margin-top: 20px;
+}
+
+nav a {
+display: inline-block;
+background: #ffffff;
+padding: 12px 24px;
+margin: 10px;
+border-radius: 8px;
+text-decoration: none;
+font-size: 20px;
+color: #333;
+transition: background 0.3s;
+box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+}
+
+nav a:hover {
+background: #a4c1df;
+}
+
+.delete-button {
+background-color: red;
+color: white;
+border: none;
+padding: 16px 32px;
+border-radius: 8px;
+font-size: 20px;
+margin-top: 30px;
+cursor: pointer;
+transition: transform 0.2s;
+}
+
+.delete-button:hover {
+transform: scale(1.05);
+}
+
+.section-title {
+font-size: 36px;
+margin-top: 50px;
+color: #0057B8;
+cursor: pointer;
+}
+
+/* Team Section */
+.team-container {
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+margin-top: 30px;
+}
+
+.team-box {
+background: #ffffff;
+padding: 20px;
+margin: 10px;
+border-radius: 12px;
+width: 250px;
+box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+}
+
+.team-box h3 {
+font-size: 24px;
+margin-bottom: 10px;
+}
+
+.team-box p {
+font-size: 18px;
+margin: 4px 0;
+}
+
+/* FAQ Section */
+.faq-container {
+max-width: 800px;
+margin: 0 auto;
+padding: 40px;
+font-family: 'Segoe UI', sans-serif;
+color: #0c4160;
+}
+
+.top-bar {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 20px 50px; 
+background-color: #f9f9f9; 
+}
+
+.left-section {
+display: flex;
+align-items: center;
+gap: 15px;
+}
+
+.logo-small {
+width: 50px;
+height: auto;
+}
+
+.faq-title {
+font-size: 28px;
+margin: 0;
+}
+
+.right-section {
+flex-shrink: 0;
+}
+
+.search-bar {
+padding: 10px 15px;
+font-size: 16px;
+width: 250px; 
+border-radius: 8px;
+border: 1px solid #ccc;
+}
+
+.subtitle {
+text-align: center;
+margin-top: 10px;
+}
+
+.subtitle hr {
+margin-top: 10px;
+}
+
+/* Popup Styles */
+.popup {
+display: none;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+background: #fff;
+padding: 30px;
+border-radius: 15px;
+box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+text-align: center;
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+z-index: 1000;
+}
+
+.popup-buttons {
+margin-top: 20px;
+}
+
+.popup-buttons button {
+margin: 0 10px;
+padding: 10px 20px;
+border: none;
+border-radius: 8px;
+font-weight: bold;
+cursor: pointer;
+}
+
+.popup-buttons button:hover {
+transform: scale(1.05);
+transition: transform 0.2s;
+}  
+
+.yes-btn {
+background-color: #28a745; 
+color: white;
+border: none;
+padding: 10px 20px;
+border-radius: 8px;
+font-size: 16px;
+cursor: pointer;
+transition: background-color 0.1s;
+}
+
+#confirm-yes:hover {
+background-color: #218838; 
+}
+
+.cancel-btn {
+background-color: #dc3545; 
+color: white;
+border: none;
+padding: 10px 20px;
+border-radius: 8px;
+font-size: 16px;
+cursor: pointer;
+transition: background-color 0.1s;
+}
+
+#confirm-cancel:hover {
+background-color: #c82333;
+}
+
+.success-icon {
+font-size: 50px;
+color: #28a745;
+margin-bottom: 10px;
+}
+
+.dismiss-btn {
+margin-top: 20px;
+padding: 10px 20px;
+background-color: #0057B8;
+color: rgb(255, 255, 255);
+border: none;
+border-radius: 8px;
+font-weight: bold;
+cursor: pointer;
+}
+
+.stars {
+display: flex;
+justify-content: center;
+margin-bottom: 10px;
+}
+
+.star {
+font-size: 30px;
+color: lightgray;
+cursor: pointer;
+}
+
+.star.selected {
+color: gold;
+}
+
+#feedback-text {
+width: 100%;
+padding: 10px;
+border-radius: 8px;
+border: 1px solid #ccc;
+font-size: 16px;
+resize: none;
+}
+
+.popup.active {
+display: block;
+}
+
+.button {
+background-color: #0057B8;
+color: white;
+border: none;
+padding: 16px 32px;
+border-radius: 8px;
+font-size: 20px;
+margin-top: 20px;
+cursor: pointer;
+transition: transform 0.2s, background-color 0.3s;
+}
+
+.button:hover {
+transform: scale(1.05);
+background-color: #0047a0;
+}
+
+/* FAQ Content Styles */
+.faq-content {
+line-height: 1.8;
+font-size: 18px;
+}
+
+.faq-content strong {
+display: block;
+margin-bottom: 5px;
+}
+
+.quick-links {
+text-align: center;
+margin-bottom: 40px;
+}
+
+.quick-links a {
+color: #007BFF;
+text-decoration: none;
+margin: 0 10px;
+}
+
+.contact-section {
+text-align: center;
+}
+
+.contact-button {
+background-color: #007BFF;
+color: white;
+padding: 12px 24px;
+border-radius: 8px;
+text-decoration: none;
+font-size: 18px;
+display: inline-block;
+margin-top: 20px;
+}
+
+hr {
+border: 0;
+height: 1px;
+background-color: #ddd;
+margin: 40px 0;
+}

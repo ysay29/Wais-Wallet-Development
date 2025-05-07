@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Transactions</title>
+  <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
   <style>
     * { 
       margin: 0; 
@@ -260,30 +261,30 @@
       </div>
 
       <nav class="nav-links">
-        <a href="index.html">Dashboard</a>
-        <a href="transactions.html" class="active">Transactions</a>
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'transactions'%}" class="active">Transactions</a>
 
         <div class="dropdown">
           <button class="dropbtn">
             Evaluation
-            <img src="{% static '/assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
+            <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
           </button>
           <div class="dropdown-content">
-            <a href="analytics.html">Analytics</a>
-            <a href="totalincome.html">Total Income</a>
-            <a href="totalexpenses.html">Total Expenses</a>
-            <a href="savings.html">Savings</a>
+            <a href="#">Analytics</a> 
+            <a href="{% url 'totalincome'%}">Total Income</a>
+            <a href="{% url 'totalexpenses'%}">Total Expenses</a>
+            <a href="{% url 'savings'%}">Savings</a>
           </div>
         </div>
 
-        <a href="budgets.html">Budgets</a>
-        <a href="settings.html">Settings</a>
-        <a href="aboutus.html">About Us</a>
+        <a href="#">Budgets</a>
+        <a href="#">Settings</a>
+        <a href="#">About Us</a>
       </nav>
     </div>
 
     <div class="account-section">
-      <a href="login.html" style="display: flex; align-items: center; gap: 12px;">
+      <a href="{% url 'login'%}" style="display: flex; align-items: center; gap: 12px;">
         <div class="account-icon">👤</div>
         <div class="account-info">
           <div class="account-label">Account</div>

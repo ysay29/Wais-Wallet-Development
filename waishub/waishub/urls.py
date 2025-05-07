@@ -23,20 +23,19 @@ from django.conf import settings   # Application settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns  # Static files serving\
 from authentication import urls
 
+
 # Define URL patterns
 urlpatterns = [
     path('admin/', admin.site.urls),         # Admin interface
     #path('', home, name='home.html'),        #Let's create a page where users get redirected first
-    path('', login_view, name='login'),    # Login page
-    path('register/', register, name='register'),  # Registration page
-    path('logout/', auth_logout, name='logout'),  # Registration page
-    path('dashboard/', include('dashboard.urls')), #Dashboard page
+    path('', include('authentication.urls')),
+    path('', include('dashboard.urls')), #Dashboard page
     path('add/', include('Transaction.urls')), #Add Transaction page
     path('transactions/', include('TransactionsList.urls')), #Transactions page
     path('totalincome/',  include('totalincome.urls')), #Total income page
     path('totalexpenses/', include('totalexpenses.urls')), #Total expenses page
     path('savings/', include('savings.urls')), #Total savings page
-    #path('add/', include('transaction.urls')), #Add Transaction page
+    path('', include('core.urls')),
 ]
 
 # Serve media files if DEBUG is True (development mode)

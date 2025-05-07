@@ -16,7 +16,7 @@ def transactions_view(request):
 
     transactions = Transaction.objects.filter(month=current_month)
 
-    return render(request, 'TransactionsList/transactions.html', {
+    return render(request, 'transactions.html', {
         'transactions': transactions,
         'current_month': current_month
     })

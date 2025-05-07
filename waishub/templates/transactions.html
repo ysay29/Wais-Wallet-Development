@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Transactions</title>
+  <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
   <style>
     * { 
       margin: 0; 
@@ -269,16 +270,16 @@
             <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
           </button>
           <div class="dropdown-content">
-            <a href="{% url 'analytics'%}">Analytics</a>
+            <a href="#">Analytics</a> 
             <a href="{% url 'totalincome'%}">Total Income</a>
             <a href="{% url 'totalexpenses'%}">Total Expenses</a>
             <a href="{% url 'savings'%}">Savings</a>
           </div>
         </div>
 
-        <a href="{% url 'budgets'%}">Budgets</a>
-        <a href="{% url 'settings'%}">Settings</a>
-        <a href="{% url 'aboutus'%}">About Us</a>
+        <a href="#">Budgets</a>
+        <a href="#">Settings</a>
+        <a href="#">About Us</a>
       </nav>
     </div>
 

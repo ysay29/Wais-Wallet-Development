@@ -10,6 +10,14 @@
 <body>
     <div class="login-container">
       <h1>Sign up</h1>
+        <div class="message-list">
+          {% for message in messages %}
+            <div class="message {{ message.tags }}">
+              <span class="message-text">{{ message }}</span>
+              <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+            </div>
+          {% endfor %}
+        </div>
       <form method="POST" action="">
         {% csrf_token %}
         <div class="form-group">

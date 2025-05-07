@@ -29,7 +29,7 @@ def register(request):
 
         if User.objects.filter(username=username).exists():
             messages.info(request, "Username already taken!")
-            return redirect('/register/')
+            return redirect('register')
 
         user = User.objects.create_user(email=email, username=username)
         user.set_password(password)

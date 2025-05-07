@@ -24,4 +24,4 @@ def savings_summary(request):
         'goal_term': goal_term,
         'reminder_frequency': reminder_frequency,
     }
-    return render(request, 'savings/savings.html', context)
+    return render(request, 'savings.html', context)

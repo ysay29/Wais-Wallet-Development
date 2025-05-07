@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -299,19 +300,19 @@
     </div>
    
     <nav class="nav-links">
-      <a href="index.html">Dashboard</a>      
-      <a href="transactions.html">Transactions</a>
+      <a href="{% url 'dashboard' %}">Dashboard</a>      
+      <a href="{% url 'transactions' %}">Transactions</a>
    
       <div class="dropdown">
         <button class="dropbtn">
           Evaluation
-          <img src="assets/dropdown.png" alt="Dropdown Icon" class="dropdown-img">
+          <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
         </button>
         <div class="dropdown-content">
-          <a href="analytics.html">Analytics</a>
-          <a href="totalincome.html">Total Income</a>
-          <a href="totalexpenses.html">Total Expenses</a>
-          <a href="savings.html" class="active">Savings</a>
+          <a href="{% url 'savings' %}">Analytics</a>
+          <a href="{% url 'totalincome' %}">Total Income</a>
+          <a href="{% url 'totalexpenses' %}">Total Expenses</a>
+          <a href="{% url 'savings' %}" class="active">Savings</a>
         </div>
       </div>
    

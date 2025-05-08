@@ -20,6 +20,7 @@
           {% endfor %}
         </div>
       {% endif %}
+      
       <form method="POST" action="">
         {% csrf_token %}
         <div class="form-group">
@@ -36,7 +37,7 @@
         </div>
         <div class="form-group">
             <label for="password">Confirm Password</label>
-            <input type="password" name="password" required placeholder="Confirm your password">
+            <input type="password" name="confirm_password" required placeholder="Confirm your password">
           </div>
         <button type="submit">Sign up</button>
         <div class="signup-link">

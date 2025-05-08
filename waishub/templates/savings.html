@@ -9,8 +9,6 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="{% static 'css/savings.css' %}">
 </head>
-
-
 <body>
 <!-- Sidebar -->
 <aside class="sidebar">
@@ -47,12 +45,11 @@
   </div>
  
   <div class="account-section">
-    <a href="login.html">
-      <div class="account-icon">👤</div>
-      <div class="account-info">
-        <div class="account-label">Account</div>
-        <div class="account-name">Ysa Frigillana</div>
-      </div>
+    <a href="{% url 'logout' %}">
+    <div class="account-icon" id="logout-button">👤</div> 
+    <div class="account-info">
+      <div class="account-label">LOGOUT</div>
+      <div class="account-name">{{ user.get_full_name|default:user.username }}</div> <!-- change -->
     </a>
   </div>
 </aside>

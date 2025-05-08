@@ -5,22 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body>
     <div class="login-container">
       <h1>Login</h1>
 
-        {% if messages %}
-        <div class="message-list">
-            {% for message in messages %}
-                <div class="message {{ message.tags }}">
-                    <span class="message-text">{{ message }}</span>
-                    <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
-                </div>
-            {% endfor %}
-        </div>
-        {% endif %}
+      {% if messages %}
+      <div class="message-list">
+        {% for message in messages %}
+          <div class="message {{ message.tags }}">
+            <span class="message-text">{{ message }}</span>
+            <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+          </div>
+        {% endfor %}
+      </div>
+      {% endif %}
       
       <form method="POST" action="{% url 'login' %}">
         {% csrf_token %}

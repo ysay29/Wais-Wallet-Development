@@ -4,6 +4,6 @@ from authentication.views import logout_user
 from . import views
 
 urlpatterns = [
-    path('', index, name='dashboard'),  # dashboard/index
+    path('dashboard/', index, name='dashboard'),  # dashboard/index
     path('logout/', logout_user, name='logout'), #logout from dashboard
 ]

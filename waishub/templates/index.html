@@ -43,18 +43,17 @@
         </button>
         <div class="dropdown-content">
           <a href="analytics.html">Analytics</a>
-          <a href="totalincome.html">Total Income</a>
-          <a href="totalexpenses.html">Total Expenses</a>
+          <a href="{% url 'totalincome' %}">Total Income</a>
+          <a href="{% url 'totalexpenses' %}">Total Expenses</a>
           <a href="{% url 'savings' %}">Savings</a>
         </div>
       </div>
     
       <a href="budgets.html">Budgets</a>
-      <a href="settings.html">Settings</a>
+      <a href="{% url 'settings' %}">Settings</a>
       <a href="{% url 'aboutus' %}">About Us</a>
     </nav>
     
-  {% if user.is_authenticated %}
   <div class="account-section">
     <a href="{% url 'logout' %}">
     <div class="account-icon" id="logout-button">👤</div> 
@@ -63,16 +62,6 @@
       <div class="account-name">{{ user.get_full_name|default:user.username }}</div> <!-- change -->
     </a>
   </div>
-  {% else %}
-  <div class="account-section">
-    <a href="{% url 'login' %}">
-    <div class="account-icon" id="logout-button">👤</div> 
-    <div class="account-info">
-      <div class="account-label">LOGIN</div>
-    </a>
-  </div>
-  {% endif %}
-  
   
 </aside>
 

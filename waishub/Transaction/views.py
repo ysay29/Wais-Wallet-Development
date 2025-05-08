@@ -20,4 +20,4 @@ def add_transaction(request):
 def transactions_list(request):
     transactions = Transaction.objects.all().order_by('-date')
     
-    return render(request, 'Transaction/transactions.html', {'transactions': transactions})
+    return render(request, 'transactions.html', {'transactions': transactions})

@@ -28,7 +28,7 @@ from authentication import urls
 urlpatterns = [
     path('admin/', admin.site.urls),         # Admin interface
     #path('', home, name='home.html'),        #Let's create a page where users get redirected first
-    path('', include('authentication.urls')),
+    path('accounts/', include('authentication.urls')),
     path('', include('dashboard.urls')), #Dashboard page
     path('add/', include('Transaction.urls')), #Add Transaction page
     path('transactions/', include('TransactionsList.urls')), #Transactions page

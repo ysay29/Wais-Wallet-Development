@@ -2,7 +2,9 @@ from django.shortcuts import render
 from .models import Saving
 from django.db.models import Sum
 from django.utils.timezone import now
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def savings_summary(request):
     savings = Saving.objects.all().order_by('-date')
     total = savings.aggregate(total_amount=Sum('amount'))['total_amount'] or 0

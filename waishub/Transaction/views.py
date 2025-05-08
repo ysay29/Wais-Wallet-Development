@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Transaction
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def add_transaction(request):
     if request.method == 'POST':
         t = request.POST.get('type')

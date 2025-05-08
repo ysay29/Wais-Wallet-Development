@@ -25,3 +25,6 @@ def savings_summary(request):
         'reminder_frequency': reminder_frequency,
     }
     return render(request, 'savings.html', context)
+
+def add_savings(request):
+    pass

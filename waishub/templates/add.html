@@ -13,7 +13,7 @@
       box-sizing: border-box;
       font-family: 'Poppins', sans-serif;
     }
-
+   
     body {
       background-color: #f0f2f5;
       display: flex;
@@ -21,7 +21,7 @@
       align-items: center;
       height: 100vh;
     }
-
+   
     .container {
       background-color: white;
       padding: 40px 30px;
@@ -29,13 +29,13 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
       width: 400px;
     }
-
+   
     h2 {
       text-align: center;
       margin-bottom: 25px;
       color: #003147;
     }
-
+   
     form label {
       display: block;
       margin-top: 15px;
@@ -43,7 +43,7 @@
       font-weight: 500;
       color: #333;
     }
-
+   
     input, select {
       width: 100%;
       padding: 10px 12px;
@@ -52,11 +52,11 @@
       outline: none;
       font-size: 14px;
     }
-
+   
     input:focus, select:focus {
       border-color: #003147;
     }
-
+   
     .save-btn {
       width: 100%;
       margin-top: 25px;
@@ -69,11 +69,11 @@
       cursor: pointer;
       transition: 0.3s;
     }
-
+   
     .save-btn:hover {
       background-color: #001f2f;
     }
-
+   
     .popup {
       position: fixed;
       top: 0;
@@ -86,7 +86,7 @@
       align-items: center;
       z-index: 100;
     }
-
+   
     .popup-content {
       background: white;
       padding: 35px 25px;
@@ -95,13 +95,13 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
       width: 320px;
     }
-
+   
     .popup-buttons {
       display: flex;
       justify-content: center;
       margin-top: 20px;
     }
-
+   
     #confirm-yes, #confirm-cancel, #close-popup {
       background-color: #003147;
       color: white;
@@ -112,11 +112,11 @@
       font-weight: bold;
       margin: 0 5px;
     }
-
+   
     #confirm-yes:hover { background-color: #218838; }
     #confirm-cancel:hover { background-color: #c82333; }
     #close-popup:hover { background-color: #001f2f; }
-
+   
     #confirm-yes { background-color: #28a745; box-shadow: inset 0 0 0 2px #1e7e34; }
     #confirm-cancel { background-color: #dc3545; box-shadow: inset 0 0 0 2px #bd2130; }
   </style>
@@ -124,7 +124,7 @@
 <body>
   <div class="container">
     <h2><strong>Add Transaction</strong></h2>
-    <form id="transaction-form" method="POST" action="{% url 'add_transaction' %}">
+    <form id="transaction-form" method="POST">
       {% csrf_token %}
       <label for="type"><strong>Type</strong></label>
       <select id="type" name="type" required>
@@ -133,18 +133,23 @@
         <option value="expense">Expense</option>
       </select>
 
+
       <label for="category"><strong>Category</strong></label>
       <input type="text" id="category" name="category" placeholder="e.g. Food, Bills" required />
+
 
       <label for="amount"><strong>Amount (₱)</strong></label>
       <input type="number" id="amount" name="amount" required />
 
+
       <label for="date"><strong>Date</strong></label>
       <input type="date" id="date" name="date" required />
+
 
       <button type="submit" class="save-btn">Save Transaction</button>
     </form>
   </div>
+
 
   <div class="popup" id="confirm-popup">
     <div class="popup-content">
@@ -156,12 +161,14 @@
     </div>
   </div>
 
+
   <div class="popup" id="saved-popup">
     <div class="popup-content">
       <p>Your Transaction is saved</p>
       <button id="close-popup">Close</button>
     </div>
   </div>
+
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -173,6 +180,7 @@
       const closePopup = document.getElementById('close-popup');
       let allowSubmit = false;
 
+
       form.addEventListener('submit', function(e) {
         if (!allowSubmit) {
           e.preventDefault();
@@ -180,19 +188,23 @@
         }
       });
 
+
       yesBtn.addEventListener('click', () => {
         allowSubmit = true;
         confirmPopup.style.display = 'none';
         form.submit();
       });
 
+
       cancelBtn.addEventListener('click', () => {
         confirmPopup.style.display = 'none';
       });
 
+
       closePopup.addEventListener('click', () => {
         savedPopup.style.display = 'none';
       });
+
 
       // Show saved popup if ?saved=1 in URL
       const isSaved = "{{ request.GET.saved|default:'' }}" === "1";

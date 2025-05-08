@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Wais Wallet - Expenses</title>
-  <link rel="icon" href="/favicon.png" sizes="any">
+  <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="{% static 'css/totalexpenses.css' %}">
 </head>
@@ -25,7 +25,7 @@
    
     <nav class="nav-links">
       <a href="{% url 'dashboard' %}" class="active">Dashboard</a>      
-      <a href="{% url 'transactions' %}">Transactions</a>
+      <a href="{% url 'transactions_list' %}">Transactions</a>
     
       <div class="dropdown">
         <button class="dropbtn">

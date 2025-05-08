@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'authentication',
     'dashboard',
     'Transaction',
-    'TransactionsList',
     'totalincome',
     'totalexpenses',
     'savings',

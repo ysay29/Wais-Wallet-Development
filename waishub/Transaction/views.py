@@ -16,3 +16,8 @@ def add_transaction(request):
             return redirect(f"{reverse('add_transaction')}?saved=1")
 
     return render(request, 'add.html')
+
+def transactions_list(request):
+    transactions = Transaction.objects.all().order_by('-date')
+    
+    return render(request, 'Transaction/transactions.html', {'transactions': transactions})

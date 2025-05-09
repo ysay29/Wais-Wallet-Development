@@ -216,7 +216,7 @@
     <nav>
       <a href="#">Home</a>
       <a href="#features">Features</a>
-      <a href="aboutus.html">About</a>
+      <a href="{% url 'aboutus'%}">About</a>
     </nav>
   </header>
 
@@ -227,7 +227,7 @@
         Take charge of every peso with <strong>Wais Wallet</strong>—track your gastos, hit your goals, and make every move count.
         Monitor spending, set saving goals, and build better money habits—all in one smart tool.
       </p>
-      <button class="btn btn-primary" onclick="window.location.href='login.html'">Get Started</button>
+      <button class="btn btn-primary" onclick="window.location.href='/login/'">Get Started</button>
     </div>
     <div class="hero-image">
       <img src="{% static 'assets/logo.png' %}" alt="Wais Wallet Illustration">
@@ -250,7 +250,7 @@
 
   <section class="about" id="about">
     <h2>About Us</h2>
-    <button onclick="window.location.href='aboutus.html'">Learn More</button>
+    <button onclick="window.location.href='/aboutus/'">Learn More</button>
   </section>
 
   <script>

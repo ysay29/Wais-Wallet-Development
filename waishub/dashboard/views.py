@@ -46,18 +46,18 @@ def notifications_view(request):
 @login_required
 def settings_view(request):
     try:
-        reminder = Reminder.objects.get(user=request.user)
+        reminder = Reminder.objects.get(user=request.user)  # Fetch reminder for the logged-in user
     except Reminder.DoesNotExist:
-        reminder = None
+        reminder = None  # If no reminder exists, it will be None
 
     if request.method == 'POST':
         form = ReminderForm(request.POST, instance=reminder)
         if form.is_valid():
             reminder = form.save(commit=False)
-            reminder.user = request.user
-            reminder.save()
-            return redirect('settings')  # or wherever your settings page is
+            reminder.user = request.user  # Associate the reminder with the logged-in user
+            reminder.save()  # Save the reminder
+            return redirect('settings')  # Redirect back to the settings page (or wherever you need)
     else:
-        form = ReminderForm(instance=reminder)
+        form = ReminderForm(instance=reminder)  # Pre-fill the form with existing reminder if available
 
-    return render(request, 'settings.html', {'form': form})
+    return render(request, 'settings.html', {'form': form})  # Render the form in the template

@@ -24,5 +24,5 @@ class Reminder(models.Model):
     enabled = models.BooleanField(default=True)  #Notification enabled by default
 
     def __str__(self):
-        return f"{self.user.username} - {self.alert_time} ({'On' if self.enabled else 'Off'})"
+        return f"{self.user.username} - {self.alert_time}"
     

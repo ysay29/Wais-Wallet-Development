@@ -1,11 +1,11 @@
 from django.utils.timezone import localtime, now
-from .models import Reminder, Notification
 from datetime import timedelta
+from .models import Reminder, Notification
 
 def send_transaction_reminders():
     print("Send transaction reminders task executed")
 
-    now_local = localtime(now())
+    now_local = localtime(now())  # Get current local datetime
     time_lower = (now_local - timedelta(seconds=30)).time()
     time_upper = (now_local + timedelta(seconds=30)).time()
     today = now_local.date()
@@ -22,15 +22,11 @@ def send_transaction_reminders():
     print(f"Found {reminders.count()} reminders.")
 
     for reminder in reminders:
-        try:
-            already_sent = Notification.objects.filter(
-                user=reminder.user,
-                message__icontains="add your transaction",
-                timestamp__date=today
-            ).exists()
-        except Exception as e:
-            print(f"Error checking for existing notifications: {e}")
-            already_sent = False  # fallback to allow notification
+        already_sent = Notification.objects.filter(
+            user=reminder.user,
+            message__icontains="add your transaction",
+            timestamp__date=today
+        ).exists()
 
         if not already_sent:
             Notification.objects.create(

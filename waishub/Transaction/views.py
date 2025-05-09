@@ -23,20 +23,19 @@ def add_transaction(request):
     return render(request, 'add.html')
 
 @login_required
-@login_required
 def transactions_list(request):
-    selected_month = request.GET.get('month')
+    selected_month = request.GET.get('month', 'All')
     transactions = Transaction.objects.filter(user=request.user).order_by('-date')
 
-    if selected_month:
+    if selected_month and selected_month != "All":
         try:
             month_number = timezone.datetime.strptime(selected_month, "%B").month
             transactions = transactions.filter(date__month=month_number)
         except ValueError:
-            pass
+            pass  # Invalid month name, skip filtering
 
     months = [
-        "January", "February", "March", "April", "May", "June",
+        "All", "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ]
 

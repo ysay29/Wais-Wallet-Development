@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache, cache_control
 from django.contrib.auth import logout
-from .models import Notification, Transaction
+from .models import Notification, Transaction, Reminder
+from .forms import ReminderForm
 from django.utils import timezone
 
 #@login_required
@@ -25,7 +26,7 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
-
+@login_required
 def notifications_view(request):
     user = request.user
     today = timezone.localtime().date()
@@ -41,3 +42,22 @@ def notifications_view(request):
         'unread_count': unread_count,
     }
     return render(request, 'notifications.html', context) # Your notifications template
+
+@login_required
+def settings_view(request):
+    try:
+        reminder = Reminder.objects.get(user=request.user)
+    except Reminder.DoesNotExist:
+        reminder = None
+
+    if request.method == 'POST':
+        form = ReminderForm(request.POST, instance=reminder)
+        if form.is_valid():
+            reminder = form.save(commit=False)
+            reminder.user = request.user
+            reminder.save()
+            return redirect('settings')  # or wherever your settings page is
+    else:
+        form = ReminderForm(instance=reminder)
+
+    return render(request, 'settings.html', {'form': form})

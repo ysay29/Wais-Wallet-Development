@@ -7,6 +7,7 @@ class Transaction(models.Model):
     category = models.CharField(max_length=100)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateField()
+
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField()
@@ -16,3 +17,11 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.message[:30]}"
+    
+class Reminder(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    alert_time = models.TimeField()
+
+    def __str__(self):
+        return f"{self.user.username} - {self.alert_time}"
+    

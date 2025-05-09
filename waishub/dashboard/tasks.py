@@ -3,9 +3,12 @@ from .models import Reminder, Notification
 from datetime import timedelta
 
 def send_transaction_reminders():
-    now_local = localtime(now())  
+    print("Send transaction reminders task executed")
+
+    now_local = localtime(now())
     time_lower = (now_local - timedelta(seconds=30)).time()
     time_upper = (now_local + timedelta(seconds=30)).time()
+    today = now_local.date()
 
     print("Now:", now_local.time())
     print("Window:", time_lower, "to", time_upper)
@@ -13,17 +16,21 @@ def send_transaction_reminders():
     reminders = Reminder.objects.filter(
         alert_time__gte=time_lower,
         alert_time__lte=time_upper,
-        enabled=True  # ✅ Only send to users who enabled it
+        enabled=True
     )
 
-    today = now_local.date() 
+    print(f"Found {reminders.count()} reminders.")
 
     for reminder in reminders:
-        already_sent = Notification.objects.filter(
-            user=reminder.user,
-            message__icontains="add your transaction",
-            timestamp__date=today
-        ).exists()
+        try:
+            already_sent = Notification.objects.filter(
+                user=reminder.user,
+                message__icontains="add your transaction",
+                timestamp__date=today
+            ).exists()
+        except Exception as e:
+            print(f"Error checking for existing notifications: {e}")
+            already_sent = False  # fallback to allow notification
 
         if not already_sent:
             Notification.objects.create(
@@ -31,3 +38,5 @@ def send_transaction_reminders():
                 message="Reminder: Don't forget to add your transaction!"
             )
             print(f"Notification sent to {reminder.user.username}")
+        else:
+            print(f"Skipped: Notification already sent to {reminder.user.username}")

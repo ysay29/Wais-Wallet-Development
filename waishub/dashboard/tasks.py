@@ -1,12 +1,14 @@
 from django.utils.timezone import localtime, now
 from .models import Reminder, Notification
-from datetime import timedelta, timezone
+from datetime import timedelta
 
 def send_transaction_reminders():
-    print("Send transaction reminders task executed")  # Debugging print to check if the task runs
-    now_local = localtime(now())  
-    time_lower = (now_local - timedelta(minutes=10)).time()
-    time_upper = (now_local + timedelta(minutes=10)).time()
+    print("Send transaction reminders task executed")
+
+    now_local = localtime(now())
+    time_lower = (now_local - timedelta(seconds=30)).time()
+    time_upper = (now_local + timedelta(seconds=30)).time()
+    today = now_local.date()
 
     print("Now:", now_local.time())
     print("Window:", time_lower, "to", time_upper)
@@ -17,23 +19,24 @@ def send_transaction_reminders():
         enabled=True
     )
 
-    print(f"Found {len(reminders)} reminders within the time window.")  # Debug to check if reminders exist
+    print(f"Found {reminders.count()} reminders.")
 
     for reminder in reminders:
-        already_sent = Notification.objects.filter(
-        user=reminder.user,
-        timestamp__date=timezone.localtime().date()
-    )
+        try:
+            already_sent = Notification.objects.filter(
+                user=reminder.user,
+                message__icontains="add your transaction",
+                timestamp__date=today
+            ).exists()
+        except Exception as e:
+            print(f"Error checking for existing notifications: {e}")
+            already_sent = False  # fallback to allow notification
 
-        print(f"Already sent? {already_sent.exists()}")  # Debug message
-        if already_sent.exists():
-            print(f"Existing notifications: {already_sent}")
-        
         if not already_sent:
-            print(f"Creating notification for {reminder.user.username}")  # Debug message
             Notification.objects.create(
                 user=reminder.user,
                 message="Reminder: Don't forget to add your transaction!"
             )
+            print(f"Notification sent to {reminder.user.username}")
         else:
-            print(f"Notification already sent to {reminder.user.username}")
+            print(f"Skipped: Notification already sent to {reminder.user.username}")

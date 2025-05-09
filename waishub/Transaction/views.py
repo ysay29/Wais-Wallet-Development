@@ -40,11 +40,14 @@ def total_income(request):
 
 @login_required
 def total_expenses(request):
-    expenses = Transaction.objects.filter(type='expense').order_by('-date')
-    total = expenses.aggregate(total_amount=Sum('amount'))['total_amount'] or 0
-    for exp in expenses:
-        exp.formatted_date = exp.date.strftime('%Y-%m-%d')  # For chart labels
+    expenses = Transaction.objects.filter(type='expense')
+    total_expenses = expenses.aggregate(Sum('amount'))['amount__sum'] or 0
+
+    category_totals_qs = expenses.values('category').annotate(total=Sum('amount'))
+    category_totals = {entry['category']: entry['total'] for entry in category_totals_qs}
+
     return render(request, 'totalexpenses.html', {
         'expenses': expenses,
-        'total': total,
+        'total_expenses': total_expenses,
+        'category_totals': category_totals,
     })

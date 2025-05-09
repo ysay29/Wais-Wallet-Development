@@ -4,6 +4,8 @@ from .models import Transaction
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from .models import Transaction
+from django.utils import timezone
+
 
 @login_required
 def add_transaction(request):
@@ -21,10 +23,28 @@ def add_transaction(request):
     return render(request, 'add.html')
 
 @login_required
+@login_required
 def transactions_list(request):
+    selected_month = request.GET.get('month')
     transactions = Transaction.objects.filter(user=request.user).order_by('-date')
-    
-    return render(request, 'transactions.html', {'transactions': transactions})
+
+    if selected_month:
+        try:
+            month_number = timezone.datetime.strptime(selected_month, "%B").month
+            transactions = transactions.filter(date__month=month_number)
+        except ValueError:
+            pass
+
+    months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ]
+
+    return render(request, 'transactions.html', {
+        'transactions': transactions,
+        'selected_month': selected_month,
+        'months': months,
+    })
 
 @login_required
 def total_income(request):

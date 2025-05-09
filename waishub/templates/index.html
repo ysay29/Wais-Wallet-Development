@@ -4,6 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Wais Wallet Dashboard</title>
   <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -26,7 +29,7 @@
     <div class="navbar">
       <img src="{% static 'assets/logo.png' %}" alt="Logo" class="navbar-logo">
       <div class="welcome-texts">
-        <p class="hello-text">Hello, {{ user.get_full_name|default:user.username }}! Welcome to</p>
+        <p class="hello-text">Hello, {{ user.get_full_name|default:user.username }}! <br> Welcome to</p>
         <p class="wallet-name">Wais Wallet</p>
       </div>
     </div>

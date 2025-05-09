@@ -6,5 +6,6 @@ class ReminderForm(forms.ModelForm):
         model = Reminder
         fields = ['alert_time']
         widgets = {
-            'alert_time': forms.TimeInput(attrs={'type': 'time'})  # Correctly renders a time picker
+            'alert_time': forms.TimeInput(attrs={'type': 'time', 'class': 'time-picker'})
         }
+

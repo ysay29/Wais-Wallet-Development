@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'dashboard',
     'Transaction',
     'savings',
+    'dashboard.apps.DashboardConfig'
 ]
 
 MIDDLEWARE = [

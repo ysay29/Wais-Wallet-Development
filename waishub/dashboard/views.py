@@ -15,4 +15,4 @@ def logout_user(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required(login_url='login')
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'index.html') #Not logged in, redirect to login page

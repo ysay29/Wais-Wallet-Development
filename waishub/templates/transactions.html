@@ -5,256 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Transactions</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f6fc;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    /* Sidebar */
-    .sidebar {
-      height: 100vh;
-      width: 250px;
-      position: relative;
-      background: #a4c1df;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      border-right: 1px solid #ddd;
-      overflow-x: hidden;
-      transition: width 0.3s;
-    }
-
-    .sidebar.closed {
-      width: 80px;
-    }
-
-    .navbar {
-      display: flex;
-      align-items: center;
-      padding: 15px;
-      background-color: transparent;
-      margin-bottom: 20px;
-    }
-
-    .navbar-logo {
-      width: 40px;
-      height: 40px;
-      margin-right: 10px;
-    }
-
-    .welcome-texts {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.3;
-    }
-
-    .hello-text {
-      font-size: 12px;
-      color: #fff;
-      font-weight: normal;
-      margin-bottom: 2px;
-      text-align: left;
-    }
-
-    .wallet-name {
-      font-size: 20px;
-      font-weight: bold;
-      color: #0c4160;
-      text-transform: capitalize;
-      letter-spacing: 1px;
-    }
-
-    .nav-links a, .dropbtn {
-      display: block;
-      color: #333;
-      padding: 10px 0;
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-
-    .nav-links a:hover, .dropbtn:hover {
-      color: #0c4160;
-    }
-
-    .nav-links a[href="index.html"],
-    .nav-links a.active {
-      color: #0c4160;
-      font-weight: bold;
-    }
-
-    .dropdown {
-      position: relative;
-    }
-
-    .dropbtn {
-      background: none;
-      border: none;
-      width: 100%;
-      text-align: left;
-      cursor: pointer;
-      font-size: 95%;
-    }
-
-    .dropdown-img {
-      width: 15px;
-      height: 15px;
-    }
-
-    .dropdown-content {
-      display: none;
-      flex-direction: column;
-      margin-top: 5px;
-    }
-
-    .dropdown:hover .dropdown-content {
-      display: flex;
-    }
-
-    /* Account Section */
-    .account-section {
-      display: flex;
-      align-items: center;
-      margin-top: auto;
-      padding: 10px 15px;
-      background: #0c4160;
-      border-radius: 10px;
-      gap: 12px;
-    }
-
-    .account-icon {
-      width: 36px;
-      height: 36px;
-      background: #f0f4f8;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      color: #0c4160;
-    }
-
-    .account-info {
-      flex: 1;
-    }
-
-    .account-label {
-      font-size: 11px;
-      color: #fff;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .account-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: #fff;
-      margin-top: 2px;
-    }
-
-    /* Main content */
-    .main-content {
-      flex: 1;
-      padding: 30px;
-      overflow-y: auto;
-    }
-
-    .content-header {
-      font-size: 24px;
-      font-weight: bold;
-      color: #0c4160;
-      margin-bottom: 20px;
-    }
-
-    /* Month Tabs */
-    .month-tabs {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      border-bottom: 1px solid #ddd;
-      margin: 0 20px 20px 20px;
-      padding: 0 10px;
-    }
-
-    .month-tab {
-      padding: 10px 15px;
-      cursor: pointer;
-      color: #666;
-      font-weight: 500;
-    }
-
-    .month-tab:hover {
-      color: #0c4160;
-    }
-
-    .month-tab.active {
-      color: #0c4160;
-      border-bottom: 2px solid #0c4160;
-    }
-
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      color: #666;
-      font-size: 18px;
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 500px;
-    }
-
-    /* Transactions Table */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      background: #fff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    th, td {
-      padding: 12px;
-      text-align: center;
-      border-bottom: 1px solid #ddd;
-    }
-
-    th {
-      background-color: #0c4160;
-      color: white;
-    }
-
-    tr:hover {
-      background-color: #f9f9f9;
-    }
-
-    .income {
-      color: green;
-      font-weight: bold;
-    }
-
-    .expense {
-      color: red;
-      font-weight: bold;
-    }
-  </style>
+  <link rel="stylesheet" href="{% static 'css/transactions.css' %}">
 </head>
 <body>
   <!-- Sidebar -->
@@ -270,7 +21,7 @@
 
       <nav class="nav-links">
         <a href="{% url 'add_transaction' %}">Add Transaction</a>
-        <a href="{% url 'transactions_list' %}" class="active">Transactions</a>
+        <a href="{% url 'transactions' %}" class="active">Transactions</a>
 
         <div class="dropdown">
           <button class="dropbtn">
@@ -279,15 +30,15 @@
           </button>
           <div class="dropdown-content">
             <a href="#">Analytics</a>
-            <a href="#">Total Income</a>
-            <a href="#">Total Expenses</a>
-            <a href="#">Savings</a>
+            <a href="{% url 'totalincome' %}">Total Income</a>
+            <a href="{% url 'totalexpenses' %}">Total Expenses</a>
+            <a href="{% url 'savings' %}">Savings</a>
           </div>
         </div>
 
         <a href="#">Budgets</a>
-        <a href="#">Settings</a>
-        <a href="#">About Us</a>
+        <a href="{% url 'settings' %}">Settings</a>
+        <a href="{% url 'aboutus' %}">About Us</a>
       </nav>
     </div>
 

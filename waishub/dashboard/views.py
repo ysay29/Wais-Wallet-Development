@@ -57,6 +57,7 @@ def settings_view(request):
         if form.is_valid():
             reminder = form.save(commit=False)
             reminder.user = request.user
+            reminder.enabled = True
             reminder.save()
             print("Reminder saved with:")
             print("Alert time:", form.cleaned_data['alert_time'])

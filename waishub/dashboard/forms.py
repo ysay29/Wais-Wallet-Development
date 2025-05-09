@@ -6,6 +6,6 @@ class ReminderForm(forms.ModelForm):
         model = Reminder
         fields = ['alert_time', 'enabled']  # include 'enabled'
         widgets = {
-            'alert_time': forms.TimeInput(attrs={'type': 'time'}),
-            'enabled': forms.CheckboxInput(attrs={'class': 'checkbox'})  # match your HTML class
+            'alert_time': forms.TimeInput(attrs={'type': 'time'}), #Reminder Time
+            'enabled': forms.CheckboxInput(attrs={'class': 'checkbox'})  # Notif Enabled
         }

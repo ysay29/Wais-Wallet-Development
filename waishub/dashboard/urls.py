@@ -6,4 +6,5 @@ from . import views
 urlpatterns = [
     path('dashboard/', index, name='dashboard'),  # dashboard/index
     path('logout/', logout_user, name='logout'), #logout from dashboard
+    path('notifications/', views.notifications_view, name='notifications'), #notifications page
 ]

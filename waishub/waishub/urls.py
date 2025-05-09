@@ -30,10 +30,10 @@ urlpatterns = [
     #path('', home, name='home.html'),        #Let's create a page where users get redirected first
     path('', include('authentication.urls')),
     path('', include('dashboard.urls')), #Dashboard page
-    path('add/', include('Transaction.urls')), #Add Transaction page
-    path('transactions/', include('TransactionsList.urls')), #Transactions page
-    path('dashboard/totalincome/',  include('totalincome.urls')), #Total income page
-    path('totalexpenses/', include('totalexpenses.urls')), #Total expenses page
+    path('', include('Transaction.urls')), #Add Transaction page
+    #path('transactions/', include('TransactionsList.urls')), #Transactions page
+    #path('dashboard/totalincome/',  include('totalincome.urls')), #Total income page
+    #path('totalexpenses/', include('totalexpenses.urls')), #Total expenses page
     path('savings/', include('savings.urls')), #Total savings page
     path('', include('core.urls')),
 ]

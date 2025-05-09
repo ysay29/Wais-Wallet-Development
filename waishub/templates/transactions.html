@@ -11,7 +11,7 @@
       padding: 0;
       box-sizing: border-box;
     }
-   
+
     body {
       font-family: 'Segoe UI', sans-serif;
       background: #f4f6fc;
@@ -219,32 +219,41 @@
       min-height: 500px;
     }
 
-    /* Pop-up Confirmation */
-    .popup {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
+    /* Transactions Table */
+    table {
       width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      align-items: center;
-      justify-content: center;
-    }
-
-    .popup-content {
+      border-collapse: collapse;
+      margin-top: 20px;
       background: #fff;
-      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px;
       text-align: center;
+      border-bottom: 1px solid #ddd;
     }
 
-    .popup-buttons button {
-      padding: 10px 20px;
-      margin: 5px;
-      cursor: pointer;
+    th {
+      background-color: #0c4160;
+      color: white;
     }
 
+    tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    .income {
+      color: green;
+      font-weight: bold;
+    }
+
+    .expense {
+      color: red;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -260,8 +269,8 @@
       </div>
 
       <nav class="nav-links">
-        <a href="index.html">Dashboard</a>
-        <a href="transactions.html" class="active">Transactions</a>
+        <a href="{% url 'add_transaction' %}">Add Transaction</a>
+        <a href="{% url 'transactions_list' %}" class="active">Transactions</a>
 
         <div class="dropdown">
           <button class="dropbtn">
@@ -269,32 +278,25 @@
             <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
           </button>
           <div class="dropdown-content">
-            <a href="analytics.html">Analytics</a>
-            <a href="totalincome.html">Total Income</a>
-            <a href="totalexpenses.html">Total Expenses</a>
-            <a href="savings.html">Savings</a>
+            <a href="#">Analytics</a>
+            <a href="#">Total Income</a>
+            <a href="#">Total Expenses</a>
+            <a href="#">Savings</a>
           </div>
         </div>
 
-<<<<<<< HEAD
         <a href="#">Budgets</a>
-        <a href="">Settings</a>
+        <a href="#">Settings</a>
         <a href="#">About Us</a>
-=======
-        <a href="budgets.html">Budgets</a>
-        <a href="settings.html">Settings</a>
-        <a href="aboutus.html">About Us</a>
->>>>>>> acedf89b657b2601f1c8e8de8b086aecec755977
       </nav>
     </div>
 
     <div class="account-section">
-      <a href="login.html" style="display: flex; align-items: center; gap: 12px;">
-        <div class="account-icon">👤</div>
-        <div class="account-info">
-          <div class="account-label">Account</div>
-          <div class="account-name">Ysa Frigillana</div>
-        </div>
+      <a href="{% url 'logout' %}">
+      <div class="account-icon" id="logout-button">👤</div> 
+      <div class="account-info">
+        <div class="account-label">LOGOUT</div>
+        <div class="account-name">{{ user.get_full_name|default:user.username }}</div> <!-- change -->
       </a>
     </div>
   </aside>
@@ -304,72 +306,43 @@
     <div class="content-header">Transactions</div>
 
     <div class="month-tabs">
-      <div class="month-tab active">January</div>
-      <div class="month-tab">February</div>
-      <div class="month-tab">March</div>
-      <div class="month-tab">April</div>
-      <div class="month-tab">May</div>
-      <div class="month-tab">June</div>
-      <div class="month-tab">July</div>
-      <div class="month-tab">August</div>
-      <div class="month-tab">September</div>
-      <div class="month-tab">October</div>
-      <div class="month-tab">November</div>
-      <div class="month-tab">December</div>
+      <div class="month-tab active">All</div>
     </div>
 
+    {% if transactions %}
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Category</th>
+          <th>Amount (₱)</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for transaction in transactions %}
+        <tr>
+          <td class="{{ transaction.type }}">{{ transaction.type|title }}</td>
+          <td>{{ transaction.category }}</td>
+          <td>₱{{ transaction.amount }}</td>
+          <td>{{ transaction.date }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
     <div class="empty-state">
-      No transactions for January.
+      No transactions available.
     </div>
-  </div>
-
-  <!-- Pop-up Confirmation -->
-  <div class="popup" id="confirm-popup">
-    <div class="popup-content">
-      <p>Are you sure you want to save this transaction?</p>
-      <div class="popup-buttons">
-        <button id="confirm-yes">Yes</button>
-        <button id="confirm-cancel">Cancel</button>
-      </div>
-    </div>
+    {% endif %}
   </div>
 
   <script>
-    // Tab switching functionality
     const tabs = document.querySelectorAll('.month-tab');
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
         tabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
-        
-        const emptyState = document.querySelector('.empty-state');
-        emptyState.textContent = `No transactions for ${tab.textContent}`;
-      });
-    });
-
-    // Pop-up confirmation
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('transaction-form');
-      const confirmPopup = document.getElementById('confirm-popup');
-      const yesBtn = document.getElementById('confirm-yes');
-      const cancelBtn = document.getElementById('confirm-cancel');
-      let allowSubmit = false;
-
-      form.addEventListener('submit', function(e) {
-        if (!allowSubmit) {
-          e.preventDefault();
-          confirmPopup.style.display = 'flex';
-        }
-      });
-
-      yesBtn.addEventListener('click', () => {
-        allowSubmit = true;
-        confirmPopup.style.display = 'none';
-        form.submit();
-      });
-
-      cancelBtn.addEventListener('click', () => {
-        confirmPopup.style.display = 'none';
       });
     });
   </script>

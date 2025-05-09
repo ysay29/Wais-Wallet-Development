@@ -21,8 +21,7 @@ def add_transaction(request):
 def transactions_list(request):
     transactions = Transaction.objects.all().order_by('-date')
     
-<<<<<<< HEAD
-    return render(request, 'Transaction/transactions.html', {'transactions': transactions})
+    return render(request, 'transactions.html', {'transactions': transactions})
 
 def total_income(request):
     incomes = Transaction.objects.filter(transaction_type='income')
@@ -45,6 +44,3 @@ def total_expenses(request):
         'expenses': expenses,
         'total': total,
     })
-=======
-    return render(request, 'transactions.html', {'transactions': transactions})
->>>>>>> 614be3a2bbb5344e6c3a651ecc460d5c6f477fd0

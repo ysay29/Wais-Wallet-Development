@@ -44,10 +44,11 @@
 
     <div class="account-section">
       <a href="{% url 'logout' %}">
-      <div class="account-icon" id="logout-button">👤</div> 
-      <div class="account-info">
-        <div class="account-label">LOGOUT</div>
-        <div class="account-name">{{ user.get_full_name|default:user.username }}</div> <!-- change -->
+        <div class="account-icon" id="logout-button">👤</div>
+        <div class="account-info">
+          <div class="account-label">LOGOUT</div>
+          <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
+        </div>
       </a>
     </div>
   </aside>
@@ -56,8 +57,15 @@
   <div class="main-content">
     <div class="content-header">Transactions</div>
 
+    <!-- Month Tabs -->
     <div class="month-tabs">
-      <div class="month-tab active">All</div>
+      {% for month in months %}
+        <a href="?month={{ month }}">
+          <div class="month-tab {% if selected_month == month %}active{% endif %}">
+            {{ month }}
+          </div>
+        </a>
+      {% endfor %}
     </div>
 
     {% if transactions %}
@@ -83,17 +91,23 @@
     </table>
     {% else %}
     <div class="empty-state">
-      No transactions available.
-    </div>
+    No transactions{% if selected_month %} for {{ selected_month }}{% endif %}.
+  </div>
     {% endif %}
   </div>
 
   <script>
     const tabs = document.querySelectorAll('.month-tab');
+    const emptyState = document.querySelector('.empty-state');
+
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
         tabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
+
+        if (emptyState) {
+          emptyState.textContent = `No transactions for ${tab.textContent}.`;
+        }
       });
     });
   </script>

@@ -11,9 +11,9 @@ def send_transaction_reminders():
     print("Window:", time_lower, "to", time_upper)
 
     reminders = Reminder.objects.filter(
-    alert_time__gte=time_lower,
-    alert_time__lte=time_upper,
-    enabled=True  # ✅ Only send to users who enabled it
+        alert_time__gte=time_lower,
+        alert_time__lte=time_upper,
+        enabled=True  # ✅ Only send to users who enabled it
     )
 
     today = now_local.date() 

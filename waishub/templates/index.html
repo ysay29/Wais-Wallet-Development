@@ -151,25 +151,27 @@
 
   </div>
 
-  <!-- Recent Transactions -->
+ <!-- Recent Transactions -->
 <section class="history recent-transactions">
   <h2>Recent Transactions</h2>
-  <ul class="transaction-list">
-    {% if recent_transactions %}
+  {% if recent_transactions %}
+    <ul class="transaction-list">
       {% for transaction in recent_transactions %}
         <li>
           <div>
             <strong>{{ transaction.category }}</strong>
-            <small class="{% if transaction.type == 'expense' %}expense{% else %}income{% endif %}">
-              {% if transaction.type == 'expense' %}-{% else %}+{% endif %} ₱{{ transaction.amount }}
-            </small>
+            {% if transaction.type|lower == "income" %}
+              <small class="income">+ ₱{{ transaction.amount }}</small>
+            {% else %}
+              <small class="expense">- ₱{{ transaction.amount }}</small>
+            {% endif %}
           </div>
         </li>
       {% endfor %}
-    {% else %}
-      <li>No recent transactions.</li>
-    {% endif %}
-  </ul>
+    </ul>
+  {% else %}
+    <p>No recent transactions</p>
+  {% endif %}
 </section>
 
 <!-- Plus Button -->

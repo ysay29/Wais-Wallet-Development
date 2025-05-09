@@ -3,6 +3,7 @@ from django.urls import reverse
 from .models import Transaction
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
+from .models import Transaction
 
 @login_required
 def add_transaction(request):
@@ -13,7 +14,7 @@ def add_transaction(request):
         dt = request.POST.get('date')
 
         if t and cat and amt and dt:
-            Transaction.objects.create(type=t, category=cat, amount=amt, date=dt)
+            Transaction.objects.create(user=request.user, type=t, category=cat, amount=amt, date=dt)
             return redirect(f"{reverse('add_transaction')}?saved=1")
         
 
@@ -21,7 +22,7 @@ def add_transaction(request):
 
 @login_required
 def transactions_list(request):
-    transactions = Transaction.objects.all().order_by('-date')
+    transactions = Transaction.objects.filter(user=request.user).order_by('-date')
     
     return render(request, 'transactions.html', {'transactions': transactions})
 

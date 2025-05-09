@@ -1,3 +1,4 @@
+{% load humanize %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -5,172 +6,394 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Wais Wallet - Savings</title>
-  <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
+  <link rel="icon" href="{% static 'favicon.png' %}" sizes="any">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="{% static 'css/savings.css' %}">
+  <style>
+    /* navbar */
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
+    
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6fc;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    /* Sidebar */
+    .sidebar {
+      height: 100vh;
+      width: 250px;
+      position: relative;
+      background: #a4c1df;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 1px solid #ddd;
+      overflow-x: hidden;
+      transition: width 0.3s;
+    }
+
+    .sidebar.closed{
+      width: 80px;
+    }
+    
+
+.navbar {
+  display: flex;
+  align-items: center; 
+  padding: 15px;
+  background-color: transparent;
+  margin-bottom: 20px;
+}
+
+.navbar-logo {
+  width: 40px; 
+  height: 40px;
+  margin-right: 10px; 
+}
+
+.welcome-texts {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.hello-text {
+  font-size: 12px; 
+  color: #fff;
+  font-weight: normal;
+  margin-bottom: 2px; 
+  text-align: left; 
+}
+
+.wallet-name {
+  font-size: 20px; 
+  font-weight: bold;
+  color: #0c4160;
+  text-transform: capitalize;
+  letter-spacing: 1px; 
+}
+
+    .nav-links a, .dropbtn {
+      display: block;
+      color: #333;
+      padding: 10px 0;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover, .dropbtn:hover {
+      color: #0c4160;
+    }
+
+    .nav-links a[href="index.html"],
+    .nav-links a.active {
+      color:#0c4160;
+      font-weight: bold;
+    }
+    .dropdown { position: relative; }
+    .dropbtn {
+      background: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      font-size: 95%;
+    }
+
+    .dropdown-img {
+  width: 15px;
+  height: 15px;
+}
+
+    .dropdown-content {
+      display: none;
+      flex-direction: column;
+      margin-top: 5px;
+    }
+    .dropdown:hover .dropdown-content { display: flex; }
+   
+
+.account-section {
+  display: flex;
+  align-items: center;
+  margin-top: auto;
+  padding: 10px 15px;
+  background: #0c4160;
+  border-radius: 10px;
+  gap: 12px;
+}
+
+.account-icon {
+  width: 36px;
+  height: 36px;
+  background: #f0f4f8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #0c4160;
+}
+
+
+.account-icon i {
+  font-size: 24px;
+  color: #fff;
+}
+
+.account-info {
+  flex: 1;
+}
+
+.account-label {
+  font-size: 11px;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.account-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 2px;
+}
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+      max-height: 100vh;
+    }
+    .header {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #223b58;
+    }
+    .content-box {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      padding: 12px 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #f0f4f8;
+      color: #223b58;
+      font-weight: 600;
+    }
+    td {
+      color: #33475b;
+    }
+    .summary {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #0c4160;
+    }
+    .form-inline {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .form-inline input, .form-inline select {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    .form-inline button {
+      background: #0c4160;
+      color: white;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .form-inline button:hover {
+      background: #0056b3;
+    }
+    .filter-box {
+      margin-bottom: 10px;
+    }
+    .month-header {
+      text-align: center;
+      font-size: 1.4rem;
+      margin: 20px 0 10px;
+      color: #223b58;
+    }
+    .progress-container {
+      display: flex;
+      height: 20px;
+      width: 100%;
+      background-color: #f0f0f0;
+      border-radius: 10px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background-color: #0071b5;
+      text-align: center;
+      line-height: 20px;
+      color: white;
+    }
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+      font-size: 0.8rem;
+      color: #666;
+    }
+    .items-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+    .item {
+      text-align: center;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
+
 <body>
 <!-- Sidebar -->
 <aside class="sidebar">
   <div>
     <div class="navbar">
-      <img src="{% static 'assets/logo.png' %}" alt="Logo" class="navbar-logo">
+      <img src="assets/logo.png" alt="Logo" class="navbar-logo">
       <div class="welcome-texts">
         <p class="hello-text">Hello, User! Welcome to</p>
         <p class="wallet-name">Wais Wallet</p>
       </div>
     </div>
-   
+    
     <nav class="nav-links">
+<<<<<<< HEAD
       <a href="{% url 'dashboard' %}">Dashboard</a>      
       <a href="{% url 'transactions_list' %}">Transactions</a>
    
+=======
+      <a href="index.html">Dashboard</a>      
+      <a href="transactions.html">Transactions</a>
+    
+>>>>>>> 7150a377c5a2c81295da3c3e6fe1da672318c0f6
       <div class="dropdown">
         <button class="dropbtn">
           Evaluation
-          <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
+          <img src="assets/dropdown.png" alt="Dropdown Icon" class="dropdown-img">
         </button>
         <div class="dropdown-content">
-          <a href="{% url 'savings' %}">Analytics</a>
-          <a href="{% url 'totalincome' %}">Total Income</a>
-          <a href="{% url 'totalexpenses' %}">Total Expenses</a>
-          <a href="{% url 'savings' %}" class="active">Savings</a>
+          <a href="analytics.html">Analytics</a>
+          <a href="totalincome.html">Total Income</a>
+          <a href="totalexpenses.html">Total Expenses</a>
+          <a href="savings.html" class="active">Savings</a>
         </div>
       </div>
-   
+    
       <a href="budgets.html">Budgets</a>
       <a href="settings.html">Settings</a>
       <a href="aboutus.html">About Us</a>
     </nav>
   </div>
- 
+  
   <div class="account-section">
-    <a href="{% url 'logout' %}">
-    <div class="account-icon" id="logout-button">👤</div> 
-    <div class="account-info">
-      <div class="account-label">LOGOUT</div>
-      <div class="account-name">{{ user.get_full_name|default:user.username }}</div> <!-- change -->
-    </a>
+    <a href="login.html">
+      <div class="account-icon">👤</div>
+      <div class="account-info">
+        <div class="account-label">Account</div>
+        <div class="account-name">Ysa Frigillana</div>
+      </a>
+      </div>
   </div>
 </aside>
 
+<div class="main-content">
+  <div id="savingsPage" class="content-box">
+    <div class="header"><strong>Savings</strong></div>
+    <form method="post" class="form-inline">
+      {% csrf_token %}
+      <input type="date" name="date" required>
+      <input type="number" name="amount" placeholder="Amount" required>
+      <button type="submit">Add Savings</button>
+    </form>
 
-  <div class="main-content">
-    <div id="savingsPage" class="content-box">
-      <div class="header"><strong>Savings</strong></div>
-      
-      <div class="form-inline">
-        <input type="date" id="savingsDate">
-        <input type="number" id="savingsAmount" placeholder="Amount">
-        <button onclick="addSavings()">Add Savings</button>
-      </div>
-     
-      <table id="savingsTable">
-        <thead>
-          <tr><th>DATE</th><th>AMOUNT</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>1/1/24</td><td>₽50,000 ...</td></tr>
-          <tr><td>1/15/24</td><td>₽50,000 ...</td></tr>
-          <tr><td>05/27/24</td><td>₽10,000 ...</td></tr>
-          <tr><td>2/1/24</td><td>₽50,000 ...</td></tr>
-          <tr><td>3/1/24</td><td>₽50,000 ...</td></tr>
-          <tr><td>2/15/24</td><td>₽50,000 ...</td></tr>
-          <tr><td>06/27/24</td><td>₽10,000 ...</td></tr>
-          <tr><td>4/1/24</td><td>₽50,000 ...</td></tr>
-          <tr><td>2/15/24</td><td>₽50,000 ...</td></tr>
-        </tbody>
-      </table>
-     
-      <div class="summary" id="totalSavings">Total Savings this month: ₽320,000</div>
-     
-      <div class="month-header">November 2024</div>
-      <button onclick="addSavings()" style="margin-bottom: 20px;">Add Savings</button>
-     
-      <div class="progress-container">
-        <div class="progress-bar" style="width: 80%;">80%</div>
-      </div>
-      <div class="progress-labels">
-        <span>40</span>
-        <span>30</span>
-        <span>20</span>
-        <span>10</span>
-        <span>0</span>
-      </div>
-     
-      <div class="items-container">
-        <div class="item">Item 1</div>
-        <div class="item">Item 2</div>
-        <div class="item">Item 3</div>
-        <div class="item">Item 4</div>
-        <div class="item">Item 5</div>
-      </div>
-     
-      <canvas id="savingsChart" height="300"></canvas>
+    <table id="savingsTable">
+      <thead>
+        <tr><th>DATE</th><th>AMOUNT</th></tr>
+      </thead>
+      <tbody>
+        {% for saving in savings %}
+          <tr>
+            <td>{{ saving.date|date:"m/d/Y" }}</td>
+            <td>₽{{ saving.amount|floatformat:0|intcomma }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="2">No savings recorded.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="summary" id="totalSavings">Total Savings this month: ₽{{ total_savings|floatformat:0|intcomma }}</div>
+
+    <div class="month-header"><strong>{{ current_month|date:"F Y" }}</strong></div>
+
+    <div class="progress-container">
+      <div class="progress-bar" style="width: {{ progress_percent }}%;">{{ progress_percent|floatformat:0 }}%</div>
     </div>
-  </div>
+    <div class="progress-labels">
+      <span>40</span><span>30</span><span>20</span><span>10</span><span>0</span>
+    </div>
 
+    <div class="items-container">
+      <div class="item">Item 1</div>
+      <div class="item">Item 2</div>
+      <div class="item">Item 3</div>
+      <div class="item">Item 4</div>
+      <div class="item">Item 5</div>
+    </div>
+
+    <canvas id="savingsChart" height="300"></canvas>
+  </div>
+</div>
 
 <script>
-let savingsData = [
-  { date: '1/1/24', amount: 50000 },
-  { date: '1/15/24', amount: 50000 },
-  { date: '05/27/24', amount: 10000 },
-  { date: '2/1/24', amount: 50000 },
-  { date: '3/1/24', amount: 50000 },
-  { date: '2/15/24', amount: 50000 },
-  { date: '06/27/24', amount: 10000 },
-  { date: '4/1/24', amount: 50000 },
-  { date: '2/15/24', amount: 50000 }
-];
+  const chartData = {
+    labels: {{ chart_labels|safe }},
+    data: {{ chart_data|safe }}
+  };
 
-
-let savingsChart;
-
-
-function addSavings() {
-  const date = document.getElementById('savingsDate').value;
-  const amount = parseFloat(document.getElementById('savingsAmount').value);
- 
-  if (date && !isNaN(amount)) {
-    savingsData.push({ date, amount });
-    localStorage.setItem('savingsData', JSON.stringify(savingsData));
-    renderTable();
-    updateTotals();
-  }
-}
-
-
-function renderTable() {
-  const table = document.getElementById('savingsTable').querySelector('tbody');
-  table.innerHTML = '';
-  savingsData.forEach(item => {
-    const row = table.insertRow();
-    row.innerHTML = `<td>${item.date}</td><td>₽${item.amount.toLocaleString()} ...</td>`;
-  });
-}
-
-
-function updateTotals() {
-  const totalSavings = savingsData.reduce((sum, item) => sum + item.amount, 0);
-  document.getElementById('totalSavings').innerText = `Total Savings this month: ₽${totalSavings.toLocaleString()}`;
-  updateChart();
-}
-
-
-function updateChart() {
-  if (savingsChart) savingsChart.destroy();
-
-
-  savingsChart = new Chart(document.getElementById('savingsChart').getContext('2d'), {
+  const savingsChart = new Chart(document.getElementById('savingsChart').getContext('2d'), {
     type: 'bar',
     data: {
-      labels: savingsData.map(s => s.date),
+      labels: chartData.labels,
       datasets: [{
         label: 'Savings',
-        data: savingsData.map(s => s.amount),
-        backgroundColor: '#4CAF50',
-        borderColor: '#388E3C',
+        data: chartData.data,
+        backgroundColor: '#0c4160',
+        borderColor: '#0071b5',
         borderWidth: 1
       }]
     },
@@ -182,15 +405,6 @@ function updateChart() {
       }
     }
   });
-}
-
-
-// Initialize on load
-document.addEventListener('DOMContentLoaded', function() {
-  renderTable();
-  updateTotals();
-  updateChart();
-});
 </script>
 </body>
 </html>

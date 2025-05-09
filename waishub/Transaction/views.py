@@ -18,17 +18,15 @@ def add_transaction(request):
 
     return render(request, 'add.html')
 
+@login_required
 def transactions_list(request):
     transactions = Transaction.objects.all().order_by('-date')
     
-<<<<<<< HEAD
     return render(request, 'transactions.html', {'transactions': transactions})
-=======
-    return render(request, 'Transaction/transactions.html', {'transactions': transactions})
->>>>>>> 9101392ef537027771b7e7f01e0420742b59d641
 
+@login_required
 def total_income(request):
-    incomes = Transaction.objects.filter(type='income')
+    incomes = Transaction.objects.filter(transaction_type='income')
     total_income = incomes.aggregate(Sum('amount'))['amount__sum'] or 0
     
     category_totals_qs = incomes.values('category').annotate(total=Sum('amount'))
@@ -39,6 +37,7 @@ def total_income(request):
         'total_income': total_income,
         'category_totals': category_totals,})
 
+@login_required
 def total_expenses(request):
     expenses = Transaction.objects.filter(type='expense').order_by('-date')
     total = expenses.aggregate(total_amount=Sum('amount'))['total_amount'] or 0
@@ -48,7 +47,3 @@ def total_expenses(request):
         'expenses': expenses,
         'total': total,
     })
-<<<<<<< HEAD
-=======
-    return render(request, 'transactions.html', {'transactions': transactions})
->>>>>>> 9101392ef537027771b7e7f01e0420742b59d641

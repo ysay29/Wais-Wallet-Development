@@ -21,10 +21,14 @@ def add_transaction(request):
 def transactions_list(request):
     transactions = Transaction.objects.all().order_by('-date')
     
+<<<<<<< HEAD
     return render(request, 'transactions.html', {'transactions': transactions})
+=======
+    return render(request, 'Transaction/transactions.html', {'transactions': transactions})
+>>>>>>> 9101392ef537027771b7e7f01e0420742b59d641
 
 def total_income(request):
-    incomes = Transaction.objects.filter(transaction_type='income')
+    incomes = Transaction.objects.filter(type='income')
     total_income = incomes.aggregate(Sum('amount'))['amount__sum'] or 0
     
     category_totals_qs = incomes.values('category').annotate(total=Sum('amount'))
@@ -44,3 +48,7 @@ def total_expenses(request):
         'expenses': expenses,
         'total': total,
     })
+<<<<<<< HEAD
+=======
+    return render(request, 'transactions.html', {'transactions': transactions})
+>>>>>>> 9101392ef537027771b7e7f01e0420742b59d641

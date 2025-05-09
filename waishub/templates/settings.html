@@ -46,16 +46,18 @@
         </div>
         
         <div class="section-divider"></div>
-        
-        <h2>Add a transaction Reminder</h2>
-        <div class="input-group">
-            <label>Alert time</label>
-            <input type="time">
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="{{ form.alert_time.id_for_label }}">Alert time</label>
+                {{ form.alert_time }}
+            </div>
+            <div class="buttons">
+                <button class="save-btn" type="submit">Save</button>
+            </div>
+        </form>
+
+
         </div>
-        
-        <div class="buttons">
-            <button class="save-btn">Save</button>
-        </div>
-    </div>
 </body>
 </html>

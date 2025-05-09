@@ -75,7 +75,7 @@
   <div class="topbar">
     <div class="search-notif">
       <input type="text" placeholder="Search...">
-      <a href="notifications.html">
+      <a href="{% url 'notifications' %}">
       <img src="{% static 'assets/bell.png' %}" alt="Notifications" class="notif-icon">
       </a>
     </div>
@@ -152,15 +152,25 @@
   </div>
 
   <!-- Recent Transactions -->
-  <section class="history recent-transactions">
-    <h2>Recent Transactions</h2>
-    <ul class="transaction-list">
-      <li><div><strong>Groceries</strong> <small class="expense">- ₱450</small></div></li>
-      <li><div><strong>Work</strong> <small class="income">+ ₱1500</small></div></li>
-      <li><div><strong>Dining Out</strong> <small class="expense">- ₱300</small></div></li>
-    </ul>
-  </section>  
-</main>
+<section class="history recent-transactions">
+  <h2>Recent Transactions</h2>
+  <ul class="transaction-list">
+    {% if recent_transactions %}
+      {% for transaction in recent_transactions %}
+        <li>
+          <div>
+            <strong>{{ transaction.category }}</strong>
+            <small class="{% if transaction.type == 'expense' %}expense{% else %}income{% endif %}">
+              {% if transaction.type == 'expense' %}-{% else %}+{% endif %} ₱{{ transaction.amount }}
+            </small>
+          </div>
+        </li>
+      {% endfor %}
+    {% else %}
+      <li>No recent transactions.</li>
+    {% endif %}
+  </ul>
+</section>
 
 <!-- Plus Button -->
 <div class="plus-button">

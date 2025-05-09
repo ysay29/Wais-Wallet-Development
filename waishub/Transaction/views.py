@@ -15,6 +15,7 @@ def add_transaction(request):
         if t and cat and amt and dt:
             Transaction.objects.create(type=t, category=cat, amount=amt, date=dt)
             return redirect(f"{reverse('add_transaction')}?saved=1")
+        
 
     return render(request, 'add.html')
 

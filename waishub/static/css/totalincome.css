@@ -235,3 +235,10 @@ margin-top: 2px;
   .filter-box {
     margin-bottom: 10px;
   }
+
+#incomeChart {
+  height: 300px !important; 
+  max-width: 100%;
+  margin-top: 30px;
+}
+

@@ -6,6 +6,8 @@ from .models import Notification, Reminder
 from .forms import ReminderForm
 from django.utils import timezone
 from Transaction.models import Transaction
+from django.db.models import Sum
+
 
 #@login_required
 def index(request):
@@ -21,10 +23,19 @@ def logout_user(request):
 def index(request):
     user = request.user
     recent_transactions = Transaction.objects.filter(user=user).order_by('-date')[:5]
+    incomes = Transaction.objects.filter(user=user, type='Income')
+    expenses = Transaction.objects.filter(user=user, type='Expense')
 
+    total_income = incomes.aggregate(Sum('amount'))['amount__sum'] or 0
+    total_expenses = expenses.aggregate(Sum('amount'))['amount__sum'] or 0
+    savings = total_income - total_expenses
     context = {
+        'income': total_income,
+        'expenses': total_expenses,
+        'savings': savings,
         'recent_transactions': recent_transactions
     }
+
     return render(request, 'index.html', context)
 
 @login_required

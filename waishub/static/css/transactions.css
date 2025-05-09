@@ -237,12 +237,12 @@ tr:hover {
   background-color: #f9f9f9;
 }
 
-.Income {
+td.income {
   color: green;
   font-weight: bold;
 }
 
-.Expense {
+td.expense {
   color: red;
   font-weight: bold;
 }

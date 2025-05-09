@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 
 class Transaction(models.Model):
     TRANSACTION_TYPES = [
-        ('Income', 'Income'),
-        ('Expense', 'Expense'),
+        ('income', 'Income'),
+        ('expense', 'Expense'),
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     type = models.CharField(max_length=10, choices=TRANSACTION_TYPES)

@@ -8,274 +8,7 @@
   <title>Wais Wallet - Savings</title>
   <link rel="icon" href="{% static 'favicon.png' %}" sizes="any">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    /* navbar */
-    * { 
-      margin: 0; 
-      padding: 0; 
-      box-sizing: border-box; 
-    }
-    
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f6fc;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-    /* Sidebar */
-    .sidebar {
-      height: 100vh;
-      width: 250px;
-      position: relative;
-      background: #a4c1df;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      border-right: 1px solid #ddd;
-      overflow-x: hidden;
-      transition: width 0.3s;
-    }
-
-    .sidebar.closed{
-      width: 80px;
-    }
-    
-
-.navbar {
-  display: flex;
-  align-items: center; 
-  padding: 15px;
-  background-color: transparent;
-  margin-bottom: 20px;
-}
-
-.navbar-logo {
-  width: 40px; 
-  height: 40px;
-  margin-right: 10px; 
-}
-
-.welcome-texts {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.3;
-}
-
-.hello-text {
-  font-size: 12px; 
-  color: #fff;
-  font-weight: normal;
-  margin-bottom: 2px; 
-  text-align: left; 
-}
-
-.wallet-name {
-  font-size: 20px; 
-  font-weight: bold;
-  color: #0c4160;
-  text-transform: capitalize;
-  letter-spacing: 1px; 
-}
-
-    .nav-links a, .dropbtn {
-      display: block;
-      color: #333;
-      padding: 10px 0;
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-
-    .nav-links a:hover, .dropbtn:hover {
-      color: #0c4160;
-    }
-
-    .nav-links a[href="index.html"],
-    .nav-links a.active {
-      color:#0c4160;
-      font-weight: bold;
-    }
-    .dropdown { position: relative; }
-    .dropbtn {
-      background: none;
-      border: none;
-      width: 100%;
-      text-align: left;
-      cursor: pointer;
-      font-size: 95%;
-    }
-
-    .dropdown-img {
-  width: 15px;
-  height: 15px;
-}
-
-    .dropdown-content {
-      display: none;
-      flex-direction: column;
-      margin-top: 5px;
-    }
-    .dropdown:hover .dropdown-content { display: flex; }
-   
-
-.account-section {
-  display: flex;
-  align-items: center;
-  margin-top: auto;
-  padding: 10px 15px;
-  background: #0c4160;
-  border-radius: 10px;
-  gap: 12px;
-}
-
-.account-icon {
-  width: 36px;
-  height: 36px;
-  background: #f0f4f8;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  color: #0c4160;
-}
-
-
-.account-icon i {
-  font-size: 24px;
-  color: #fff;
-}
-
-.account-info {
-  flex: 1;
-}
-
-.account-label {
-  font-size: 11px;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.account-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  margin-top: 2px;
-}
-    .main-content {
-      flex: 1;
-      padding: 30px;
-      overflow-y: auto;
-      max-height: 100vh;
-    }
-    .header {
-      font-size: 1.8rem;
-      margin-bottom: 20px;
-      color: #223b58;
-    }
-    .content-box {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-    th, td {
-      padding: 12px 10px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-    th {
-      background-color: #f0f4f8;
-      color: #223b58;
-      font-weight: 600;
-    }
-    td {
-      color: #33475b;
-    }
-    .summary {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #0c4160;
-    }
-    .form-inline {
-      margin-bottom: 20px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .form-inline input, .form-inline select {
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-    .form-inline button {
-      background: #0c4160;
-      color: white;
-      padding: 8px 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    .form-inline button:hover {
-      background: #0056b3;
-    }
-    .filter-box {
-      margin-bottom: 10px;
-    }
-    .month-header {
-      text-align: center;
-      font-size: 1.4rem;
-      margin: 20px 0 10px;
-      color: #223b58;
-    }
-    .progress-container {
-      display: flex;
-      height: 20px;
-      width: 100%;
-      background-color: #f0f0f0;
-      border-radius: 10px;
-      margin: 20px 0;
-      overflow: hidden;
-    }
-    .progress-bar {
-      height: 100%;
-      background-color: #0071b5;
-      text-align: center;
-      line-height: 20px;
-      color: white;
-    }
-    .progress-labels {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 5px;
-      font-size: 0.8rem;
-      color: #666;
-    }
-    .items-container {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 30px;
-    }
-    .item {
-      text-align: center;
-      font-size: 0.9rem;
-    }
-  </style>
+  <link rel="stylesheet" href="{% static 'css/savings.css' %}">
 </head>
 
 <body>
@@ -283,7 +16,7 @@
 <aside class="sidebar">
   <div>
     <div class="navbar">
-      <img src="assets/logo.png" alt="Logo" class="navbar-logo">
+      <img src="{% static 'assets/logo.png' %}" alt="Logo" class="navbar-logo">
       <div class="welcome-texts">
         <p class="hello-text">Hello, {{ user.get_full_name|default:user.username }}! <br> Welcome to</p>
         <p class="wallet-name">Wais Wallet</p>
@@ -297,11 +30,11 @@
       <div class="dropdown">
         <button class="dropbtn">
           Evaluation
-          <img src="assets/dropdown.png" alt="Dropdown Icon" class="dropdown-img">
+          <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
         </button>
         <div class="dropdown-content">
           <a href="analytics.html">Analytics</a>
-          <a href="totalincome.html">Total Income</a>
+          <a href="{% url 'totalincome' %}">Total Income</a>
           <a href="totalexpenses.html">Total Expenses</a>
           <a href="savings.html" class="active">Savings</a>
         </div>
@@ -314,14 +47,13 @@
   </div>
   
   <div class="account-section">
-    <a href="login.html">
-      <div class="account-icon">👤</div>
+      <a href="{% url 'logout' %}">
+      <div class="account-icon" id="logout-button">👤</div> 
       <div class="account-info">
-        <div class="account-label">Account</div>
-        <div class="account-name">Ysa Frigillana</div>
+        <div class="account-label">LOGOUT</div>
+        <div class="account-name">{{ user.get_full_name|default:user.username }}</div> <!-- change -->
       </a>
-      </div>
-  </div>
+    </div>
 </aside>
 
 <div class="main-content">

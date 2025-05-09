@@ -271,7 +271,7 @@
     <div class="navbar">
       <img src="assets/logo.png" alt="Logo" class="navbar-logo">
       <div class="welcome-texts">
-        <p class="hello-text">Hello, User! Welcome to</p>
+        <p class="hello-text">Hello, {{ user.get_full_name|default:user.username }}! <br> Welcome to</p>
         <p class="wallet-name">Wais Wallet</p>
       </div>
     </div>
@@ -310,8 +310,8 @@
     <a href="login.html">
     <div class="account-icon">👤</div> <!-- You can replace with an icon/image -->
     <div class="account-info">
-      <div class="account-label">Account</div>
-      <div class="account-name">Ysa Frigillana</div>
+      <div class="account-label">LOGOUT</div>
+      <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
     </a>
     </div>
   </div>

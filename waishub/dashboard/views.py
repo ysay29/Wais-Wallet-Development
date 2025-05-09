@@ -34,4 +34,4 @@ def notifications_view(request):
         'older_notifications': older_notifications,
         'unread_count': unread_count,
     }
-    return render(request, 'notifications.html', context)
+    return render(request, 'notifications.html', context) # Your notifications template

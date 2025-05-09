@@ -7,66 +7,71 @@
     <title>Wais Wallet - Notifications</title>
     <link rel="icon" type="image/png" href="{% static 'assets/logo.png' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/notifications.css' %}"
+    <link rel="stylesheet" href="{% static 'css/notifications.css' %}">
 </head>
 <body>
-    
-    <!-- Notifications Content -->
+
     <div class="content">
         <div class="container">
             <span>
-                <h1>Notifications <span id="notif-count" class="badge">2</span></h1>
+                <h1>Notifications <span id="notif-count" class="badge">{{ unread_count }}</span></h1>
             </span>
-        
+
+            {% if today_notifications %}
             <section>
                 <h2>Today</h2>
-                <div class="notification unread">
-                    <img src="https://cdn-icons-png.flaticon.com/512/992/992700.png" alt="coins" class="icon">
+                {% for notif in today_notifications %}
+                <div class="notification {% if not notif.read %}unread{% endif %}">
+                    <img src="{{ notif.icon_url }}" alt="icon" class="icon">
                     <div class="text">
-                        <p class="title">It's time to input your expenses for today</p>
-                        <p class="time">08:17 PM</p>
+                        <p class="title">{{ notif.message }}</p>
+                        <p class="time">{{ notif.timestamp|time:"H:i A" }}</p>
                     </div>
+                    {% if not notif.read %}
                     <div class="dot"></div>
+                    {% endif %}
                 </div>
+                {% endfor %}
             </section>
-        
+            {% endif %}
+
+            {% if older_notifications %}
             <section>
-                <h2>Yesterday</h2>
-                <div class="notification unread">
-                    <img src="https://cdn-icons-png.flaticon.com/512/564/564619.png" alt="warning" class="icon">
+                <h2>Earlier</h2>
+                {% for notif in older_notifications %}
+                <div class="notification {% if not notif.read %}unread{% endif %}">
+                    <img src="{{ notif.icon_url }}" alt="icon" class="icon">
                     <div class="text">
-                        <p class="title">Overspending Warning</p>
-                        <p class="time">05:29 PM</p>
+                        <p class="title">{{ notif.message }}</p>
+                        <p class="time">{{ notif.timestamp|time:"H:i A" }}</p>
                     </div>
+                    {% if not notif.read %}
                     <div class="dot"></div>
+                    {% endif %}
                 </div>
-        
-                <div class="notification">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2784/2784459.png" alt="analytics" class="icon">
-                    <div class="text">
-                        <p class="title">View your past month analytics</p>
-                        <p class="time">10:05 PM</p>
-                    </div>
-                </div>
-        
-                <div class="no-notifications">
-                    You're all caught up!
-                </div>
+                {% endfor %}
             </section>
+            {% endif %}
+
+            {% if not today_notifications and not older_notifications %}
+            <div class="no-notifications">
+                You're all caught up!
+            </div>
+            {% endif %}
         </div>
     </div>
 
     <script>
         const notifCount = document.getElementById('notif-count');
         const notifications = document.querySelectorAll('.notification');
-        
+
         function updateNotifCount() {
             const unread = document.querySelectorAll('.notification.unread').length;
             notifCount.textContent = unread;
         }
-        
+
         updateNotifCount();
-        
+
         notifications.forEach(notification => {
             notification.addEventListener('click', () => {
                 notification.classList.remove('unread');
@@ -76,3 +81,4 @@
     </script>
 </body>
 </html>
+python manage.py shell

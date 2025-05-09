@@ -49,7 +49,7 @@ def transactions_list(request):
 @login_required
 def total_income(request):
     # Filter transactions by 'income' and get the total amount
-    incomes = Transaction.objects.filter(user=request.user, type='income')
+    incomes = Transaction.objects.filter(user=request.user, type='Income')
     total_income = incomes.aggregate(Sum('amount'))['amount__sum'] or 0
 
     # Calculate category-wise totals for income

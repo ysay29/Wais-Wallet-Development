@@ -283,44 +283,43 @@
 <aside class="sidebar">
   <div>
     <div class="navbar">
-      <img src="assets/logo.png" alt="Logo" class="navbar-logo">
+      <img src="{% static 'assets/logo.png' %}" alt="Logo" class="navbar-logo">
       <div class="welcome-texts">
         <p class="hello-text">Hello, {{ user.get_full_name|default:user.username }}! <br> Welcome to</p>
         <p class="wallet-name">Wais Wallet</p>
       </div>
     </div>
     
+    </div>    
     <nav class="nav-links">
-      <a href="{% url 'dashboard' %}">Dashboard</a>      
+      <a href="{% url 'dashboard' %}" class="active">Dashboard</a>      
       <a href="{% url 'transactions' %}">Transactions</a>
-   
+    
       <div class="dropdown">
         <button class="dropbtn">
           Evaluation
-          <img src="assets/dropdown.png" alt="Dropdown Icon" class="dropdown-img">
+          <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
         </button>
         <div class="dropdown-content">
           <a href="analytics.html">Analytics</a>
-          <a href="totalincome.html">Total Income</a>
-          <a href="totalexpenses.html">Total Expenses</a>
-          <a href="savings.html" class="active">Savings</a>
+          <a href="{% url 'totalincome' %}">Total Income</a>
+          <a href="{% url 'totalexpenses' %}">Total Expenses</a>
+          <a href="{% url 'savings' %}">Savings</a>
         </div>
       </div>
     
       <a href="budgets.html">Budgets</a>
-      <a href="settings.html">Settings</a>
-      <a href="aboutus.html">About Us</a>
+      <a href="{% url 'settings' %}">Settings</a>
+      <a href="{% url 'aboutus' %}">About Us</a>
     </nav>
-  </div>
-  
+    
   <div class="account-section">
-    <a href="login.html">
-      <div class="account-icon">👤</div>
-      <div class="account-info">
-        <div class="account-label">LOGOUT</div>
-        <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
-      </a>
-      </div>
+    <a href="{% url 'logout' %}">
+    <div class="account-icon" id="logout-button">👤</div> 
+    <div class="account-info">
+      <div class="account-label">LOGOUT</div>
+      <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
+    </a>
   </div>
 </aside>
 

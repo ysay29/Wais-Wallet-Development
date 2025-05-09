@@ -9,49 +9,49 @@
 </head>
 <body>
   <!-- Sidebar -->
-  <aside class="sidebar">
-    <div>
-      <div class="navbar">
-        <img src="{% static 'assets/logo.png' %}" alt="Logo" class="navbar-logo">
-        <div class="welcome-texts">
-          <p class="hello-text">Hello, {{ user.get_full_name|default:user.username }}! <br> Welcome to</p>
-          <p class="wallet-name">Wais Wallet</p>
+<aside class="sidebar">
+  <div>
+    <div class="navbar">
+      <img src="{% static 'assets/logo.png' %}" alt="Logo" class="navbar-logo">
+      <div class="welcome-texts">
+        <p class="hello-text">Hello, {{ user.get_full_name|default:user.username }}! <br> Welcome to</p>
+        <p class="wallet-name">Wais Wallet</p>
+      </div>
+    </div>
+    
+    </div>    
+    <nav class="nav-links">
+      <a href="{% url 'add_transaction' %}">Add Transaction</a>  
+      <a href="{% url 'transactions' %}">Transactions</a>
+    
+      <div class="dropdown">
+        <button class="dropbtn">
+          Evaluation
+          <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
+        </button>
+        <div class="dropdown-content">
+          <a href="analytics.html">Analytics</a>
+          <a href="{% url 'totalincome' %}">Total Income</a>
+          <a href="{% url 'totalexpenses' %}">Total Expenses</a>
+          <a href="{% url 'savings' %}">Savings</a>
         </div>
       </div>
-
-      <nav class="nav-links">
-        <a href="{% url 'add_transaction' %}">Add Transaction</a>
-        <a href="{% url 'transactions' %}" class="active">Transactions</a>
-
-        <div class="dropdown">
-          <button class="dropbtn">
-            Evaluation
-            <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
-          </button>
-          <div class="dropdown-content">
-            <a href="#">Analytics</a>
-            <a href="{% url 'totalincome' %}">Total Income</a>
-            <a href="{% url 'totalexpenses' %}">Total Expenses</a>
-            <a href="{% url 'savings' %}">Savings</a>
-          </div>
-        </div>
-
-        <a href="#">Budgets</a>
-        <a href="{% url 'settings' %}">Settings</a>
-        <a href="{% url 'aboutus' %}">About Us</a>
-      </nav>
-    </div>
-
-    <div class="account-section">
-      <a href="{% url 'logout' %}">
-        <div class="account-icon" id="logout-button">👤</div>
-        <div class="account-info">
-          <div class="account-label">LOGOUT</div>
-          <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
-        </div>
-      </a>
-    </div>
-  </aside>
+    
+      <a href="budgets.html">Budgets</a>
+      <a href="{% url 'settings' %}">Settings</a>
+      <a href="{% url 'aboutus' %}">About Us</a>
+    </nav>
+    
+  <div class="account-section">
+    <a href="{% url 'logout' %}">
+    <div class="account-icon" id="logout-button">👤</div> 
+    <div class="account-info">
+      <div class="account-label">LOGOUT</div>
+      <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
+    </a>
+  </div>
+  
+</aside>
 
   <!-- Main Content -->
   <div class="main-content">

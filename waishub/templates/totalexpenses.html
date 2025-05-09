@@ -295,6 +295,11 @@
   <div id="expensesPage" class="content-box">
     <div class="header"><strong>Total Expenses</strong></div>
 
+    <!-- Total Expenses Summary -->
+    <div class="summary">
+      <strong>Total Expenses: ₱{{ total_expenses }}</strong>
+    </div>
+
     <table>
       <thead>
         <tr>
@@ -308,7 +313,7 @@
           <tr>
             <td>{{ expense.date }}</td>
             <td>{{ expense.category }}</td>
-            <td>₱{{ expense.amount }}</td>
+            <td>{{ expense.formatted_amount }}</td>
           </tr>
         {% empty %}
           <tr>

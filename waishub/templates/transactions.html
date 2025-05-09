@@ -81,9 +81,9 @@
       <tbody>
         {% for transaction in transactions %}
         <tr>
-          <td class="{{ transaction.type }}">{{ transaction.type|title }}</td>
+          <td class="transaction-type {{ transaction.type|lower }}">{{ transaction.type|title }}</td>
           <td>{{ transaction.category }}</td>
-          <td>₱{{ transaction.amount }}</td>
+          <td class="transaction-amount {{ transaction.type|lower }}">₱{{ transaction.amount }}</td>
           <td>{{ transaction.date }}</td>
         </tr>
         {% endfor %}

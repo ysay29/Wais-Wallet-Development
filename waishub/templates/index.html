@@ -90,34 +90,66 @@
   </div>
   
   <!-- Cards -->
-  <div class="cards">
-    <div class="card">
-      <a href="{% url 'totalincome' %}">
-      <h3>Total Income</h3>
-      <p>₱ {{ income|floatformat:2 }}</p>
+  <!-- Income Card -->
+<div class="card">
+  <a href="{% url 'totalincome' %}">
+    <h3>Total Income</h3>
+    <p>₱ {{ income|floatformat:2 }}</p>
+
+    {% if income_change >= 0 %}
       <img src="{% static 'assets/increase.png' %}" alt="increase" class="arrow-icon">
-      <span class="increase"> 1.7% from last month</span>
-      </a>
-      </div>
-    
-      <div class="card">
-        <a href="{% url 'totalexpenses' %}">
-        <h3>Total Expenses</h3>
-        <p>₱ {{ expenses|floatformat:2 }}</p>
-          <img src="{% static 'assets/increase.png' %}" alt="increase" class="arrow-icon">
-      <span class="increase"> 1.7% from last month</span>
-      </a>
-      </div>
- 
-      <div class="card">
-        <a href="{% url 'savings' %}">
-        <h3>Savings</h3>
-        <p>₱ {{ savings|floatformat:2 }}</p>
-          <img src="{% static 'assets/decrease.png' %}" alt="decrease" class="arrow-icon">
-      <span class="decrease"> 1.7% from last month</span>
-        </a>
-      </div>
-  </div>
+      <span class="increase" style="color: green;">
+        {{ income_change|floatformat:1 }}% from last month
+      </span>
+    {% else %}
+      <img src="{% static 'assets/decrease.png' %}" alt="decrease" class="arrow-icon">
+      <span class="decrease" style="color: red;">
+        {{ income_change|floatformat:1 }}% from last month
+      </span>
+    {% endif %}
+  </a>
+</div>
+
+
+<!-- Expenses Card -->
+<div class="card">
+  <a href="{% url 'totalexpenses' %}">
+    <h3>Total Expenses</h3>
+    <p>₱ {{ expenses|floatformat:2 }}</p>
+
+    {% if expense_change >= 0 %}
+      <img src="{% static 'assets/increase.png' %}" alt="increase" class="arrow-icon">
+      <span class="decrease" style="color: red;">
+        {{ expense_change|floatformat:1 }}% from last month
+      </span>
+    {% else %}
+      <img src="{% static 'assets/decrease.png' %}" alt="decrease" class="arrow-icon">
+      <span class="increase" style="color: green;">
+        {{ expense_change|floatformat:1 }}% from last month
+      </span>
+    {% endif %}
+  </a>
+</div>
+
+<!-- Savings Card -->
+<div class="card">
+  <a href="{% url 'savings' %}">
+    <h3>Savings</h3>
+    <p>₱ {{ savings|floatformat:2 }}</p>
+
+    {% if savings_change >= 0 %}
+      <img src="{% static 'assets/increase.png' %}" alt="increase" class="arrow-icon">
+      <span class="increase" style="color: green;">
+        {{ savings_change|floatformat:1 }}% from last month
+      </span>
+    {% else %}
+      <img src="{% static 'assets/decrease.png' %}" alt="decrease" class="arrow-icon">
+      <span class="decrease" style="color: red;">
+        {{ savings_change|floatformat:1 }}% from last month
+      </span>
+    {% endif %}
+  </a>
+</div>
 
 
   <!-- Chart and Calendar -->

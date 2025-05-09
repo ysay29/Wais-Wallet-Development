@@ -1,11 +1,14 @@
 from django.utils.timezone import localtime, now
-from .models import Reminder, Notification
 from datetime import timedelta
+from .models import Reminder, Notification
 
 def send_transaction_reminders():
-    now_local = localtime(now())  
+    print("Send transaction reminders task executed")
+
+    now_local = localtime(now())  # Get current local datetime
     time_lower = (now_local - timedelta(seconds=30)).time()
     time_upper = (now_local + timedelta(seconds=30)).time()
+    today = now_local.date()
 
     print("Now:", now_local.time())
     print("Window:", time_lower, "to", time_upper)
@@ -13,10 +16,10 @@ def send_transaction_reminders():
     reminders = Reminder.objects.filter(
         alert_time__gte=time_lower,
         alert_time__lte=time_upper,
-        enabled=True  # ✅ Only send to users who enabled it
+        enabled=True
     )
 
-    today = now_local.date() 
+    print(f"Found {reminders.count()} reminders.")
 
     for reminder in reminders:
         already_sent = Notification.objects.filter(
@@ -31,3 +34,5 @@ def send_transaction_reminders():
                 message="Reminder: Don't forget to add your transaction!"
             )
             print(f"Notification sent to {reminder.user.username}")
+        else:
+            print(f"Skipped: Notification already sent to {reminder.user.username}")

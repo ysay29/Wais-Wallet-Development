@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache, cache_control
 from django.contrib.auth import logout
-from .models import Notification, Transaction, Reminder
+from .models import Notification, Reminder
 from .forms import ReminderForm
 from django.utils import timezone
+from Transaction.models import Transaction
 
 #@login_required
 def index(request):
@@ -57,7 +58,7 @@ def settings_view(request):
         if form.is_valid():
             reminder = form.save(commit=False)
             reminder.user = request.user
-            reminder.enabled = True
+            reminder.enabled = form.cleaned_data.get('enabled', False)  # Defaults to False if not provided
             reminder.save()
             print("Reminder saved with:")
             print("Alert time:", form.cleaned_data['alert_time'])

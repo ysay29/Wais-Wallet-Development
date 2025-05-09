@@ -26,7 +26,7 @@ def transactions_list(request):
 
 @login_required
 def total_income(request):
-    incomes = Transaction.objects.filter(transaction_type='income')
+    incomes = Transaction.objects.filter(type='income')
     total_income = incomes.aggregate(Sum('amount'))['amount__sum'] or 0
     
     category_totals_qs = incomes.values('category').annotate(total=Sum('amount'))

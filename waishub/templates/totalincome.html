@@ -350,39 +350,42 @@
 
 <script id="income-data" type="application/json">
   {
-    "labels": [{% for inc in incomes %}"{{ inc.date|date:'M d' }}"{% if not forloop.last %},{% endif %}{% endfor %}],
-    "data": [{% for inc in incomes %}{{ inc.amount }}{% if not forloop.last %},{% endif %}{% endfor %}]
+    "labels": [{% for category, amount in category_totals.items %}"{{ category }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+    "data": [{% for category, amount in category_totals.items %}{{ amount }}{% if not forloop.last %},{% endif %}{% endfor %}]
   }
 </script>
-
 
 <script>
   const incomeData = JSON.parse(document.getElementById('income-data').textContent);
   const labels = incomeData.labels;
   const data = incomeData.data;
 
-
   if (labels.length > 0 && data.length > 0) {
     new Chart(
       document.getElementById('incomeChart').getContext('2d'),
       {
-        type: 'line',
+        type: 'bar',
         data: {
           labels: labels,
           datasets: [{
-            label: 'Income',
+            label: 'Total Income by Category',
             data: data,
-            borderColor: '#2ecc71',
-            fill: false,
-            tension: 0.3,
-            pointBackgroundColor: '#2ecc71'
+            backgroundColor: '#2ecc71',
+            borderRadius: 6
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           scales: {
-            y: { beginAtZero: true }
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return '₱' + value;
+                }
+              }
+            }
           },
           plugins: {
             tooltip: {
@@ -391,6 +394,9 @@
                   return '₱' + context.parsed.y;
                 }
               }
+            },
+            legend: {
+              display: false
             }
           }
         }
@@ -400,7 +406,6 @@
     document.getElementById('incomeChart').insertAdjacentHTML('afterend', '<p class="no-data">No data available for chart.</p>');
   }
 </script>
-
 
 </body>
 </html>

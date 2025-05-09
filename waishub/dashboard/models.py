@@ -21,7 +21,8 @@ class Notification(models.Model):
 class Reminder(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     alert_time = models.TimeField()
+    enabled = models.BooleanField(default=True)  #Notification enabled by default
 
     def __str__(self):
-        return f"{self.user.username} - {self.alert_time}"
+        return f"{self.user.username} - {self.alert_time} ({'On' if self.enabled else 'Off'})"
     

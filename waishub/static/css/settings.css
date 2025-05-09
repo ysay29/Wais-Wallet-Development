@@ -102,33 +102,10 @@ button {
     border-top: 1px solid #eee;
     margin: 20px 0;
 }
-/* Custom style for time input */
-input[type="time"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
+.time-picker {
+    padding: 8px;
+    border: 1px solid #ccc;
     border-radius: 6px;
-    box-sizing: border-box;
     font-size: 14px;
-    margin-bottom: 5px;
-    background-color: white;
-    color: #555;
 }
 
-/* Optional: For better compatibility across browsers */
-input[type="time"]::-webkit-outer-spin-button,
-input[type="time"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-input[type="time"]::-webkit-calendar-picker-indicator {
-    background: transparent;
-    border: none;
-}
-
-input[type="time"]:focus {
-    border-color: #27ae60;
-    outline: none;
-    box-shadow: 0 0 8px rgba(39, 174, 96, 0.2);
-}

@@ -160,7 +160,7 @@
         <li>
           <div>
             <strong>{{ transaction.category }}</strong>
-            {% if transaction.type == "income" %}
+            {% if transaction.type|lower == "income" %}
               <small class="income">+ ₱{{ transaction.amount }}</small>
             {% else %}
               <small class="expense">- ₱{{ transaction.amount }}</small>

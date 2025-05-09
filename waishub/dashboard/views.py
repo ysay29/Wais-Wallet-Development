@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache, cache_control
 from django.contrib.auth import logout
 from .models import Notification
-from datetime import timezone
+from django.utils import timezone
 
 #@login_required
 def index(request):

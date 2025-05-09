@@ -16,3 +16,5 @@ class DashboardConfig(AppConfig):
         # Stop scheduler on shutdown
         atexit.register(lambda: scheduler.shutdown(wait=False))
 
+        from .scheduler import start_scheduler
+        start_scheduler()

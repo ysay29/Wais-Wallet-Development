@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'core',
     'authentication',
-    'dashboard',
     'Transaction',
     'savings',
     'dashboard.apps.DashboardConfig'

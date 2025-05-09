@@ -40,8 +40,8 @@
         <div class="option-group">
             <label>Notifications:</label>
             <div class="option-row">
-                <input type="checkbox" id="notifications" checked class="checkbox">
-                <label for="notifications">Enable notifications</label>
+                {{ form.enabled }}
+                <label for="{{ form.enabled.id_for_label }}">Enable notifications</label>
             </div>
         </div>
         

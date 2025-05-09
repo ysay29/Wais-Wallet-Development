@@ -35,29 +35,35 @@ def notifications_view(request):
     today_notifications = notifications.filter(timestamp__date=today)
     older_notifications = notifications.exclude(timestamp__date=today)
     unread_count = notifications.filter(read=False).count()
+    reminder_notifications = notifications.filter(message__icontains="Reminder")
 
     context = {
         'today_notifications': today_notifications,
         'older_notifications': older_notifications,
         'unread_count': unread_count,
+        'reminder_notifications': reminder_notifications,
     }
     return render(request, 'notifications.html', context) # Your notifications template
 
 @login_required
 def settings_view(request):
     try:
-        reminder = Reminder.objects.get(user=request.user)  # Fetch reminder for the logged-in user
+        reminder = Reminder.objects.get(user=request.user)
     except Reminder.DoesNotExist:
-        reminder = None  # If no reminder exists, it will be None
+        reminder = None
 
     if request.method == 'POST':
         form = ReminderForm(request.POST, instance=reminder)
         if form.is_valid():
             reminder = form.save(commit=False)
-            reminder.user = request.user  # Associate the reminder with the logged-in user
-            reminder.save()  # Save the reminder
-            return redirect('settings')  # Redirect back to the settings page (or wherever you need)
-    else:
-        form = ReminderForm(instance=reminder)  # Pre-fill the form with existing reminder if available
+            reminder.user = request.user
+            reminder.save()
+            print("Reminder saved with:")
+            print("Alert time:", form.cleaned_data['alert_time'])
+            print("Enabled:", form.cleaned_data['enabled'])
+            return redirect('settings')
 
-    return render(request, 'settings.html', {'form': form})  # Render the form in the template
+    else:
+        form = ReminderForm(instance=reminder)
+
+    return render(request, 'settings.html', {'form': form})

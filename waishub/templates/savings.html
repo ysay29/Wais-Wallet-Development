@@ -74,7 +74,7 @@
         {% for saving in savings %}
           <tr>
             <td>{{ saving.date|date:"m/d/Y" }}</td>
-            <td>₽{{ saving.amount|floatformat:0|intcomma }}</td>
+            <td>₱{{ saving.amount|floatformat:0|intcomma }}</td>
           </tr>
         {% empty %}
           <tr><td colspan="2">No savings recorded.</td></tr>
@@ -82,7 +82,7 @@
       </tbody>
     </table>
 
-    <div class="summary" id="totalSavings">Total Savings this month: ₽{{ total_savings|floatformat:0|intcomma }}</div>
+    <div class="summary" id="totalSavings">Total Savings this month: ₱{{ total_savings|floatformat:0|intcomma }}</div>
 
     <div class="month-header"><strong>{{ current_month|date:"F Y" }}</strong></div>
 

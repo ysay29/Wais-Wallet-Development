@@ -31,8 +31,11 @@
           <option>No categories available</option>
         {% endfor %}
       </select>
+
       <p>Or enter a new category:</p>
-      <input type="text" id="category" name="category" placeholder="e.g. Food, Bills" />
+      <input type="text" id="new_category" name="new_category" placeholder="e.g. Food, Bills" />
+
+
 
       <label for="amount"><strong>Amount (₱)</strong></label>
       <input type="number" id="amount" name="amount" required />
@@ -86,6 +89,21 @@
     yesBtn.addEventListener('click', () => {
       allowSubmit = true;
       confirmPopup.style.display = 'none';
+
+      // Check if the user entered a custom category
+      const categoryDropdown = document.querySelector('#category');
+      const newCategoryInput = document.querySelector('#new_category');
+      
+      // If the input is not empty, add the new category to the form
+      if (newCategoryInput.value.trim() !== '') {
+        // Create a hidden input field with the new category value
+        const newCategoryField = document.createElement('input');
+        newCategoryField.type = 'hidden';
+        newCategoryField.name = 'category';
+        newCategoryField.value = newCategoryInput.value.trim();
+        form.appendChild(newCategoryField);
+      }
+
       form.submit();
     });
 
@@ -102,24 +120,24 @@
     if (isSaved) {
       savedPopup.style.display = 'flex';
     }
-  });
 
-  const categoryDropdown = document.querySelector('#category');
-  const categoryInput = document.createElement('input');
-  categoryInput.type = 'text';
-  categoryInput.id = 'category-custom';
-  categoryInput.placeholder = 'Enter custom category';
+    const categoryDropdown = document.querySelector('#category');
+    const categoryInput = document.createElement('input');
+    categoryInput.type = 'text';
+    categoryInput.id = 'category-custom';
+    categoryInput.placeholder = 'Enter custom category';
 
-  // When dropdown is selected, show input field for custom category
-  categoryDropdown.addEventListener('change', function() {
-    if (categoryDropdown.value === '') {
-      // If no option is selected, show the input for a new category
-      categoryInput.style.display = 'block';
-      categoryDropdown.parentElement.appendChild(categoryInput);
-    } else {
-      // If an option is selected, hide the input field
-      categoryInput.style.display = 'none';
-    }
+    // When dropdown is selected, show input field for custom category
+    categoryDropdown.addEventListener('change', function() {
+      if (categoryDropdown.value === '') {
+        // If no option is selected, show the input for a new category
+        categoryInput.style.display = 'block';
+        categoryDropdown.parentElement.appendChild(categoryInput);
+      } else {
+        // If an option is selected, hide the input field
+        categoryInput.style.display = 'none';
+      }
+    });
   });
 </script>
 </body>

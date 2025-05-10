@@ -23,6 +23,7 @@
   {% endfor %}
 </div>
 {% endif %}
+
 <!-- Sidebar -->
 <aside class="sidebar">
   <div>
@@ -33,132 +34,117 @@
         <p class="wallet-name">Wais Wallet</p>
       </div>
     </div>
-    
-    </div>    
-    <nav class="nav-links">
-      <a href="{% url 'dashboard' %}" class="active">Dashboard</a>      
-      <a href="{% url 'transactions' %}">Transactions</a>
-    
-      <div class="dropdown">
-        <button class="dropbtn">
-          Evaluation
-          <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
-        </button>
-        <div class="dropdown-content">
-          <a href="analytics.html">Analytics</a>
-          <a href="{% url 'totalincome' %}">Total Income</a>
-          <a href="{% url 'totalexpenses' %}">Total Expenses</a>
-          <a href="{% url 'savings' %}">Savings</a>
-        </div>
+  </div>    
+  <nav class="nav-links">
+    <a href="{% url 'dashboard' %}" class="active">Dashboard</a>      
+    <a href="{% url 'transactions' %}">Transactions</a>
+    <div class="dropdown">
+      <button class="dropbtn">
+        Evaluation
+        <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
+      </button>
+      <div class="dropdown-content">
+        <a href="analytics.html">Analytics</a>
+        <a href="{% url 'totalincome' %}">Total Income</a>
+        <a href="{% url 'totalexpenses' %}">Total Expenses</a>
+        <a href="{% url 'savings' %}">Savings</a>
       </div>
-    
-      <a href="budgets.html">Budgets</a>
-      <a href="{% url 'settings' %}">Settings</a>
-      <a href="{% url 'aboutus' %}">About Us</a>
-    </nav>
-    
+    </div>
+    <a href="budgets.html">Budgets</a>
+    <a href="{% url 'settings' %}">Settings</a>
+    <a href="{% url 'aboutus' %}">About Us</a>
+  </nav>
   <div class="account-section">
     <a href="{% url 'logout' %}">
-    <div class="account-icon" id="logout-button">👤</div> 
-    <div class="account-info">
-      <div class="account-label">LOGOUT</div>
-      <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
+      <div class="account-icon" id="logout-button">👤</div> 
+      <div class="account-info">
+        <div class="account-label">LOGOUT</div>
+        <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
+      </div>
     </a>
   </div>
-  
 </aside>
 
 <!-- Main -->
 <main class="main">
-
   <!-- Top Filters -->
   <div class="topbar">
-  <div class="search-notif">
-    <input type="text" placeholder="Search...">
-        <a href="{% url 'notifications' %}" class="notif-wrapper">
-      <img src="{% static 'assets/bell.png' %}" alt="Notifications" class="notif-icon">
-      {% if has_unread_notifications %}
-        <span class="notif-badge"></span>
-      {% endif %}
-        </a>
+    <div class="search-notif">
+      <input type="text" placeholder="Search...">
+      <a href="{% url 'notifications' %}" class="notif-wrapper">
+        <img src="{% static 'assets/bell.png' %}" alt="Notifications" class="notif-icon">
+        {% if has_unread_notifications %}
+          <span class="notif-badge"></span>
+        {% endif %}
+      </a>
+    </div>
   </div>
-</div>
 
   <div class="filters">
-    <button>Day</button>
-    <button>Week</button>
-    <button class="active">Month</button>
-    <button>Year</button>
-    <input type="date">
+    <button class="filter-btn" data-filter="day">Day</button>
+    <button class="filter-btn" data-filter="week">Week</button>
+    <button class="filter-btn active" data-filter="month">Month</button>
+    <button class="filter-btn" data-filter="year">Year</button>
+    <input type="date" id="datePicker">
   </div>
-  
+
   <!-- Cards -->
-  <!-- Income Card -->
-<div class="card">
-  <a href="{% url 'totalincome' %}">
-    <h3>Total Income</h3>
-    <p>₱ {{ income|floatformat:2 }}</p>
+  <div class="card">
+    <a href="{% url 'totalincome' %}">
+      <h3>Total Income</h3>
+      <p>₱ {{ income|floatformat:2 }}</p>
+      {% if income_change >= 0 %}
+        <img src="{% static 'assets/increase.png' %}" alt="increase" class="arrow-icon">
+        <span class="increase" style="color: green;">
+          {{ income_change|floatformat:1 }}% from last month
+        </span>
+      {% else %}
+        <img src="{% static 'assets/decrease.png' %}" alt="decrease" class="arrow-icon">
+        <span class="decrease" style="color: red;">
+          {{ income_change|floatformat:1 }}% from last month
+        </span>
+      {% endif %}
+    </a>
+  </div>
 
-    {% if income_change >= 0 %}
-      <img src="{% static 'assets/increase.png' %}" alt="increase" class="arrow-icon">
-      <span class="increase" style="color: green;">
-        {{ income_change|floatformat:1 }}% from last month
-      </span>
-    {% else %}
-      <img src="{% static 'assets/decrease.png' %}" alt="decrease" class="arrow-icon">
-      <span class="decrease" style="color: red;">
-        {{ income_change|floatformat:1 }}% from last month
-      </span>
-    {% endif %}
-  </a>
-</div>
+  <div class="card">
+    <a href="{% url 'totalexpenses' %}">
+      <h3>Total Expenses</h3>
+      <p>₱ {{ expenses|floatformat:2 }}</p>
+      {% if expense_change >= 0 %}
+        <img src="{% static 'assets/increase.png' %}" alt="increase" class="arrow-icon">
+        <span class="decrease" style="color: red;">
+          {{ expense_change|floatformat:1 }}% from last month
+        </span>
+      {% else %}
+        <img src="{% static 'assets/decrease.png' %}" alt="decrease" class="arrow-icon">
+        <span class="increase" style="color: green;">
+          {{ expense_change|floatformat:1 }}% from last month
+        </span>
+      {% endif %}
+    </a>
+  </div>
 
-
-<!-- Expenses Card -->
-<div class="card">
-  <a href="{% url 'totalexpenses' %}">
-    <h3>Total Expenses</h3>
-    <p>₱ {{ expenses|floatformat:2 }}</p>
-
-    {% if expense_change >= 0 %}
-      <img src="{% static 'assets/increase.png' %}" alt="increase" class="arrow-icon">
-      <span class="decrease" style="color: red;">
-        {{ expense_change|floatformat:1 }}% from last month
-      </span>
-    {% else %}
-      <img src="{% static 'assets/decrease.png' %}" alt="decrease" class="arrow-icon">
-      <span class="increase" style="color: green;">
-        {{ expense_change|floatformat:1 }}% from last month
-      </span>
-    {% endif %}
-  </a>
-</div>
-
-<!-- Savings Card -->
-<div class="card">
-  <a href="{% url 'savings' %}">
-    <h3>Savings</h3>
-    <p>₱ {{ savings|floatformat:2 }}</p>
-
-    {% if savings_change >= 0 %}
-      <img src="{% static 'assets/increase.png' %}" alt="increase" class="arrow-icon">
-      <span class="increase" style="color: green;">
-        {{ savings_change|floatformat:1 }}% from last month
-      </span>
-    {% else %}
-      <img src="{% static 'assets/decrease.png' %}" alt="decrease" class="arrow-icon">
-      <span class="decrease" style="color: red;">
-        {{ savings_change|floatformat:1 }}% from last month
-      </span>
-    {% endif %}
-  </a>
-</div>
-
+  <div class="card">
+    <a href="{% url 'savings' %}">
+      <h3>Savings</h3>
+      <p>₱ {{ savings|floatformat:2 }}</p>
+      {% if savings_change >= 0 %}
+        <img src="{% static 'assets/increase.png' %}" alt="increase" class="arrow-icon">
+        <span class="increase" style="color: green;">
+          {{ savings_change|floatformat:1 }}% from last month
+        </span>
+      {% else %}
+        <img src="{% static 'assets/decrease.png' %}" alt="decrease" class="arrow-icon">
+        <span class="decrease" style="color: red;">
+          {{ savings_change|floatformat:1 }}% from last month
+        </span>
+      {% endif %}
+    </a>
+  </div>
 
   <!-- Chart and Calendar -->
   <div class="grid-2">
-
-    <!-- Expenses Chart -->
     <div class="chart-container">
       <div class="chart-header">
         <h4>Total Expenses</h4>
@@ -168,8 +154,6 @@
       </div>
       <canvas id="expensesChart"></canvas>
     </div>
-
-    <!-- Calendar -->
 
     <div class="calendar-container">
       <div class="calendar-header">
@@ -183,69 +167,67 @@
         <progress id="progress-bar" value="70" max="100"></progress>
       </div>      
     </div>
-
   </div>
 
- <!-- Recent Transactions -->
-<section class="history recent-transactions">
-  <h2>Recent Transactions</h2>
-  {% if recent_transactions %}
-    <ul class="transaction-list">
-      {% for transaction in recent_transactions %}
-        <li>
-          <div>
-            <strong>{{ transaction.category }}</strong>
-            {% if transaction.type|lower == "income" %}
-              <small class="income">+ ₱{{ transaction.amount }}</small>
-            {% else %}
-              <small class="expense">- ₱{{ transaction.amount }}</small>
-            {% endif %}
-          </div>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>No recent transactions</p>
-  {% endif %}
-</section>
+  <!-- Recent Transactions -->
+  <section class="history recent-transactions">
+    <h2>Recent Transactions</h2>
+    {% if recent_transactions %}
+      <ul class="transaction-list">
+        {% for transaction in recent_transactions %}
+          <li>
+            <div>
+              <strong>{{ transaction.category }}</strong>
+              {% if transaction.type|lower == "income" %}
+                <small class="income">+ ₱{{ transaction.amount }}</small>
+              {% else %}
+                <small class="expense">- ₱{{ transaction.amount }}</small>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No recent transactions</p>
+    {% endif %}
+  </section>
 
-<!-- Plus Button -->
-<div class="plus-button">
-  <img src="{% static 'assets/add-icon.png' %}" alt="Plus Icon" id="plus-icon">
-  <div class="plus-menu" id="plus-menu">
-    <a href="{% url 'add_transaction' %}">Add Transaction</a>
-    <a href="{% url 'add_expense' %}">Manage Expenses</a>
-    <a href="addsavings.html">Savings</a>
+  <!-- Plus Button -->
+  <div class="plus-button">
+    <img src="{% static 'assets/add-icon.png' %}" alt="Plus Icon" id="plus-icon">
+    <div class="plus-menu" id="plus-menu">
+      <a href="{% url 'add_transaction' %}">Add Transaction</a>
+      <a href="{% url 'add_expense' %}">Manage Expenses</a>
+      <a href="addsavings.html">Savings</a>
+    </div>
   </div>
-</div>
+</main>
 
 <script src="{% static 'js/addButton.js' %}" defer></script>
 
 <script>
-  // Expenses Chart
   const ctx = document.getElementById('expensesChart').getContext('2d');
-const expensesChart = new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    datasets: [{
-      label: 'Expenses',
-      data: [5000, 3000, 8000, 10000, 7000, 2000, 4000],
-      backgroundColor: '#0c4160',
-      borderRadius: 10,    // <- This rounds the corners
-      borderSkipped: false // <- Rounds top and bottom corners
-    }]
-  },
-  options: {
-    scales: {
-      y: {
-        beginAtZero: true
+  const expensesChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      datasets: [{
+        label: 'Expenses',
+        data: [5000, 3000, 8000, 10000, 7000, 2000, 4000],
+        backgroundColor: '#0c4160',
+        borderRadius: 10,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
       }
     }
-  }
-});
+  });
 
-  // Calendar
   const calendar = document.getElementById('calendar');
   const monthYear = document.getElementById('monthYear');
   const prevMonth = document.getElementById('prevMonth');
@@ -280,61 +262,67 @@ const expensesChart = new Chart(ctx, {
   nextMonth.onclick = () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); };
   renderCalendar();
 
-  // Progress Circle
-  const progressCtx = document.getElementById('progressCircle').getContext('2d');
-  new Chart(progressCtx, {
-    type: 'doughnut',
-    data: {
-      datasets: [{
-        data: [70, 30],
-        backgroundColor: ['#0056d2', '#e0e0e0'],
-        borderWidth: 0
-      }]
-    },
-    options: {
-      cutout: '75%',
-      plugins: { legend: { display: false } }
-    }
-  });
-
-  document.addEventListener('DOMContentLoaded', function() {
-    const manageExpensesPopup = document.getElementById('manage-expenses-popup');
-    const closeExpensesBtn = document.getElementById('close-expenses-popup');
-    const expensesForm = document.getElementById('expenses-form');
-
-    // Function to show the popup (call this when you want to open it)
-    function showManageExpenses() {
-      manageExpensesPopup.style.display = 'flex';
-    }
-
-    // Function to hide the popup
-    function hideManageExpenses() {
-      manageExpensesPopup.style.display = 'none';
-    }
-
-    // Close button event
-    closeExpensesBtn.addEventListener('click', hideManageExpenses);
-
-    // Form submission
-    expensesForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      // Add your save logic here
-      hideManageExpenses();
-      expensesForm.reset();
+  // Activate filter buttons
+  document.querySelectorAll('.filter-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+      const filter = button.getAttribute('data-filter');
+      fetchDashboardData(filter);
     });
-
-    // You'll need to call showManageExpenses() when your "Manage Expenses" button is clicked
-    // Example: document.getElementById('your-manage-button').addEventListener('click', showManageExpenses);
   });
-  
-// Logout button functionality
+
+  document.getElementById('datePicker').addEventListener('change', (e) => {
+    const selectedDate = e.target.value;
+    fetchDashboardData('date', selectedDate);
+  });
+
+  function fetchDashboardData(filterType, date = null) {
+    const url = `/dashboard/filter/?type=${filterType}${date ? `&date=${date}` : ''}`;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        document.querySelector('.card:nth-child(1) p').textContent = `₱ ${parseFloat(data.income).toFixed(2)}`;
+        document.querySelector('.card:nth-child(2) p').textContent = `₱ ${parseFloat(data.expenses).toFixed(2)}`;
+        document.querySelector('.card:nth-child(3) p').textContent = `₱ ${parseFloat(data.savings).toFixed(2)}`;
+        updateChart(data.chart_data);
+        updateTransactions(data.transactions);
+      });
+  }
+
+  function updateChart(chartData) {
+    expensesChart.data.labels = chartData.labels;
+    expensesChart.data.datasets[0].data = chartData.values;
+    expensesChart.update();
+  }
+
+  function updateTransactions(transactions) {
+    const list = document.querySelector('.transaction-list');
+    list.innerHTML = '';
+    if (transactions.length === 0) {
+      list.innerHTML = '<p>No recent transactions</p>';
+      return;
+    }
+    transactions.forEach(tx => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <div>
+          <strong>${tx.category}</strong>
+          <small class="${tx.type === 'income' ? 'income' : 'expense'}">
+            ${tx.type === 'income' ? '+' : '-'} ₱${tx.amount}
+          </small>
+        </div>`;
+      list.appendChild(li);
+    });
+  }
+
+  // Logout confirmation
   document.getElementById("logout-button").addEventListener("click", function () {
     const confirmLogout = confirm("Are you sure you want to logout?");
     if (confirmLogout) {
       window.location.href = "{% url 'logout' %}";
     }
   });
-
 </script>
 </body>
 </html>

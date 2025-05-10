@@ -8,10 +8,12 @@ from .forms import ReminderForm
 from django.utils import timezone
 from Transaction.models import Transaction
 from django.db.models import Sum
-from datetime import timedelta
+from datetime import datetime, timedelta
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from Transaction.models import Transaction, UserCategory
+from django.utils.dateparse import parse_date
+
 
 
 #@login_required
@@ -154,19 +156,85 @@ def add_expense(request):
 
     if request.method == 'POST':
         category = request.POST.get('category')
+        new_category = request.POST.get('new_category')
+
+        # Use new_category if it's provided
+        final_category = new_category if new_category else category
+
         amount = request.POST.get('amount')
         review_period = request.POST.get('review_period')
 
-        if category and amount and review_period:
+        if final_category and amount and review_period:
+            # Optionally save new category to UserCategory if it's new
+            if new_category:
+                UserCategory.objects.get_or_create(user=user, category_name=new_category)
+
             Budget.objects.create(
                 user=user,
-                category=category,
+                category=final_category,
                 amount=amount,
                 review_period=review_period
             )
             messages.success(request, 'Budget saved successfully!')
-            return redirect('add_expense')  # or wherever you want to redirect
+            return redirect('add_expense')
         else:
             messages.error(request, 'Please fill in all fields.')
 
     return render(request, 'addexpenses.html', {'categories': categories})
+
+
+def filter_dashboard_data(request):
+    filter_type = request.GET.get('type')
+    date_str = request.GET.get('date')
+    
+    today = datetime.today().date()
+    
+    if filter_type == 'day':
+        start = end = today
+    elif filter_type == 'week':
+        start = today - timedelta(days=today.weekday())  # Monday
+        end = start + timedelta(days=6)
+    elif filter_type == 'month':
+        start = today.replace(day=1)
+        end = (start + timedelta(days=32)).replace(day=1) - timedelta(days=1)
+    elif filter_type == 'year':
+        start = today.replace(month=1, day=1)
+        end = today.replace(month=12, day=31)
+    elif filter_type == 'date' and date_str:
+        date = parse_date(date_str)
+        start = end = date
+    else:
+        return JsonResponse({'error': 'Invalid filter'}, status=400)
+
+    transactions = Transaction.objects.filter(date__range=[start, end], user=request.user)
+
+    income = sum(t.amount for t in transactions if t.type == 'income')
+    expenses = sum(t.amount for t in transactions if t.type == 'expense')
+    savings = income - expenses
+
+    # Grouping for chart (example: day-based labels)
+    grouped = {}
+    for tx in transactions:
+        label = tx.date.strftime('%b %d')
+        grouped[label] = grouped.get(label, 0) + tx.amount if tx.type == 'expense' else grouped.get(label, 0)
+
+    chart_data = {
+        'labels': list(grouped.keys()),
+        'values': list(grouped.values())
+    }
+
+    tx_list = [
+        {
+            'category': t.category,
+            'amount': float(t.amount),
+            'type': t.type
+        } for t in transactions.order_by('-date')[:5]
+    ]
+
+    return JsonResponse({
+        'income': income,
+        'expenses': expenses,
+        'savings': savings,
+        'chart_data': chart_data,
+        'transactions': tx_list
+    })

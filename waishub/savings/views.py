@@ -4,7 +4,11 @@ from django.utils.timezone import now
 from collections import defaultdict
 from decimal import Decimal
 import json
+from .models import SavingsGoal
+from django.contrib.auth.decorators import login_required
+from .forms import SavingsGoalForm
 
+@login_required
 def savings_summary(request):
     if request.method == 'POST':
         date = request.POST.get('date')
@@ -57,3 +61,17 @@ def savings_summary(request):
     }
 
     return render(request, 'savings.html', context)
+
+def add_savings(request):
+    if request.method == 'POST':
+        form = SavingsGoalForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('view_budgets')  # or your budget page URL name
+    else:
+        form = SavingsGoalForm()
+    return render(request, 'addsavings.html', {'form': form})
+
+def budget_view(request):
+    goals = SavingsGoal.objects.all()
+    return render(request, 'budgets.html', {'goals': goals})

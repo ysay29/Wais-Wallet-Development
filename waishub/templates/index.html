@@ -50,7 +50,7 @@
         <a href="{% url 'savings' %}">Savings</a>
       </div>
     </div>
-    <a href="budgets.html">Budgets</a>
+    <a href="{% url 'budget' %}">Budgets</a>
     <a href="{% url 'settings' %}">Settings</a>
     <a href="{% url 'aboutus' %}">About Us</a>
   </nav>
@@ -198,7 +198,7 @@
     <div class="plus-menu" id="plus-menu">
       <a href="{% url 'add_transaction' %}">Add Transaction</a>
       <a href="{% url 'add_expense' %}">Manage Expenses</a>
-      <a href="addsavings.html">Savings</a>
+      <a href="{% url 'add_savings_goal' %}">Savings</a>
     </div>
   </div>
 </main>

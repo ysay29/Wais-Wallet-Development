@@ -30,7 +30,7 @@ urlpatterns = [
     path('', include('authentication.urls')),
     path('', include('dashboard.urls')), #Dashboard page
     path('', include('Transaction.urls')), #Add Transaction page
-    path('savings/', include('savings.urls')), #Total savings page
+    path('', include('savings.urls')), #Savings page and manage savings goal
     path('', include('core.urls')),
 ]
 

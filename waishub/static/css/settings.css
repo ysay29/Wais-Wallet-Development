@@ -61,16 +61,16 @@ input, select {
     margin-bottom: 8px;
 }
 
+.option-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #27ae60;
+}
+
 .option-row label {
     margin-bottom: 0;
     margin-left: 10px;
     color: #333;
-}
-
-.checkbox {
-    width: 18px;
-    height: 18px;
-    accent-color: #27ae60;
 }
 
 .buttons {

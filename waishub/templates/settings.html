@@ -13,12 +13,16 @@
         <h1>Settings</h1>
         
         <h2>Username</h2>
+        <form method="POST" action="{% url 'update_username' %}">
+        {% csrf_token %}
         <div class="input-group">
-            <input type="text" placeholder="Enter your name">
+            <input type="text" name="username" placeholder="Enter your name" value="{{ request.user.username }}" required>
         </div>
-        
+        <button type="submit" class="save-btn">Save Username</button>
+        </form>
+
         <div class="option-group">
-            <label>Notifications:</label>
+            <h2>Notifications:</h2>
             <div class="option-row">
                 {{ form.enabled }}
                 <label for="{{ form.enabled.id_for_label }}">Enable notifications</label>

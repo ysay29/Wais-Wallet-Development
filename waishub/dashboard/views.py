@@ -148,6 +148,16 @@ def settings_view(request):
     return render(request, 'settings.html', {'form': form})
 
 @login_required
+def update_username(request):
+    if request.method == "POST":
+        new_username = request.POST.get("username")
+        if new_username:
+            request.user.username = new_username
+            request.user.save()
+            return redirect('settings')
+    return redirect('settings')
+
+@login_required
 def add_expense(request):
     user = request.user
 

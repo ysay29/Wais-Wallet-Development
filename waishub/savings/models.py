@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+
 
 class Saving(models.Model):
     date = models.DateField()
@@ -10,3 +12,28 @@ class Saving(models.Model):
 
     def __str__(self):
         return f"{self.date} - {self.category}: ₱{self.amount}"
+    
+class SavingsGoal(models.Model):
+    TERM_CHOICES = [
+        ('3 months', '3 months'),
+        ('6 months', '6 months'),
+        ('1 year', '1 year'),
+        ('2 years', '2 years'),
+    ]
+
+    REMINDER_CHOICES = [
+        ('Weekly', 'Weekly'),
+        ('Monthly', 'Monthly'),
+        ('Quarterly', 'Quarterly'),
+    ]
+
+    name = models.CharField(max_length=100)
+    target_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    current_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    term = models.CharField(max_length=20, choices=TERM_CHOICES)
+    reminder = models.CharField(max_length=20, choices=REMINDER_CHOICES)
+
+    def progress_percent(self):
+        if self.target_amount == 0:
+            return 0
+        return (self.current_amount / self.target_amount) * 100

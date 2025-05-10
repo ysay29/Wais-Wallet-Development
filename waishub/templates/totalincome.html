@@ -55,12 +55,21 @@
   
 </aside>
 
-
-
-
   <div class="main-content">
     <div id="incomePage" class="content-box">
       <div class="header"><strong>Total Income</strong></div>
+      <div id="incomePage" class="content-box">
+      <form method="POST" action="{% url 'add_transaction' %}">
+        {% csrf_token %}
+        <div class="form-inline">
+          <input type="hidden" name="type" value="Income"> <!-- Set transaction type -->
+          <input type="date" name="date" required>
+          <input type="text" name="category" placeholder="Category" required>
+          <input type="number" name="amount" placeholder="Amount" step="0.01" required>
+          <button type="submit">Add Income</button>
+        </div>
+      </form>
+    </div>
       <!-- Income Table -->
       <table id="incomeTable">
         <thead>

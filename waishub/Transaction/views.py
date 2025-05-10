@@ -16,9 +16,7 @@ def add_transaction(request):
         dt = request.POST.get('date')
 
         if t and cat and amt and dt:
-            # Save the transaction associated with the logged-in user
             Transaction.objects.create(user=request.user, type=t, category=cat, amount=amt, date=dt)
-            # Redirect to the same page to show a success message (if needed)
             return redirect(f"{reverse('add_transaction')}?saved=1")
 
     return render(request, 'add.html')

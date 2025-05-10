@@ -59,48 +59,43 @@
   </div>
 
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('transaction-form');
-      const confirmPopup = document.getElementById('confirm-popup');
-      const savedPopup = document.getElementById('saved-popup');
-      const yesBtn = document.getElementById('confirm-yes');
-      const cancelBtn = document.getElementById('confirm-cancel');
-      const closePopup = document.getElementById('close-popup');
-      let allowSubmit = false;
+ <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('transaction-form');
+    const confirmPopup = document.getElementById('confirm-popup');
+    const savedPopup = document.getElementById('saved-popup');
+    const yesBtn = document.getElementById('confirm-yes');
+    const cancelBtn = document.getElementById('confirm-cancel');
+    const closePopup = document.getElementById('close-popup');
+    let allowSubmit = false;
 
-
-      form.addEventListener('submit', function(e) {
-        if (!allowSubmit) {
-          e.preventDefault();
-          confirmPopup.style.display = 'flex';
-        }
-      });
-
-
-      yesBtn.addEventListener('click', () => {
-        allowSubmit = true;
-        confirmPopup.style.display = 'none';
-        form.submit();
-      });
-
-
-      cancelBtn.addEventListener('click', () => {
-        confirmPopup.style.display = 'none';
-      });
-
-
-      closePopup.addEventListener('click', () => {
-        savedPopup.style.display = 'none';
-      });
-
-
-      // Show saved popup if ?saved=1 in URL
-      const isSaved = "{{ request.GET.saved|default:'' }}" === "1";
-      if (isSaved) {
-        savedPopup.style.display = 'flex';
+    form.addEventListener('submit', function(e) {
+      if (!allowSubmit) {
+        e.preventDefault();
+        confirmPopup.style.display = 'flex';
       }
     });
-  </script>
+
+    yesBtn.addEventListener('click', () => {
+      allowSubmit = true;
+      confirmPopup.style.display = 'none';
+      form.submit();
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      confirmPopup.style.display = 'none';
+    });
+
+    closePopup.addEventListener('click', () => {
+      window.location.href = "{% url 'dashboard' %}";
+    });
+
+    // Show saved popup if ?saved=1 in URL
+    const isSaved = "{{ request.GET.saved|default:'' }}" === "1";
+    if (isSaved) {
+      savedPopup.style.display = 'flex';
+    }
+  });
+</script>
 </body>
 </html>

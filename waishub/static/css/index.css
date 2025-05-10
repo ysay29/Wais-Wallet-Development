@@ -235,7 +235,7 @@ cursor: pointer;
 
   .card {
     flex: 1;
-    min-width: 220px;
+    min-width: 150px;
     background: white; /* Card background color */
     border-radius: 20px;
     padding: 20px;

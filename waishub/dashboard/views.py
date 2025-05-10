@@ -1,14 +1,17 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache, cache_control
+from django.contrib import messages
 from django.contrib.auth import logout
-from .models import Notification, Reminder
+from .models import Notification, Reminder, Budget, Category
 from .forms import ReminderForm
 from django.utils import timezone
 from Transaction.models import Transaction
 from django.db.models import Sum
 from datetime import timedelta
-
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from Transaction.models import Transaction, UserCategory
 
 
 #@login_required
@@ -68,6 +71,9 @@ def index(request):
     expense_change = percent_change(total_expenses, last_expenses)
     savings_change = percent_change(savings, last_savings)
 
+    # Check if there are any unread notifications
+    has_unread_notifications = Notification.objects.filter(user=user, read=False).exists()
+
     # Recent transactions
     recent_transactions = Transaction.objects.filter(user=user).order_by('-date')[:5]
 
@@ -79,6 +85,7 @@ def index(request):
         'expense_change': expense_change,
         'savings_change': savings_change,
         'recent_transactions': recent_transactions,
+        'has_unread_notifications': has_unread_notifications, 
     }
 
     return render(request, 'index.html', context)
@@ -102,6 +109,18 @@ def notifications_view(request):
     }
     return render(request, 'notifications.html', context) # Your notifications template
 
+@require_POST
+@login_required
+def mark_notification_read(request):
+    notif_id = request.POST.get('notif_id')
+    try:
+        notif = Notification.objects.get(id=notif_id, user=request.user)
+        notif.read = True
+        notif.save()
+        return JsonResponse({'status': 'success'})
+    except Notification.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Notification not found'}, status=404)
+    
 @login_required
 def settings_view(request):
     try:
@@ -125,3 +144,29 @@ def settings_view(request):
         form = ReminderForm(instance=reminder)
 
     return render(request, 'settings.html', {'form': form})
+
+@login_required
+def add_expense(request):
+    user = request.user
+
+    # Get distinct expense categories for the logged-in user
+    categories = UserCategory.objects.filter(user=user).values_list('category_name', flat=True)
+
+    if request.method == 'POST':
+        category = request.POST.get('category')
+        amount = request.POST.get('amount')
+        review_period = request.POST.get('review_period')
+
+        if category and amount and review_period:
+            Budget.objects.create(
+                user=user,
+                category=category,
+                amount=amount,
+                review_period=review_period
+            )
+            messages.success(request, 'Budget saved successfully!')
+            return redirect('add_expense')  # or wherever you want to redirect
+        else:
+            messages.error(request, 'Please fill in all fields.')
+
+    return render(request, 'addexpenses.html', {'categories': categories})

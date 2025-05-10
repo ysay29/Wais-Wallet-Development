@@ -10,7 +10,7 @@
   <title>Wais Wallet Dashboard</title>
   <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="{% static 'css/index.css' %}"
+  <link rel="stylesheet" href="{% static 'css/index.css' %}">
 </head>
 <body>
 {% if messages %}
@@ -73,13 +73,16 @@
 
   <!-- Top Filters -->
   <div class="topbar">
-    <div class="search-notif">
-      <input type="text" placeholder="Search...">
-      <a href="{% url 'notifications' %}">
+  <div class="search-notif">
+    <input type="text" placeholder="Search...">
+        <a href="{% url 'notifications' %}" class="notif-wrapper">
       <img src="{% static 'assets/bell.png' %}" alt="Notifications" class="notif-icon">
-      </a>
-    </div>
+      {% if has_unread_notifications %}
+        <span class="notif-badge"></span>
+      {% endif %}
+        </a>
   </div>
+</div>
 
   <div class="filters">
     <button>Day</button>
@@ -211,7 +214,7 @@
   <img src="{% static 'assets/add-icon.png' %}" alt="Plus Icon" id="plus-icon">
   <div class="plus-menu" id="plus-menu">
     <a href="{% url 'add_transaction' %}">Add Transaction</a>
-    <a href="addexpenses.html">Manage Expenses</a>
+    <a href="{% url 'add_expense' %}">Manage Expenses</a>
     <a href="addsavings.html">Savings</a>
   </div>
 </div>

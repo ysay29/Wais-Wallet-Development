@@ -47,6 +47,16 @@ h2 {
     border-radius: 6px;
     position: relative;
 }
+.notification.read {
+    background-color: #f4f4f4; /* default, just explicit */
+    opacity: 0.85;
+    transition: opacity 0.3s ease;
+}
+.notification:hover {
+    background-color: #dbefff;
+    cursor: pointer;
+}
+
 
 .icon {
     width: 30px;

@@ -22,7 +22,7 @@
                 <section>
                     <h2>Today</h2>
                     {% for notif in today_notifications %}
-                        <div class="notification {% if not notif.read %}unread{% endif %}">
+                        <div class="notification {% if not notif.read %}unread{% endif %}" data-id="{{ notif.id }}">
                             <img src="{{ notif.icon_url }}" alt="icon" class="icon">
                             <div class="text">
                                 <p class="title">{{ notif.message }}</p>
@@ -40,7 +40,7 @@
                 <section>
                     <h2>Earlier</h2>
                     {% for notif in older_notifications %}
-                        <div class="notification {% if not notif.read %}unread{% endif %}">
+                        <div class="notification {% if not notif.read %}unread{% endif %}" data-id="{{ notif.id }}">
                             <img src="{{ notif.icon_url }}" alt="icon" class="icon">
                             <div class="text">
                                 <p class="title">{{ notif.message }}</p>
@@ -66,21 +66,51 @@
         const notifCount = document.getElementById('notif-count');
         const notifications = document.querySelectorAll('.notification');
 
+        // Function to update the unread notifications count
         function updateNotifCount() {
             const unread = document.querySelectorAll('.notification.unread').length;
             notifCount.textContent = unread;
         }
 
-        updateNotifCount();
+        // Function to mark notification as read
+        function markAsRead(notifElement) {
+            const notifId = notifElement.dataset.id;
 
+            // Make AJAX request to mark the notification as read
+            fetch("{% url 'mark_notification_read' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": "{{ csrf_token }}",
+                },
+                body: `notif_id=${notifId}`
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.status === 'success') {
+                      notifElement.classList.remove('unread');
+                      const dot = notifElement.querySelector('.dot');
+                      if (dot) dot.remove(); // Remove the blue dot
+                      updateNotifCount(); // Update the unread count
+                  } else {
+                      console.log("Error marking notification as read");
+                  }
+              }).catch(error => {
+                  console.log("Error:", error);
+              });
+        }
+
+        // Add event listener to each notification
         notifications.forEach(notification => {
             notification.addEventListener('click', () => {
-                notification.classList.remove('unread');
-                const dot = notification.querySelector('.dot');
-                if (dot) dot.remove();
-                updateNotifCount();
+                if (notification.classList.contains('unread')) {
+                    markAsRead(notification); // Mark as read if unread
+                }
             });
         });
+
+        // Initialize unread count
+        updateNotifCount();
     </script>
+
 </body>
 </html>

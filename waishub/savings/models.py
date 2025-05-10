@@ -1,9 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-<<<<<<< HEAD
-
-=======
->>>>>>> 89542f6e6a337578c0973ae1b2b9bedfb71182d6
 
 class Saving(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -18,6 +14,8 @@ class Saving(models.Model):
         return f"{self.date} - {self.category}: ₱{self.amount}"
     
 class SavingsGoal(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='savings_goals')
+
     TERM_CHOICES = [
         ('3 months', '3 months'),
         ('6 months', '6 months'),

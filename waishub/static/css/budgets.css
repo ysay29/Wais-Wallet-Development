@@ -99,6 +99,44 @@ width: 0%;
 transition: width 0.5s ease;
 }
 
+.close-button {
+  display: inline-block;
+  margin-top: 30px; /* Position it below the title */
+  text-align: center; 
+  width: 100%;
+}
+
+.close-button button {
+  background-color: #0c4160;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 200px; /* Adjust width as needed */
+  transition: background-color 0.3s ease;
+}
+
+.close-button button:hover {
+  background-color: #084a63;
+}
+
+.delete-btn {
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+}
+
+
 /* RESPONSIVE */
 @media (max-width: 992px) {
 .budget-grid {

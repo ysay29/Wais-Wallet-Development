@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Saving
 from django.utils.timezone import now
 from collections import defaultdict
@@ -62,16 +62,24 @@ def savings_summary(request):
 
     return render(request, 'savings.html', context)
 
+@login_required
+def budget_view(request):
+    goals = SavingsGoal.objects.all()
+    return render(request, 'budgets.html', {'goals': goals})
+
+@login_required
 def add_savings(request):
     if request.method == 'POST':
         form = SavingsGoalForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('view_budgets')  # or your budget page URL name
+            return redirect('budget')  # Redirect to 'budget', not 'budget_view'
     else:
         form = SavingsGoalForm()
     return render(request, 'addsavings.html', {'form': form})
 
-def budget_view(request):
-    goals = SavingsGoal.objects.all()
-    return render(request, 'budgets.html', {'goals': goals})
+@login_required
+def delete_goal(request, id):
+    goal = get_object_or_404(SavingsGoal, id=id)  # Get the goal by its ID
+    goal.delete()  # Delete the goal
+    return redirect('budget')  # Redirect to the budgets page

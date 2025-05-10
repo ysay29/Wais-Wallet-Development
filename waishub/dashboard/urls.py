@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index, logout_user, notifications_view, settings_view, mark_notification_read, add_expense, filter_dashboard_data, update_username
+from .views import index, logout_user, notifications_view, settings_view, mark_notification_read, add_expense, filter_dashboard_data, update_username, delete_all_data
 
 urlpatterns = [
     path('dashboard/', index, name='dashboard'),  # dashboard/index
@@ -10,4 +10,5 @@ urlpatterns = [
     path('add-expense/', add_expense, name='add_expense'), #manage budget page
     path('dashboard/filter/', filter_dashboard_data, name='filter_dashboard_data'), #filter dashboard data
     path('update-username/', update_username, name='update_username'),   #update username
+    path('delete-all-data/', delete_all_data, name='delete_all_data'),  #delete all data
 ]

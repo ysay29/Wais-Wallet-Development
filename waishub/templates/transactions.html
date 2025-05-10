@@ -9,6 +9,7 @@
 </head>
 <body>
   <!-- Sidebar -->
+<<<<<<< HEAD
   <aside class="sidebar">
     <div>
       <div class="navbar">
@@ -16,48 +17,65 @@
         <div class="welcome-texts">
           <p class="hello-text">Hello, User! Welcome to</p>
           <p class="wallet-name">Wais Wallet</p>
+=======
+<aside class="sidebar">
+  <div>
+    <div class="navbar">
+      <img src="{% static 'assets/logo.png' %}" alt="Logo" class="navbar-logo">
+      <div class="welcome-texts">
+        <p class="hello-text">Hello, {{ user.get_full_name|default:user.username }}! <br> Welcome to</p>
+        <p class="wallet-name">Wais Wallet</p>
+      </div>
+    </div>
+    
+    </div>    
+    <nav class="nav-links">
+      <a href="{% url 'add_transaction' %}">Add Transaction</a>  
+      <a href="{% url 'transactions' %}">Transactions</a>
+    
+      <div class="dropdown">
+        <button class="dropbtn">
+          Evaluation
+          <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
+        </button>
+        <div class="dropdown-content">
+          <a href="analytics.html">Analytics</a>
+          <a href="{% url 'totalincome' %}">Total Income</a>
+          <a href="{% url 'totalexpenses' %}">Total Expenses</a>
+          <a href="{% url 'savings' %}">Savings</a>
+>>>>>>> 72f8dc224038f2c19726d5612ed7948647da11ec
         </div>
       </div>
-
-      <nav class="nav-links">
-        <a href="{% url 'add_transaction' %}">Add Transaction</a>
-        <a href="{% url 'transactions' %}" class="active">Transactions</a>
-
-        <div class="dropdown">
-          <button class="dropbtn">
-            Evaluation
-            <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
-          </button>
-          <div class="dropdown-content">
-            <a href="#">Analytics</a>
-            <a href="{% url 'totalincome' %}">Total Income</a>
-            <a href="{% url 'totalexpenses' %}">Total Expenses</a>
-            <a href="{% url 'savings' %}">Savings</a>
-          </div>
-        </div>
-
-        <a href="#">Budgets</a>
-        <a href="{% url 'settings' %}">Settings</a>
-        <a href="{% url 'aboutus' %}">About Us</a>
-      </nav>
-    </div>
-
-    <div class="account-section">
-      <a href="{% url 'logout' %}">
-      <div class="account-icon" id="logout-button">👤</div> 
-      <div class="account-info">
-        <div class="account-label">LOGOUT</div>
-        <div class="account-name">{{ user.get_full_name|default:user.username }}</div> <!-- change -->
-      </a>
-    </div>
-  </aside>
+    
+      <a href="budgets.html">Budgets</a>
+      <a href="{% url 'settings' %}">Settings</a>
+      <a href="{% url 'aboutus' %}">About Us</a>
+    </nav>
+    
+  <div class="account-section">
+    <a href="{% url 'logout' %}">
+    <div class="account-icon" id="logout-button">👤</div> 
+    <div class="account-info">
+      <div class="account-label">LOGOUT</div>
+      <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
+    </a>
+  </div>
+  
+</aside>
 
   <!-- Main Content -->
   <div class="main-content">
     <div class="content-header">Transactions</div>
 
+    <!-- Month Tabs -->
     <div class="month-tabs">
-      <div class="month-tab active">All</div>
+      {% for month in months %}
+        <a href="?month={{ month }}">
+          <div class="month-tab {% if selected_month == month %}active{% endif %}">
+            {{ month }}
+          </div>
+        </a>
+      {% endfor %}
     </div>
 
     {% if transactions %}
@@ -73,9 +91,9 @@
       <tbody>
         {% for transaction in transactions %}
         <tr>
-          <td class="{{ transaction.type }}">{{ transaction.type|title }}</td>
+          <td class="transaction-type {{ transaction.type|lower }}">{{ transaction.type|title }}</td>
           <td>{{ transaction.category }}</td>
-          <td>₱{{ transaction.amount }}</td>
+          <td class="transaction-amount {{ transaction.type|lower }}">₱{{ transaction.amount }}</td>
           <td>{{ transaction.date }}</td>
         </tr>
         {% endfor %}
@@ -83,17 +101,23 @@
     </table>
     {% else %}
     <div class="empty-state">
-      No transactions available.
-    </div>
+    No transactions{% if selected_month %} for {{ selected_month }}{% endif %}.
+  </div>
     {% endif %}
   </div>
 
   <script>
     const tabs = document.querySelectorAll('.month-tab');
+    const emptyState = document.querySelector('.empty-state');
+
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
         tabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
+
+        if (emptyState) {
+          emptyState.textContent = `No transactions for ${tab.textContent}.`;
+        }
       });
     });
   </script>

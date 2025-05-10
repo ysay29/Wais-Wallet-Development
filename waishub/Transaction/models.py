@@ -14,3 +14,7 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"{self.type} — {self.category} — ₱{self.amount}"
+
+    def formatted_amount(self):
+        return f"₱{self.amount:,.2f}"  # This will format the amount with commas and two decimal places
+

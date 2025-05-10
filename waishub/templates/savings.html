@@ -23,10 +23,11 @@
       </div>
     </div>
     
+    </div>    
     <nav class="nav-links">
-      <a href="{% url 'dashboard' %}">Dashboard</a>      
+      <a href="{% url 'dashboard' %}" class="active">Dashboard</a>      
       <a href="{% url 'transactions' %}">Transactions</a>
-   
+    
       <div class="dropdown">
         <button class="dropbtn">
           Evaluation
@@ -35,18 +36,23 @@
         <div class="dropdown-content">
           <a href="analytics.html">Analytics</a>
           <a href="{% url 'totalincome' %}">Total Income</a>
+<<<<<<< HEAD
           <a href="totalexpenses.html">Total Expenses</a>
           <a href="savings.html" class="active">Savings</a>
+=======
+          <a href="{% url 'totalexpenses' %}">Total Expenses</a>
+          <a href="{% url 'savings' %}">Savings</a>
+>>>>>>> 72f8dc224038f2c19726d5612ed7948647da11ec
         </div>
       </div>
     
       <a href="budgets.html">Budgets</a>
-      <a href="settings.html">Settings</a>
-      <a href="aboutus.html">About Us</a>
+      <a href="{% url 'settings' %}">Settings</a>
+      <a href="{% url 'aboutus' %}">About Us</a>
     </nav>
-  </div>
-  
+    
   <div class="account-section">
+<<<<<<< HEAD
       <a href="{% url 'logout' %}">
       <div class="account-icon" id="logout-button">👤</div> 
       <div class="account-info">
@@ -54,6 +60,15 @@
         <div class="account-name">{{ user.get_full_name|default:user.username }}</div> <!-- change -->
       </a>
     </div>
+=======
+    <a href="{% url 'logout' %}">
+    <div class="account-icon" id="logout-button">👤</div> 
+    <div class="account-info">
+      <div class="account-label">LOGOUT</div>
+      <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
+    </a>
+  </div>
+>>>>>>> 72f8dc224038f2c19726d5612ed7948647da11ec
 </aside>
 
 <div class="main-content">

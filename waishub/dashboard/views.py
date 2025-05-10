@@ -6,6 +6,10 @@ from .models import Notification, Reminder
 from .forms import ReminderForm
 from django.utils import timezone
 from Transaction.models import Transaction
+from django.db.models import Sum
+from datetime import timedelta
+
+
 
 #@login_required
 def index(request):
@@ -20,11 +24,63 @@ def logout_user(request):
 @login_required(login_url='login')
 def index(request):
     user = request.user
+    today = timezone.now()
+    first_day_this_month = today.replace(day=1)
+    first_day_last_month = (first_day_this_month - timedelta(days=1)).replace(day=1)
+    last_day_last_month = first_day_this_month - timedelta(days=1)
+
+    # Current month transactions
+    this_month_incomes = Transaction.objects.filter(
+        user=user, type='Income',
+        date__gte=first_day_this_month, date__lte=today
+    )
+    this_month_expenses = Transaction.objects.filter(
+        user=user, type='Expense',
+        date__gte=first_day_this_month, date__lte=today
+    )
+
+    # Last month transactions
+    last_month_incomes = Transaction.objects.filter(
+        user=user, type='Income',
+        date__gte=first_day_last_month, date__lte=last_day_last_month
+    )
+    last_month_expenses = Transaction.objects.filter(
+        user=user, type='Expense',
+        date__gte=first_day_last_month, date__lte=last_day_last_month
+    )
+
+    recent_transactions = Transaction.objects.filter(user=user).order_by('-date')[:5]
+     # Totals
+    total_income = this_month_incomes.aggregate(Sum('amount'))['amount__sum'] or 0
+    total_expenses = this_month_expenses.aggregate(Sum('amount'))['amount__sum'] or 0
+    savings = total_income - total_expenses
+
+    last_income = last_month_incomes.aggregate(Sum('amount'))['amount__sum'] or 0
+    last_expenses = last_month_expenses.aggregate(Sum('amount'))['amount__sum'] or 0
+    last_savings = last_income - last_expenses
+    # Percent changes (avoid division by zero)
+    def percent_change(current, previous):
+        if previous == 0:
+            return 100.0 if current > 0 else 0.0
+        return ((current - previous) / previous) * 100
+
+    income_change = percent_change(total_income, last_income)
+    expense_change = percent_change(total_expenses, last_expenses)
+    savings_change = percent_change(savings, last_savings)
+
+    # Recent transactions
     recent_transactions = Transaction.objects.filter(user=user).order_by('-date')[:5]
 
     context = {
-        'recent_transactions': recent_transactions
+        'income': total_income,
+        'expenses': total_expenses,
+        'savings': savings,
+        'income_change': income_change,
+        'expense_change': expense_change,
+        'savings_change': savings_change,
+        'recent_transactions': recent_transactions,
     }
+
     return render(request, 'index.html', context)
 
 @login_required

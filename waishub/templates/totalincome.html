@@ -7,310 +7,52 @@
   <title>Wais Wallet – Total Income</title>
   <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    /* navbar */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-   
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f6fc;
-      display: flex;
-      min-height: 100vh;
-    }
-
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-    /* Sidebar */
-    .sidebar {
-      height: 100vh;
-      width: 250px;
-      position: relative;
-      background: #a4c1df;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      border-right: 1px solid #ddd;
-      overflow-x: hidden;
-      transition: width 0.3s;
-    }
-
-
-    .sidebar.closed{
-      width: 80px;
-    }
-   
-.navbar {
-  display: flex;
-  align-items: center; /* Align logo and text vertically */
-  padding: 15px;
-  background-color: transparent;
-  margin-bottom: 20px;
-}
-
-
-.navbar-logo {
-  width: 40px; /* Adjust logo size as needed */
-  height: 40px;
-  margin-right: 10px; /* Space between logo and text */
-}
-
-
-.welcome-texts {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.3;
-}
-
-
-.hello-text {
-  font-size: 12px; /* Slightly larger than 10px */
-  color: #555;
-  font-weight: normal;
-  margin-bottom: 2px; /* Tighter spacing */
-  text-align: left; /* Align left when beside logo */
-}
-
-
-.wallet-name {
-  font-size: 20px; /* Increased from 15px */
-  font-weight: bold;
-  color: #0c4160;
-  text-transform: capitalize;
-  letter-spacing: 1px; /* Slightly more spacing */
-}
-
-
-    .nav-links a, .dropbtn {
-      display: block;
-      color: #333;
-      padding: 10px 0;
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-
-
-    .nav-links a:hover, .dropbtn:hover {
-      color: #0056d2;
-    }
-
-
-    .nav-links a[href="index.html"],
-    .nav-links a.active {
-      color:#0c4160;
-      font-weight: bold;
-    }
-    .dropdown { position: relative; }
-    .dropbtn {
-      background: none;
-      border: none;
-      width: 100%;
-      text-align: left;
-      cursor: pointer;
-      font-size: 95%;
-    }
-
-
-    .dropdown-img {
-  width: 15px;
-  height: 15px;
-}
-
-
-    .dropdown-content {
-      display: none;
-      flex-direction: column;
-      background: #a4c1df;
-      margin-top: 5px;
-    }
-    .dropdown:hover .dropdown-content { display: flex; }
-   
-    /* Account Section Styling */
-.account-section {
-  display: flex;
-  align-items: center;
-  margin-top: auto;
-  padding: 10px 15px;
-  background: #0c4160;
-  border-radius: 10px;
-  gap: 12px;
-}
-
-
-.account-icon {
-  width: 36px;
-  height: 36px;
-  background: #f0f4f8;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  color: #0c4160;
-}
-
-
-/* Alternative for using an icon font (Font Awesome example) */
-/* <i class="fas fa-user-circle account-icon"></i> */
-.account-icon i {
-  font-size: 24px;
-  color: #fff;
-}
-
-
-.account-info {
-  flex: 1;
-}
-
-
-.account-label {
-  font-size: 11px;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-
-.account-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-  margin-top: 2px;
-}
-
-
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f6f8;
-    }
-    .main-content {
-      margin-left: 10px;
-      padding: 30px;
-      flex: 1;
-      overflow-y: auto;
-      max-height: 100vh;
-    }
-    .header {
-      font-size: 1.8rem;
-      margin-bottom: 20px;
-      color: #223b58;
-    }
-    .content-box {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-    th, td {
-      padding: 12px 10px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-    th {
-      background-color: #f0f4f8;
-      color: #223b58;
-      font-weight: 600;
-    }
-    td {
-      color: #33475b;
-    }
-    .summary {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: green;
-    }
-    .summary.red {
-      color: #e74c3c;
-    }
-    .form-inline {
-      margin-bottom: 20px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .form-inline input, .form-inline select {
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-    .form-inline button {
-      background: #007bff;
-      color: white;
-      padding: 8px 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    .form-inline button:hover {
-      background: #0056b3;
-    }
-    .filter-box {
-      margin-bottom: 10px;
-    }
-  </style>
+  <link rel="stylesheet" href="{% static 'css/totalincome.css' %}"
 </head>
 <body>
 <!-- Sidebar -->
 <aside class="sidebar">
   <div>
     <div class="navbar">
-      <img src="assets/logo.png" alt="Logo" class="navbar-logo">
+      <img src="{% static 'assets/logo.png' %}" alt="Logo" class="navbar-logo">
       <div class="welcome-texts">
         <p class="hello-text">Hello, {{ user.get_full_name|default:user.username }}! <br> Welcome to</p>
         <p class="wallet-name">Wais Wallet</p>
       </div>
     </div>
-   
+    
     </div>    
     <nav class="nav-links">
-      <a href="index.html" class="active">Dashboard</a>      
-      <a href="transactions.html">Transactions</a>
-   
+      <a href="{% url 'dashboard' %}" class="active">Dashboard</a>      
+      <a href="{% url 'transactions' %}">Transactions</a>
+    
       <div class="dropdown">
         <button class="dropbtn">
           Evaluation
-          <img src="assets/dropdown.png" alt="Dropdown Icon" class="dropdown-img">
+          <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
         </button>
         <div class="dropdown-content">
           <a href="analytics.html">Analytics</a>
-          <a href="totalincome.html">Total Income</a>
-          <a href="totalexpenses.html">Total Expenses</a>
-          <a href="savings.html">Savings</a>
+          <a href="{% url 'totalincome' %}">Total Income</a>
+          <a href="{% url 'totalexpenses' %}">Total Expenses</a>
+          <a href="{% url 'savings' %}">Savings</a>
         </div>
       </div>
-   
+    
       <a href="budgets.html">Budgets</a>
-      <a href="settings.html">Settings</a>
-      <a href="aboutus.html">About Us</a>
+      <a href="{% url 'settings' %}">Settings</a>
+      <a href="{% url 'aboutus' %}">About Us</a>
     </nav>
-   
-  </div>
+    
   <div class="account-section">
-    <a href="login.html">
-    <div class="account-icon">👤</div> <!-- You can replace with an icon/image -->
+    <a href="{% url 'logout' %}">
+    <div class="account-icon" id="logout-button">👤</div> 
     <div class="account-info">
       <div class="account-label">LOGOUT</div>
       <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
     </a>
-    </div>
   </div>
- 
+  
 </aside>
 
 
@@ -339,12 +81,18 @@
 
 
       <!-- Total Summary -->
-      <div class="summary">Total Income: ₱{{ total }}</div>
+      <div class="summary">Total Income: ₱{{ total_income }}</div>
 
 
       <!-- Chart -->
-      <canvas id="incomeChart" height="100"></canvas>
+      <div style="position: relative; height: 300px;">
+        <canvas id="incomeChart"></canvas>
+      </div>
+
     </div>
+    </div>
+    <a href="{% url 'dashboard' %}" class="back-button">← Back to Home</a>
+  </div>
   </div>
 
 
@@ -360,50 +108,58 @@
   const labels = incomeData.labels;
   const data = incomeData.data;
 
+  const chartCanvas = document.getElementById('incomeChart');
+  const ctx = chartCanvas.getContext('2d');
+
+  // 💥 Destroy any existing chart on this canvas (using a custom global var)
+  if (window.incomeChartInstance) {
+    window.incomeChartInstance.destroy();
+    window.incomeChartInstance = null;
+  }
+
   if (labels.length > 0 && data.length > 0) {
-    new Chart(
-      document.getElementById('incomeChart').getContext('2d'),
-      {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'Total Income by Category',
-            data: data,
-            backgroundColor: '#2ecc71',
-            borderRadius: 6
-          }]
+    window.incomeChartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Total Income by Category',
+          data: data,
+          backgroundColor: '#2ecc71',
+          borderRadius: 6,
+          barThickness: 40,
+          maxBarThickness: 60
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return '₱' + value;
+              }
+            }
+          }
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: function(value) {
-                  return '₱' + value;
-                }
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return '₱' + context.parsed.y;
               }
             }
           },
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  return '₱' + context.parsed.y;
-                }
-              }
-            },
-            legend: {
-              display: false
-            }
+          legend: {
+            display: false
           }
         }
       }
-    );
+    });
   } else {
-    document.getElementById('incomeChart').insertAdjacentHTML('afterend', '<p class="no-data">No data available for chart.</p>');
+    chartCanvas.insertAdjacentHTML('afterend', '<p class="no-data">No data available for chart.</p>');
   }
 </script>
 

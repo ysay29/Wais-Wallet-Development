@@ -13,6 +13,8 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from Transaction.models import Transaction, UserCategory
 from django.utils.dateparse import parse_date
+from savings.models import Saving, SavingsGoal
+from savings.views import savings_summary
 
 
 
@@ -148,6 +150,16 @@ def settings_view(request):
     return render(request, 'settings.html', {'form': form})
 
 @login_required
+def update_username(request):
+    if request.method == "POST":
+        new_username = request.POST.get("username")
+        if new_username:
+            request.user.username = new_username
+            request.user.save()
+            return redirect('settings')
+    return redirect('settings')
+
+@login_required
 def add_expense(request):
     user = request.user
 
@@ -238,3 +250,17 @@ def filter_dashboard_data(request):
         'chart_data': chart_data,
         'transactions': tx_list
     })
+
+# Function to delete all data for the logged-in user
+@login_required
+def delete_all_data(request):
+    if request.method == 'POST':
+        # Perform data deletion
+        Transaction.objects.filter(user=request.user).delete()  # Delete all transactions
+        Budget.objects.filter(user=request.user).delete()  # Delete all budgets
+        Notification.objects.filter(user=request.user).delete()  # Delete all notifications
+        Saving.objects.filter(user=request.user).delete()  # Delete all savings records
+        messages.success(request, 'Your data has been deleted successfully.')
+        return redirect('settings')  # Redirect to the settings page after deletion
+
+    return render(request, 'settings.html')

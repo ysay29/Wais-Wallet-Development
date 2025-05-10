@@ -61,16 +61,16 @@ input, select {
     margin-bottom: 8px;
 }
 
+.option-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #27ae60;
+}
+
 .option-row label {
     margin-bottom: 0;
     margin-left: 10px;
     color: #333;
-}
-
-.checkbox {
-    width: 18px;
-    height: 18px;
-    accent-color: #27ae60;
 }
 
 .buttons {
@@ -109,3 +109,101 @@ button {
     font-size: 14px;
 }
 
+.delete-button {
+background-color: red;
+color: white;
+border: none;
+padding: 16px 32px;
+border-radius: 8px;
+font-size: 20px;
+margin-top: 30px;
+cursor: pointer;
+transition: transform 0.2s;
+}
+
+.delete-button:hover {
+transform: scale(1.05);
+}
+
+/* Popup Styles */
+.popup {
+display: none;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+background: #fff;
+padding: 30px;
+border-radius: 15px;
+box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+text-align: center;
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+z-index: 1000;
+}
+
+.popup-buttons {
+margin-top: 20px;
+}
+
+.popup-buttons button {
+margin: 0 10px;
+padding: 10px 20px;
+border: none;
+border-radius: 8px;
+font-weight: bold;
+cursor: pointer;
+}
+
+.popup-buttons button:hover {
+transform: scale(1.05);
+transition: transform 0.2s;
+}  
+
+.yes-btn {
+background-color: #28a745; 
+color: white;
+border: none;
+padding: 10px 20px;
+border-radius: 8px;
+font-size: 16px;
+cursor: pointer;
+transition: background-color 0.1s;
+}
+
+#confirm-yes:hover {
+background-color: #218838; 
+}
+
+.cancel-btn {
+background-color: #dc3545; 
+color: white;
+border: none;
+padding: 10px 20px;
+border-radius: 8px;
+font-size: 16px;
+cursor: pointer;
+transition: background-color 0.1s;
+}
+
+#confirm-cancel:hover {
+background-color: #c82333;
+}
+
+.success-icon {
+font-size: 50px;
+color: #28a745;
+margin-bottom: 10px;
+}
+
+.dismiss-btn {
+margin-top: 20px;
+padding: 10px 20px;
+background-color: #0057B8;
+color: rgb(255, 255, 255);
+border: none;
+border-radius: 8px;
+font-weight: bold;
+cursor: pointer;
+}

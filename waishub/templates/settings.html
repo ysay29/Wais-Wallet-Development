@@ -13,32 +13,16 @@
         <h1>Settings</h1>
         
         <h2>Username</h2>
+        <form method="POST" action="{% url 'update_username' %}">
+        {% csrf_token %}
         <div class="input-group">
-            <input type="text" placeholder="Enter your name">
+            <input type="text" name="username" placeholder="Enter your name" value="{{ request.user.username }}" required>
         </div>
-        
+        <button type="submit" class="save-btn">Save Username</button>
+        </form>
+
         <div class="option-group">
-            <label>Currency:</label>
-            <div class="option-row">
-                <input type="radio" id="php" name="currency" checked class="checkbox">
-                <label for="php">₱ PHP</label>
-            </div>
-        </div>
-        
-        <div class="option-group">
-            <label>Theme:</label>
-            <div class="option-row">
-                <input type="radio" id="light" name="theme" checked class="checkbox">
-                <label for="light">Light</label>
-            </div>
-            <div class="option-row">
-                <input type="radio" id="dark" name="theme" class="checkbox">
-                <label for="dark">Dark</label>
-            </div>
-        </div>
-        
-        <div class="option-group">
-            <label>Notifications:</label>
+            <h2>Notifications:</h2>
             <div class="option-row">
                 {{ form.enabled }}
                 <label for="{{ form.enabled.id_for_label }}">Enable notifications</label>
@@ -56,6 +40,58 @@
                 <button class="save-btn" type="submit">Save</button>
             </div>
         </form>
+
+        <!-- Delete Data Button -->
+        <form action="{% url 'delete_all_data' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="delete-button">Delete all data</button>
+        </form>
+
+        <!-- Confirm Deletion Pop-up -->
+        <div class="popup" id="confirm-popup" style="display:none;">
+            <p>Are you sure you want to delete all your data?</p>
+            <div class="popup-buttons">
+                <button id="confirm-yes">Yes</button>
+                <button id="confirm-cancel">Cancel</button>
+            </div>
         </div>
+
+        <!-- Success Pop-up -->
+        <div class="popup" id="success-popup" style="display:none;">
+            <div class="success-icon">✅</div>
+            <h2>Success!</h2>
+            <p>Your data has been deleted successfully.</p>
+            <button id="dismiss-success" class="dismiss-btn">Dismiss</button>
+        </div>
+    </div>
+    
 </body>
+
+<script>
+    // Data Deletion Functionality
+    const deleteButton = document.querySelector('.delete-button');
+    const confirmPopup = document.getElementById('confirm-popup');
+    const successPopup = document.getElementById('success-popup');
+    const confirmYesBtn = document.getElementById('confirm-yes');
+    const confirmCancelBtn = document.getElementById('confirm-cancel');
+    const dismissSuccessBtn = document.getElementById('dismiss-success');
+
+    deleteButton.addEventListener('click', (event) => {
+      event.preventDefault();  // Prevent the default form submission
+      confirmPopup.style.display = 'flex';  // Show the confirmation popup
+    });
+
+    confirmCancelBtn.addEventListener('click', () => {
+      confirmPopup.style.display = 'none';  // Hide the confirmation popup if canceled
+    });
+
+    confirmYesBtn.addEventListener('click', () => {
+      // Submit the form to delete data
+      document.querySelector('form[action="{% url 'delete_all_data' %}"]').submit();
+    });
+
+    dismissSuccessBtn.addEventListener('click', () => {
+      successPopup.style.display = 'none';  // Hide the success popup when dismissed
+    });
+</script>
 </html>

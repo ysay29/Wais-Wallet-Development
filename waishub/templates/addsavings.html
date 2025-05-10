@@ -13,47 +13,51 @@
   <div class="container">
     <h1>Savings Goal</h1>
 
-    <h2>Saving Name</h2>
-    <div class="input-group">
-      <input type="text" placeholder="e.g., Emergency Fund">
-      <p class="example-text">Give your savings goal a name</p>
-    </div>
+    <form id="savings-form" method="POST" action="{% url 'add_savings_goal' %}">
+      {% csrf_token %}
 
-    <div class="input-group">
-      <label>Maximum Savings (₱)</label>
-      <input type="number" placeholder="e.g., 10000">
-      <p class="example-text">Enter your target amount</p>
-    </div>
+      <div class="input-group">
+        <label for="name">Saving Name</label>
+        <input type="text" id="name" name="name" placeholder="e.g., Emergency Fund" required>
+        <p class="example-text">Give your savings goal a name</p>
+      </div>
 
-    <h2>Goal Term</h2>
-    <div class="input-group">
-      <select>
-        <option>Select term</option>
-        <option>3 months</option>
-        <option>6 months</option>
-        <option>1 year</option>
-        <option>2 years</option>
-      </select>
-    </div>
+      <div class="input-group">
+        <label for="target_amount">Maximum Savings (₱)</label>
+        <input type="number" id="target_amount" name="target_amount" placeholder="e.g., 10000" required>
+        <p class="example-text">Enter your target amount</p>
+      </div>
 
-    <div class="input-group">
-      <label>Reminder Frequency</label>
-      <select>
-        <option>Select frequency</option>
-        <option>Weekly</option>
-        <option>Monthly</option>
-        <option>Quarterly</option>
-      </select>
-    </div>
+      <div class="input-group">
+        <label for="term">Goal Term</label>
+        <select id="term" name="term" required>
+          <option value="">Select term</option>
+          <option>3 months</option>
+          <option>6 months</option>
+          <option>1 year</option>
+          <option>2 years</option>
+        </select>
+      </div>
 
-    <div class="buttons">
-      <button class="save-btn" id="save-btn">Save</button>
-      <button class="close-btn" id="close-btn">Close</button>
-    </div>
+      <div class="input-group">
+        <label for="reminder">Reminder Frequency</label>
+        <select id="reminder" name="reminder" required>
+          <option value="">Select frequency</option>
+          <option>Weekly</option>
+          <option>Monthly</option>
+          <option>Quarterly</option>
+        </select>
+      </div>
+
+      <div class="buttons">
+        <button type="submit" class="save-btn" id="save-btn">Save</button>
+        <button type="button" class="close-btn" id="close-btn">Close</button>
+      </div>
+    </form>
   </div>
 
   <!-- Confirm Save Pop-up -->
-  <div class="popup" id="confirm-popup">
+  <div class="popup" id="confirm-popup" style="display: none;">
     <p>Are you sure you want to save this goal?</p>
     <div class="popup-buttons">
       <button id="confirm-yes">Yes</button>
@@ -62,41 +66,46 @@
   </div>
 
   <!-- Saved Pop-up -->
-  <div class="popup" id="saved-popup">
+  <div class="popup" id="saved-popup" style="display: none;">
     <p>Your Savings Goal is saved!</p>
     <button id="close-popup">Close</button>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const saveBtn = document.getElementById('save-btn');
-      const closeBtn = document.getElementById('close-btn');
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('savings-form');
       const confirmPopup = document.getElementById('confirm-popup');
       const savedPopup = document.getElementById('saved-popup');
       const confirmYes = document.getElementById('confirm-yes');
       const confirmCancel = document.getElementById('confirm-cancel');
-      const closeSavedPopup = document.getElementById('close-popup');
+      const closePopup = document.getElementById('close-popup');
+      const closeBtn = document.getElementById('close-btn');
 
-      saveBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        confirmPopup.style.display = 'flex';
+      let allowSubmit = false;
+
+      form.addEventListener('submit', function (e) {
+        if (!allowSubmit) {
+          e.preventDefault();
+          confirmPopup.style.display = 'flex';
+        }
       });
 
-      confirmYes.addEventListener('click', function() {
+      confirmYes.addEventListener('click', function () {
+        allowSubmit = true;
         confirmPopup.style.display = 'none';
-        savedPopup.style.display = 'flex';
+        form.submit();
       });
 
-      confirmCancel.addEventListener('click', function() {
+      confirmCancel.addEventListener('click', function () {
         confirmPopup.style.display = 'none';
       });
 
-      closeSavedPopup.addEventListener('click', function() {
+      closePopup.addEventListener('click', function () {
         savedPopup.style.display = 'none';
       });
 
-      closeBtn.addEventListener('click', function() {
-        window.close(); // or you can redirect somewhere else if needed
+      closeBtn.addEventListener('click', function () {
+        window.location.href = "{% url 'dashboard' %}";
       });
     });
   </script>

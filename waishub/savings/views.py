@@ -24,8 +24,8 @@ def savings_summary(request):
         monthly_totals[month_label] += s.amount
 
     chart_labels = list(monthly_totals.keys())[::-1]  # Reverse for chronological order
-    chart_data = list(monthly_totals.values())[::-1]
-
+    chart_data = [float(v) for v in monthly_totals.values()][::-1] 
+    
     context = {
         'savings': savings,
         'total_savings': total,

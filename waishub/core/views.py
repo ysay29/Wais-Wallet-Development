@@ -9,3 +9,6 @@ def landing(request):
 
 def settings(request):
     return render(request, 'settings.html', {})
+
+def add_savings(request):
+    return render(request, 'addsavings.html', {})

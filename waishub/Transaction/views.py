@@ -3,12 +3,15 @@ from django.urls import reverse
 from .models import Transaction
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
-from .models import Transaction
+from .models import Transaction, UserCategory
 from django.utils import timezone
 
 
 @login_required
 def add_transaction(request):
+    # Fetch all distinct categories for the logged-in user from the UserCategory model
+    categories = UserCategory.objects.filter(user=request.user)
+
     if request.method == 'POST':
         t = request.POST.get('type')  # 'income' or 'expense'
         cat = request.POST.get('category')
@@ -16,12 +19,17 @@ def add_transaction(request):
         dt = request.POST.get('date')
 
         if t and cat and amt and dt:
-            # Save the transaction associated with the logged-in user
+            # If it's a custom category, create a new UserCategory for the user
+            if not UserCategory.objects.filter(user=request.user, category_name=cat).exists():
+                UserCategory.objects.create(user=request.user, category_name=cat)
+            
             Transaction.objects.create(user=request.user, type=t, category=cat, amount=amt, date=dt)
-            # Redirect to the same page to show a success message (if needed)
             return redirect(f"{reverse('add_transaction')}?saved=1")
 
-    return render(request, 'add.html')
+    return render(request, 'add.html', {'categories': categories})
+
+
+
 
 @login_required
 def transactions_list(request):

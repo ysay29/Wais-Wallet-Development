@@ -36,13 +36,8 @@
         <div class="dropdown-content">
           <a href="analytics.html">Analytics</a>
           <a href="{% url 'totalincome' %}">Total Income</a>
-<<<<<<< HEAD
-          <a href="totalexpenses.html">Total Expenses</a>
-          <a href="savings.html" class="active">Savings</a>
-=======
           <a href="{% url 'totalexpenses' %}">Total Expenses</a>
           <a href="{% url 'savings' %}">Savings</a>
->>>>>>> 72f8dc224038f2c19726d5612ed7948647da11ec
         </div>
       </div>
     
@@ -52,15 +47,6 @@
     </nav>
     
   <div class="account-section">
-<<<<<<< HEAD
-      <a href="{% url 'logout' %}">
-      <div class="account-icon" id="logout-button">👤</div> 
-      <div class="account-info">
-        <div class="account-label">LOGOUT</div>
-        <div class="account-name">{{ user.get_full_name|default:user.username }}</div> <!-- change -->
-      </a>
-    </div>
-=======
     <a href="{% url 'logout' %}">
     <div class="account-icon" id="logout-button">👤</div> 
     <div class="account-info">
@@ -68,7 +54,6 @@
       <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
     </a>
   </div>
->>>>>>> 72f8dc224038f2c19726d5612ed7948647da11ec
 </aside>
 
 <div class="main-content">
@@ -89,7 +74,7 @@
         {% for saving in savings %}
           <tr>
             <td>{{ saving.date|date:"m/d/Y" }}</td>
-            <td>₽{{ saving.amount|floatformat:0|intcomma }}</td>
+            <td>₱{{ saving.amount|floatformat:0|intcomma }}</td>
           </tr>
         {% empty %}
           <tr><td colspan="2">No savings recorded.</td></tr>
@@ -97,7 +82,7 @@
       </tbody>
     </table>
 
-    <div class="summary" id="totalSavings">Total Savings this month: ₽{{ total_savings|floatformat:0|intcomma }}</div>
+    <div class="summary" id="totalSavings">Total Savings this month: ₱{{ total_savings|floatformat:0|intcomma }}</div>
 
     <div class="month-header"><strong>{{ current_month|date:"F Y" }}</strong></div>
 

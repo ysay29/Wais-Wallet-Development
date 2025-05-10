@@ -60,7 +60,18 @@
 <div class="main-content">
   <div id="expensesPage" class="content-box">
     <div class="header"><strong>Total Expenses</strong></div>
-
+    <div id="expensesPage" class="content-box">
+      <form method="POST" action="{% url 'add_transaction' %}">
+        {% csrf_token %}
+        <div class="form-inline">
+          <input type="hidden" name="type" value="Expense"> <!-- Set transaction type -->
+          <input type="date" name="date" required>
+          <input type="text" name="category" placeholder="Category" required>
+          <input type="number" name="amount" placeholder="Amount" step="0.01" required>
+          <button type="submit">Add Expense</button>
+        </div>
+      </form>
+    </div>
     <!-- Total Expenses Summary -->
     <div class="summary">
       <strong>Total Expenses: {{ total_expenses }}</strong>

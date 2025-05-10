@@ -1,6 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class UserCategory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    category_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.category_name} ({self.user.username})"
+
+
 class Transaction(models.Model):
     TRANSACTION_TYPES = [
         ('income', 'Income'),

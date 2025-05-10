@@ -44,13 +44,8 @@ def savings_summary(request):
 
     # Convert Decimal values to float for JSON serialization
     chart_labels = list(monthly_totals.keys())[::-1]  # Reverse for chronological order
-<<<<<<< HEAD
-    chart_data = [float(v) for v in monthly_totals.values()][::-1] 
-    
-=======
     chart_data = [float(value) for value in monthly_totals.values()][::-1]  # Convert Decimal to float
 
->>>>>>> 7aa97bd36cd60875df314a07c4b3dac58b90d201
     context = {
         'savings': savings,
         'total_savings': total,

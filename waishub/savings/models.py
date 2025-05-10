@@ -1,8 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
+<<<<<<< HEAD
 
+=======
+>>>>>>> 89542f6e6a337578c0973ae1b2b9bedfb71182d6
 
 class Saving(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     date = models.DateField()
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     category = models.CharField(max_length=100, blank=True)

@@ -19,7 +19,7 @@ def savings_summary(request):
             try:
                 # Convert amount to Decimal and save the instance
                 amount = Decimal(amount)
-                Saving.objects.create(date=date, amount=amount)
+                Saving.objects.create(user=request.user, date=date, amount=amount)
             except (ValueError, TypeError, Decimal.InvalidOperation):
                 # Handle invalid amount input
                 return render(request, 'savings.html', {
@@ -35,7 +35,7 @@ def savings_summary(request):
 
     # Fetch all savings and calculate totals
     savings = Saving.objects.all().order_by('-date')
-    total = sum(s.amount for s in savings if s.amount)  # Ensure `amount` is not None
+    total = sum(s.amount or Decimal('0') for s in savings)# Ensure `amount` is not None
     goal = Decimal('400000')  # Use Decimal for goal
     progress = (total / goal) * 100 if goal else 0
 

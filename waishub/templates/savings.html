@@ -59,13 +59,35 @@
 <div class="main-content">
   <div id="savingsPage" class="content-box">
     <div class="header"><strong>Savings</strong></div>
+
+    <!-- Goal filter dropdown -->
+    <form method="get" class="form-inline" style="margin-bottom: 1rem;">
+      <label for="goal">Filter by Goal:</label>
+      <select name="goal" id="goal" onchange="this.form.submit()">
+        <option value="">All Goals</option>
+        {% for goal in goals %}
+          <option value="{{ goal.id }}" {% if selected_goal and selected_goal.id == goal.id %}selected{% endif %}>
+            {{ goal.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </form>
+
+    <!-- Add Savings Form -->
     <form method="post" class="form-inline">
       {% csrf_token %}
       <input type="date" name="date" required>
       <input type="number" name="amount" placeholder="Amount" required>
+      <select name="goal" required>
+        <option value="">Select Goal</option>
+        {% for goal in goals %}
+          <option value="{{ goal.id }}">{{ goal.name }}</option>
+        {% endfor %}
+      </select>
       <button type="submit">Add Savings</button>
     </form>
 
+    <!-- Savings Table -->
     <table id="savingsTable">
       <thead>
         <tr><th>DATE</th><th>AMOUNT</th></tr>
@@ -82,28 +104,41 @@
       </tbody>
     </table>
 
-    <div class="summary" id="totalSavings">Total Savings this month: ₱{{ total_savings|floatformat:0|intcomma }}</div>
-
-    <div class="month-header"><strong>{{ current_month|date:"F Y" }}</strong></div>
+    <!-- Summary and Progress -->
+    {% if selected_goal %}
+      <div class="month-header"><strong>{{ selected_goal.name }}</strong></div>
+      <div class="summary" id="totalSavings">
+        Saved: ₱{{ total_savings|floatformat:0|intcomma }} / ₱{{ selected_goal.target_amount|floatformat:0|intcomma }}
+      </div>
+    {% else %}
+      <div class="month-header"><strong>{{ current_month|date:"F Y" }}</strong></div>
+      <div class="summary" id="totalSavings">Total Savings this month: ₱{{ total_savings|floatformat:0|intcomma }}</div>
+    {% endif %}
 
     <div class="progress-container">
       <div class="progress-bar" style="width: {{ progress_percent }}%;">{{ progress_percent|floatformat:0 }}%</div>
     </div>
     <div class="progress-labels">
-      <span>40</span><span>30</span><span>20</span><span>10</span><span>0</span>
+      <span>0%</span><span>20%</span><span>40%</span><span>60%</span><span>80%</span><span>100%</span>
     </div>
 
     <div class="items-container">
-      <div class="item">Item 1</div>
-      <div class="item">Item 2</div>
-      <div class="item">Item 3</div>
-      <div class="item">Item 4</div>
-      <div class="item">Item 5</div>
+      {% for saving in savings|slice:":5" %}
+        <div class="item">
+          {{ saving.date|date:"M d, Y" }}: ₱{{ saving.amount|floatformat:2 }}
+          {% if saving.goal %} ({{ saving.goal.name }}) {% endif %}
+        </div>
+      {% empty %}
+        <div class="item">No recent savings.</div>
+      {% endfor %}
     </div>
 
+
+    <!-- Chart -->
     <canvas id="savingsChart" height="100"></canvas>
   </div>
 </div>
+
 
 <script>
   const chartData = {

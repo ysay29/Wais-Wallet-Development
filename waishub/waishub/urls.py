@@ -32,6 +32,7 @@ urlpatterns = [
     path('', include('Transaction.urls')), #Add Transaction page
     path('', include('savings.urls')), #Savings page and manage savings goal
     path('', include('core.urls')),
+    path('', include('analytics.urls')), #Analytics page
 ]
 
 # Serve media files if DEBUG is True (development mode)

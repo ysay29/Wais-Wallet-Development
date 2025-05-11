@@ -44,7 +44,7 @@
         <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
       </button>
       <div class="dropdown-content">
-        <a href="analytics.html">Analytics</a>
+        <a href="{% url 'analytics' %}" >Analytics</a>
         <a href="{% url 'totalincome' %}">Total Income</a>
         <a href="{% url 'totalexpenses' %}">Total Expenses</a>
         <a href="{% url 'savings' %}">Savings</a>
@@ -161,13 +161,15 @@
         <span id="monthYear"></span>
         <button id="nextMonth">&gt;</button>
       </div>
+
       <div id="calendar"></div>
+
+      <!-- Monthly Progress -->
       <div class="monthly-progress">
-        <span>Monthly Progress</span>
-        <progress id="progress-bar" value="70" max="100"></progress>
-      </div>      
+        <span>Savings Goal Progress</span>
+        <progress id="progress-bar" value="{{ progress_percent }}" max="100"></progress>
+      </div>
     </div>
-  </div>
 
   <!-- Recent Transactions -->
   <section class="history recent-transactions">

@@ -21,7 +21,7 @@ from authentication.views import *  # Import views from the authentication app
 from django.conf.urls.static import static
 from django.conf import settings   # Application settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns  # Static files serving\
-
+from analytics.views import analytics
 
 
 # Define URL patterns
@@ -32,6 +32,7 @@ urlpatterns = [
     path('', include('Transaction.urls')), #Add Transaction page
     path('', include('savings.urls')), #Savings page and manage savings goal
     path('', include('core.urls')),
+    path('analytics/', analytics, name='analytics'), #Analytics page
 ]
 
 # Serve media files if DEBUG is True (development mode)

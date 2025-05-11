@@ -6,61 +6,48 @@ from decimal import Decimal
 import json
 from .models import SavingsGoal
 from django.contrib.auth.decorators import login_required
-from .forms import SavingsGoalForm
+from .forms import SavingsGoalForm, SavingForm
 
 @login_required
 def savings_summary(request):
-    if request.method == 'POST':
-        date = request.POST.get('date')
-        amount = request.POST.get('amount')
+    selected_goal_id = request.GET.get('goal')
+    goals = SavingsGoal.objects.filter(user=request.user)
 
-        # Validate the inputs
-        if date and amount:
-            try:
-                # Convert amount to Decimal and save the instance
-                amount = Decimal(amount)
-                Saving.objects.create(user=request.user, date=date, amount=amount)
-            except (ValueError, TypeError, Decimal.InvalidOperation):
-                # Handle invalid amount input
-                return render(request, 'savings.html', {
-                    'error': 'Invalid amount. Please enter a valid number.'
-                })
-        else:
-            # Handle missing fields
-            return render(request, 'savings.html', {
-                'error': 'Both date and amount are required.'
-            })
+    if selected_goal_id:
+        try:
+            selected_goal = goals.get(id=selected_goal_id)
+            savings = Saving.objects.filter(user=request.user, goal=selected_goal).order_by('-date')
+        except SavingsGoal.DoesNotExist:
+            selected_goal = None
+            savings = Saving.objects.filter(user=request.user).order_by('-date')
+    else:
+        selected_goal = None
+        savings = Saving.objects.filter(user=request.user).order_by('-date')
 
-        return redirect('savings')  # Ensure the URL name matches your urlpatterns
+    total = sum(s.amount or Decimal('0') for s in savings)
+    goal_amount = selected_goal.target_amount if selected_goal else Decimal('400000')
+    progress = (total / goal_amount) * 100 if goal_amount else 0
 
-    # Fetch all savings and calculate totals
-    savings = Saving.objects.all().order_by('-date')
-    total = sum(s.amount or Decimal('0') for s in savings)# Ensure `amount` is not None
-    goal = Decimal('400000')  # Use Decimal for goal
-    progress = (total / goal) * 100 if goal else 0
-
-    # Group savings by month for chart
     monthly_totals = defaultdict(Decimal)
     for s in savings:
-        if s.date:  # Ensure date is not None
-            month_label = s.date.strftime('%b %Y')  # Example: 'May 2025'
+        if s.date:
+            month_label = s.date.strftime('%b %Y')
             monthly_totals[month_label] += s.amount
 
-    # Convert Decimal values to float for JSON serialization
-    chart_labels = list(monthly_totals.keys())[::-1]  # Reverse for chronological order
-    chart_data = [float(value) for value in monthly_totals.values()][::-1]  # Convert Decimal to float
-
     context = {
+        'goals': goals,
+        'selected_goal': selected_goal,
         'savings': savings,
         'total_savings': total,
-        'goal': goal,
+        'goal': goal_amount,
         'progress_percent': progress,
         'current_month': now(),
-        'chart_labels': json.dumps(chart_labels),
-        'chart_data': json.dumps(chart_data),
+        'chart_labels': json.dumps(list(monthly_totals.keys())[::-1]),
+        'chart_data': json.dumps([float(v) for v in monthly_totals.values()][::-1]),
     }
 
     return render(request, 'savings.html', context)
+
 
 @login_required
 def budget_view(request):

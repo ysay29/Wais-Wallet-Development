@@ -260,6 +260,7 @@ def delete_all_data(request):
         Budget.objects.filter(user=request.user).delete()  # Delete all budgets
         Notification.objects.filter(user=request.user).delete()  # Delete all notifications
         Saving.objects.filter(user=request.user).delete()  # Delete all savings records
+        UserCategory.objects.filter(user=request.user).delete()  # Delete all user categories
         messages.success(request, 'Your data has been deleted successfully.')
         return redirect('settings')  # Redirect to the settings page after deletion
 

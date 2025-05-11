@@ -161,13 +161,15 @@
         <span id="monthYear"></span>
         <button id="nextMonth">&gt;</button>
       </div>
+
       <div id="calendar"></div>
+
+      <!-- Monthly Progress -->
       <div class="monthly-progress">
-        <span>Monthly Progress</span>
-        <progress id="progress-bar" value="70" max="100"></progress>
-      </div>      
+        <span>Savings Goal Progress</span>
+        <progress id="progress-bar" value="{{ progress_percent }}" max="100"></progress>
+      </div>
     </div>
-  </div>
 
   <!-- Recent Transactions -->
   <section class="history recent-transactions">

@@ -5,13 +5,17 @@ class Saving(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     date = models.DateField()
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    category = models.CharField(max_length=100, blank=True)
-    goal_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    goal_term = models.CharField(max_length=100, blank=True)  # e.g., '6 months'
-    reminder_frequency = models.CharField(max_length=100, blank=True)  # e.g., 'weekly'
+    goal = models.ForeignKey('SavingsGoal', on_delete=models.CASCADE, related_name='savings', null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.goal:
+            # Recalculate the total savings for this goal
+            self.goal.current_amount = self.goal.savings.aggregate(total=models.Sum('amount'))['total'] or 0
+            self.goal.save()
 
     def __str__(self):
-        return f"{self.date} - {self.category}: ₱{self.amount}"
+        return f"{self.date} - ₱{self.amount} (Goal: {self.goal.name if self.goal else 'None'})"
     
 class SavingsGoal(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='savings_goals')

@@ -3,21 +3,21 @@ Wais Wallet is a smart finance app that helps you track expenses, set savings go
 
 DEVELOPMENT TEAM
 
-Frontend Team
-Ysa Frigillana
-Elena Lanuza
-Lee Tuangco
+Frontend Team:
+Ysa Frigillana,
+Elena Lanuza,
+Lee Tuangco,
 Karl Esteban
 
 
-Backend Team 
-Franchezca Banayad
-Princess Mae Sanchez
+Backend Team: 
+Franchezca Banayad,
+Princess Mae Sanchez,
 Kenshin Cuerl Dizon
 
 
-Database Team 
-John Benedict Listangco
-Recson Avielle Rojo
+Database Team:
+John Benedict Listangco,
+Recson Avielle Rojo,
 Achilles Pajes
 

@@ -31,7 +31,7 @@
           <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
         </button>
         <div class="dropdown-content">
-          <a href="analytics.html">Analytics</a>
+          <a href="{% url 'analytics' %}">Analytics</a>
           <a href="{% url 'totalincome' %}">Total Income</a>
           <a href="{% url 'totalexpenses' %}">Total Expenses</a>
           <a href="{% url 'savings' %}">Savings</a>

@@ -1,47 +1,70 @@
 from django.shortcuts import render
-from .models import MonthlySpending  # Import the MonthlySpending model
+from django.contrib.auth.decorators import login_required
+from Transaction.models import Transaction
+from django.db.models import Sum, Q
+from django.db.models.functions import TruncMonth
+import json
 
-
+@login_required
 def analytics(request):
     """
-    View to render the analytics dashboard with spending data.
+    View to render the analytics dashboard with real-time data aggregated from the Transaction model.
     """
-    # Fetch all MonthlySpending records for the logged-in user, ordered by ID
-    spend_data = MonthlySpending.objects.filter(user=request.user).order_by('id')
+    try:
+        transactions = Transaction.objects.filter(user=request.user)
 
-    # Check if there is any spending data
-    if not spend_data.exists():
+        print(f"Transactions for user {request.user}: {transactions}")
+
+        if not transactions.exists():
+            print("No transactions found for the user.")
+            return render(request, 'analytics.html', {'message': "No transaction data available."})
+
+        # Group and aggregate by month
+        spend_data = transactions.annotate(
+            month=TruncMonth('date')
+        ).values('month').annotate(
+            total_income=Sum('amount', filter=Q(type='income')),
+            total_expenses=Sum('amount', filter=Q(type='expense')),
+        ).order_by('month')
+
+        print(f"Spend data: {list(spend_data)}")
+
+        months, income, expenses, balance = [], [], [], []
+
+        for entry in spend_data:
+            month = entry['month']
+            total_income_val = entry['total_income'] or 0
+            total_expenses_val = entry['total_expenses'] or 0
+
+            print(f"Month: {month}, Income: {total_income_val}, Expenses: {total_expenses_val}")
+
+            months.append(month.strftime('%B %Y'))
+            income.append(total_income_val)
+            expenses.append(total_expenses_val)
+            balance.append(total_income_val - total_expenses_val)
+
+        total_income_sum = sum(income)
+        total_expenses_sum = sum(expenses)
+
+        print(f"Months: {months}")
+        print(f"Income: {income}")
+        print(f"Expenses: {expenses}")
+        print(f"Balance: {balance}")
+        print(f"Total Income: {total_income_sum}")
+        print(f"Total Expenses: {total_expenses_sum}")
+
         context = {
-            'message': "No spending data available.",
+            'months': json.dumps(months),
+            'income': json.dumps(income),
+            'expenses': json.dumps(expenses),
+            'balance': json.dumps(balance),
+            'total_income': total_income_sum,
+            'total_expenses': total_expenses_sum,
+            'has_data': bool(months),  # <-- Add this if you're conditionally rendering charts
         }
-        return render(request, 'analytics.html', context)  # Reference the global template
 
-    # Extract data for the dashboard
-    months = [entry.month for entry in spend_data]
-    income = [entry.income for entry in spend_data]
-    expenses = [entry.expense for entry in spend_data]
-    balance = [inc - exp for inc, exp in zip(income, expenses)]
+        return render(request, 'analytics.html', context)
 
-    # Extract category-specific spending
-    food = [entry.food for entry in spend_data]
-    utilities = [entry.utilities for entry in spend_data]
-    apparel = [entry.apparel for entry in spend_data]
-
-    # Calculate totals for each category
-    food_total = sum(food)
-    utilities_total = sum(utilities)
-    apparel_total = sum(apparel)
-
-    # Prepare context for the template
-    context = {
-        'months': months,
-        'income': income,
-        'expenses': expenses,
-        'balance': balance,
-        'food_total': food_total,
-        'utilities_total': utilities_total,
-        'apparel_total': apparel_total,
-    }
-
-    # Render the analytics dashboard template
-    return render(request, 'analytics.html', context)  # Reference the global template
+    except Exception as e:
+        print(f"[Analytics View Error] {e}")
+        return render(request, 'analytics.html', {'message': "An error occurred while processing the data."})

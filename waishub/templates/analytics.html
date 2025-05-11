@@ -7,99 +7,64 @@
     <title>Analytics Dashboard</title>
     <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="{% static 'css/analytics.css' %}">    
+    <link rel="stylesheet" href="{% static 'css/analytics.css' %}">
+    <style>
+        .no-data-message {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 1.5rem;
+            color: #555;
+        }
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 40px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>Analytics Dashboard</h1>
-        
-        <div class="summary-cards">
-            <div class="summary-card">
-                <h3>Total Income</h3>
-                <div class="amount">₱99M</div>
-                <div class="change">↑ 1.45% from last period</div>
+
+        {% if message %}
+            <div class="no-data-message">
+                <p>{{ message }}</p>
             </div>
-            
-            <div class="summary-card">
-                <h3>Total Expenses</h3>
-                <div class="amount">₱99M</div>
-                <div class="change">↑ 1.45% from last period</div>
+        {% elif has_data %}
+            <!-- Summary Section -->
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <h3>Total Income</h3>
+                    <div class="amount">₱{{ total_income|floatformat:2 }}</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Total Expenses</h3>
+                    <div class="amount">₱{{ total_expenses|floatformat:2 }}</div>
+                </div>
             </div>
-        </div>
-        
-        <h2>Income vs Expenses (Last 6 Months)</h2>
-        <div class="chart-container">
-            <canvas id="incomeExpenseChart"></canvas>
-        </div>
-        
-        <div class="divider"></div>
-        
-        <h2>Spending by Category</h2>
-        <div class="categories">
-            <div class="category">
-                <h4>Food</h4>
-                <div>₱12,345</div>
+
+            <!-- Charts -->
+            <h2>Income vs Expenses</h2>
+            <div class="chart-container">
+                <canvas id="incomeExpenseChart"></canvas>
             </div>
-            <div class="category">
-                <h4>Utilities</h4>
-                <div>₱8,765</div>
+
+            <h2>Balance Trend</h2>
+            <div class="chart-container">
+                <canvas id="balanceTrendChart"></canvas>
             </div>
-            <div class="category">
-                <h4>Apparel</h4>
-                <div>₱5,432</div>
-            </div>
-        </div>
-        
-        <div class="divider"></div>
-        
-        <h2>Balance Trend</h2>
-        <div class="chart-container">
-            <canvas id="balanceTrendChart"></canvas>
-        </div>
-        
-        <div class="legend">
-            <div class="legend-item">
-                <div class="legend-color income-color"></div>
-                <span>Income</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color expense-color"></div>
-                <span>Expense</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color balance-color"></div>
-                <span>Balance</span>
-            </div>
-        </div>
-        
-        <div class="months">
-            <span class="month">Jan</span>
-            <span class="month">Feb</span>
-            <span class="month">Mar</span>
-            <span class="month">Apr</span>
-            <span class="month">May</span>
-            <span class="month">June</span>
-            <span class="month">July</span>
-            <span class="month">Aug</span>
-            <span class="month">Sep</span>
-            <span class="month">Oct</span>
-            <span class="month">Nov</span>
-        </div>
+        {% endif %}
     </div>
 
+    {% if has_data %}
     <script>
-        // Mock data for charts
-        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-        const incomeData = [8500000, 9200000, 10100000, 9900000, 10500000, 11000000];
-        const expenseData = [8200000, 8800000, 9500000, 9700000, 10200000, 9900000];
-        const balanceData = incomeData.map((income, index) => income - expenseData[index]);
-        
-        const categories = ['Food', 'Utilities', 'Apparel', 'Transport', 'Entertainment'];
-        const categoryData = [12345, 8765, 5432, 7654, 3456];
-        
-        // Income vs Expenses Chart
-        const incomeExpenseCtx = document.getElementById('incomeExpenseChart').getContext('2d');
-        new Chart(incomeExpenseCtx, {
+        const months = JSON.parse('{{ months|safe|escapejs }}');
+        const incomeData = JSON.parse('{{ income|safe|escapejs }}');
+        const expenseData = JSON.parse('{{ expenses|safe|escapejs }}');
+        const balanceData = JSON.parse('{{ balance|safe|escapejs }}');
+
+        // Income vs Expenses Bar Chart
+        new Chart(document.getElementById('incomeExpenseChart'), {
             type: 'bar',
             data: {
                 labels: months,
@@ -108,104 +73,70 @@
                         label: 'Income',
                         data: incomeData,
                         backgroundColor: '#0a405f',
-                        borderColor: '#0a405f',
                         borderWidth: 1
                     },
                     {
                         label: 'Expenses',
                         data: expenseData,
                         backgroundColor: '#5ba3f8',
-                        borderColor: '#5ba3f8',
                         borderWidth: 1
                     }
                 ]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            callback: function(value) {
-                                return '₱' + (value / 1000000).toFixed(1) + 'M';
-                            }
+                            callback: value => '₱' + value.toLocaleString()
                         }
                     }
                 },
                 plugins: {
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
-                                return context.dataset.label + ': ₱' + context.raw.toLocaleString();
-                            }
-                        }
-                    }
-                }
-            }
-        });
-        
-        // Balance Trend Chart
-        const balanceTrendCtx = document.getElementById('balanceTrendChart').getContext('2d');
-        new Chart(balanceTrendCtx, {
-            type: 'line',
-            data: {
-                labels: months,
-                datasets: [
-                    {
-                        label: 'Income',
-                        data: incomeData,
-                        borderColor: '#0a405f',
-                        backgroundColor: '#0a405f',
-                        borderWidth: 2,
-                        fill: false
-                    },
-                    {
-                        label: 'Expenses',
-                        data: expenseData,
-                        borderColor: '#5ba3f8',
-                        backgroundColor: '#5ba3f8',
-                        borderWidth: 2,
-                        fill: false
-                    },
-                    {
-                        label: 'Balance',
-                        data: balanceData,
-                        borderColor: '#446381',
-                        backgroundColor: '#446381',
-                        borderWidth: 3,
-                        borderDash: [5, 5],
-                        fill: true
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: false,
-                        ticks: {
-                            callback: function(value) {
-                                return '₱' + (value / 1000000).toFixed(1) + 'M';
-                            }
-                        }
-                    }
-                },
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.dataset.label + ': ₱' + context.raw.toLocaleString();
-                            }
+                            label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
                         }
                     }
                 }
             }
         });
 
-        // You could also add a pie chart for categories if you want
-        // Just add another canvas element and initialize it similarly
+        // Balance Trend Line Chart
+        new Chart(document.getElementById('balanceTrendChart'), {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Balance',
+                    data: balanceData,
+                    borderColor: '#446381',
+                    backgroundColor: 'rgba(68, 99, 129, 0.2)',
+                    borderWidth: 2,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: value => '₱' + value.toLocaleString()
+                        }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
+                        }
+                    }
+                }
+            }
+        });
     </script>
+    {% endif %}
 </body>
 </html>

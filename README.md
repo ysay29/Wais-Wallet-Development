@@ -21,3 +21,7 @@ John Benedict Listangco,
 Recson Avielle Rojo,
 Achilles Pajes
 
+## 📄 License
+
+This project is licensed under the [Student Project License](./LICENSE) – Group 1, PLM Computer Engineering 2025.
+

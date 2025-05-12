@@ -4,6 +4,8 @@ from Transaction.models import Transaction
 from django.db.models import Sum, Q
 from django.db.models.functions import TruncMonth
 import json
+from django.http import JsonResponse
+from datetime import datetime
 
 
 @login_required
@@ -80,3 +82,36 @@ def analytics(request):
         # Debugging: Catch and print any errors
         print(f"[Analytics View Error] {e}")
         return render(request, 'analytics.html', {'message': "An error occurred while processing the data."})
+    
+
+#ANALYTIC ON DASHBOARD
+@login_required
+def analytics_data(request):
+    """
+    Return analytics chart data as JSON for the dashboard chart.
+    """
+    try:
+        transactions = Transaction.objects.filter(user=request.user)
+
+        spend_data = transactions.annotate(
+            month=TruncMonth('date')
+        ).values('month').annotate(
+            total_income=Sum('amount', filter=Q(type__iexact='income')),
+            total_expenses=Sum('amount', filter=Q(type__iexact='expense'))
+        ).order_by('month')
+
+        months, income, expenses = [], [], []
+
+        for entry in spend_data:
+            months.append(entry['month'].strftime('%B %Y'))
+            income.append(float(entry['total_income'] or 0))
+            expenses.append(float(entry['total_expenses'] or 0))
+
+        return JsonResponse({
+            'labels': months,
+            'income': income,
+            'expenses': expenses
+        })
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

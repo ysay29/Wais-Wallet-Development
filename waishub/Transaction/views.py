@@ -6,27 +6,44 @@ from django.db.models import Sum
 from .models import Transaction, UserCategory
 from django.utils import timezone
 from decimal import Decimal
+from datetime import datetime
 
 @login_required
 def add_transaction(request):
+    # Get the user's categories for the dropdown or selection
     categories = UserCategory.objects.filter(user=request.user)
 
     if request.method == 'POST':
         t = request.POST.get('type')  # 'income' or 'expense'
-        cat = request.POST.get('category')
-        amt = request.POST.get('amount')
-        dt = request.POST.get('date')
+        cat = request.POST.get('category')  # Category name
+        amt = request.POST.get('amount')  # Transaction amount
+        dt = request.POST.get('date')  # Transaction date
 
+        # Ensure all necessary fields are provided
         if t and cat and amt and dt:
-            # If it's a custom category, create a new UserCategory for the user
-            if not UserCategory.objects.filter(user=request.user, category_name=cat).exists():
-                UserCategory.objects.create(user=request.user, category_name=cat)
+            try:
+                # Convert the date string to a datetime object
+                dt = datetime.strptime(dt, '%Y-%m-%d')  # Assuming format is 'YYYY-MM-DD'
+            except ValueError:
+                # Handle invalid date format (you can log it or return a custom error message)
+                dt = None
+            
+            if dt:
+                # Check if the category exists for the current user, if not, create it
+                if not UserCategory.objects.filter(user=request.user, category_name=cat).exists():
+                    UserCategory.objects.create(user=request.user, category_name=cat)
 
-            # Convert amount to Decimal before saving
-            amt = Decimal(amt)  # Convert string to Decimal
+                # Convert the amount to Decimal before saving
+                amt = Decimal(amt)
 
-            Transaction.objects.create(user=request.user, type=t, category=cat, amount=amt, date=dt)
-            return redirect(f"{reverse('add_transaction')}?saved=1")
+                # Create the transaction in the database
+                Transaction.objects.create(user=request.user, type=t, category=cat, amount=amt, date=dt)
+
+                # Redirect with a "saved" query parameter
+                return redirect(f"{reverse('add_transaction')}?saved=1")
+            else:
+                # Handle invalid date format (optional: add a message to the user)
+                pass
 
     return render(request, 'add.html', {'categories': categories})
 

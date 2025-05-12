@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analytics Dashboard</title>
     <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="{% static 'css/analytics.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         .no-data-message {
             text-align: center;
@@ -19,6 +20,36 @@
             position: relative;
             height: 400px;
             margin-top: 40px;
+            width: 100%;
+        }
+        .summary-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .summary-card {
+            flex: 1 1 45%;
+            background: #f4f4f4;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        .summary-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        .summary-card .amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #0a405f;
+        }
+        @media (max-width: 600px) {
+            .summary-card {
+                flex: 1 1 100%;
+            }
         }
     </style>
 </head>
@@ -31,7 +62,6 @@
                 <p>{{ message }}</p>
             </div>
         {% elif has_data %}
-            <!-- Summary Section -->
             <div class="summary-cards">
                 <div class="summary-card">
                     <h3>Total Income</h3>
@@ -43,7 +73,6 @@
                 </div>
             </div>
 
-            <!-- Charts -->
             <h2>Income vs Expenses</h2>
             <div class="chart-container">
                 <canvas id="incomeExpenseChart"></canvas>
@@ -63,7 +92,9 @@
         const expenseData = JSON.parse('{{ expenses|safe|escapejs }}');
         const balanceData = JSON.parse('{{ balance|safe|escapejs }}');
 
-        // Income vs Expenses Bar Chart
+        const currencyFormat = value => '₱' + value.toLocaleString();
+
+        // Income vs Expenses Chart
         new Chart(document.getElementById('incomeExpenseChart'), {
             type: 'bar',
             data: {
@@ -85,25 +116,26 @@
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            callback: value => '₱' + value.toLocaleString()
+                            callback: currencyFormat
                         }
                     }
                 },
                 plugins: {
                     tooltip: {
                         callbacks: {
-                            label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
+                            label: context => `${context.dataset.label}: ${currencyFormat(context.raw)}`
                         }
                     }
                 }
             }
         });
 
-        // Balance Trend Line Chart
+        // Balance Trend Chart
         new Chart(document.getElementById('balanceTrendChart'), {
             type: 'line',
             data: {
@@ -114,23 +146,25 @@
                     borderColor: '#446381',
                     backgroundColor: 'rgba(68, 99, 129, 0.2)',
                     borderWidth: 2,
-                    fill: true
+                    fill: true,
+                    tension: 0.3
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 scales: {
                     y: {
                         beginAtZero: false,
                         ticks: {
-                            callback: value => '₱' + value.toLocaleString()
+                            callback: currencyFormat
                         }
                     }
                 },
                 plugins: {
                     tooltip: {
                         callbacks: {
-                            label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
+                            label: context => `${context.dataset.label}: ${currencyFormat(context.raw)}`
                         }
                     }
                 }

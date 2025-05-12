@@ -6,6 +6,9 @@ from django.db.models.functions import TruncMonth
 import json
 from django.http import JsonResponse
 from datetime import datetime
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from .models import MonthlyFinance
 
 
 @login_required
@@ -82,36 +85,72 @@ def analytics(request):
         # Debugging: Catch and print any errors
         print(f"[Analytics View Error] {e}")
         return render(request, 'analytics.html', {'message': "An error occurred while processing the data."})
-    
+
+#UPDATE MONTHLY FINANCE
+@receiver(post_save, sender=Transaction) 
+def update_monthly_finance(sender, instance, **kwargs):
+    # Ensure the monthly finance record exists for the month
+    finance, created = MonthlyFinance.objects.get_or_create(
+        user=instance.user,
+        month=instance.date.replace(day=1)
+    )
+    finance.update_finance()
 
 #ANALYTIC ON DASHBOARD
+from django.shortcuts import render
+from django.http import JsonResponse
+from .models import MonthlyFinance
+from datetime import date
+from django.db.models import Sum
+from django.contrib.auth.decorators import login_required
+
 @login_required
 def analytics_data(request):
-    """
-    Return analytics chart data as JSON for the dashboard chart.
-    """
-    try:
-        transactions = Transaction.objects.filter(user=request.user)
+    # Get current user's finances for the current year and month
+    user = request.user
+    current_month = date.today().month
+    current_year = date.today().year
 
-        spend_data = transactions.annotate(
-            month=TruncMonth('date')
-        ).values('month').annotate(
-            total_income=Sum('amount', filter=Q(type__iexact='income')),
-            total_expenses=Sum('amount', filter=Q(type__iexact='expense'))
-        ).order_by('month')
+    # Get monthly finance data
+    monthly_finances = MonthlyFinance.objects.filter(user=user, month__year=current_year)
 
-        months, income, expenses = [], [], []
+    # Prepare data for chart
+    labels = []
+    income_data = []
+    expense_data = []
+    balance_data = []
 
-        for entry in spend_data:
-            months.append(entry['month'].strftime('%B %Y'))
-            income.append(float(entry['total_income'] or 0))
-            expenses.append(float(entry['total_expenses'] or 0))
+    for finance in monthly_finances:
+        labels.append(finance.month.strftime('%B'))
+        income_data.append(float(finance.income))
+        expense_data.append(float(finance.expenses))
+        balance_data.append(float(finance.balance))
 
-        return JsonResponse({
-            'labels': months,
-            'income': income,
-            'expenses': expenses
-        })
+    # Prepare the summary (income, expenses, savings)
+    total_income = sum(income_data)
+    total_expenses = sum(expense_data)
+    savings = total_income - total_expenses
 
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+    # Prepare chart data in a structured way
+    chart_data = {
+        "labels": labels,
+        "income": income_data,
+        "expenses": expense_data,
+        "balance": balance_data
+    }
+
+    # Prepare the context to pass to the front-end
+    context = {
+        'months': labels,            # Monthly labels
+        'income': total_income,      # Total income
+        'expenses': total_expenses,  # Total expenses
+        'savings': savings,          # Total savings
+        'chart_data': chart_data,    # Data to update the chart
+    }
+
+    # If an AJAX request (fetch request), return JSON data
+    if request.is_ajax():
+        return JsonResponse(context)
+
+    # Regular GET request, render the page
+    return render(request, 'dashboard/index.html', context)

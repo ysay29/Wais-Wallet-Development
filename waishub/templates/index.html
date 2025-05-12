@@ -2,15 +2,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>Wais Wallet Dashboard</title>
-  <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
+  <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="{% static 'css/index.css' %}">
+  <link rel="stylesheet" href="{% static 'css/index.css' %}" />
 </head>
 <body>
 {% if messages %}
@@ -26,25 +26,23 @@
 
 <!-- Sidebar -->
 <aside class="sidebar">
-  <div>
-    <div class="navbar">
-      <img src="{% static 'assets/logo.png' %}" alt="Logo" class="navbar-logo">
-      <div class="welcome-texts">
-        <p class="hello-text">Hello, {{ user.get_full_name|default:user.username }}! <br> Welcome to</p>
-        <p class="wallet-name">Wais Wallet</p>
-      </div>
+  <div class="navbar">
+    <img src="{% static 'assets/logo.png' %}" alt="Logo" class="navbar-logo" />
+    <div class="welcome-texts">
+      <p class="hello-text">Hello, {{ user.get_full_name|default:user.username }}! <br> Welcome to</p>
+      <p class="wallet-name">Wais Wallet</p>
     </div>
-  </div>    
+  </div>
   <nav class="nav-links">
-    <a href="{% url 'dashboard' %}" class="active">Dashboard</a>      
+    <a href="{% url 'dashboard' %}" class="active">Dashboard</a>
     <a href="{% url 'transactions' %}">Transactions</a>
     <div class="dropdown">
       <button class="dropbtn">
         Evaluation
-        <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
+        <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img" />
       </button>
       <div class="dropdown-content">
-        <a href="{% url 'analytics' %}" >Analytics</a>
+        <a href="{% url 'analytics' %}">Analytics</a>
         <a href="{% url 'totalincome' %}">Total Income</a>
         <a href="{% url 'totalexpenses' %}">Total Expenses</a>
         <a href="{% url 'savings' %}">Savings</a>
@@ -56,7 +54,7 @@
   </nav>
   <div class="account-section">
     <a href="{% url 'logout' %}">
-      <div class="account-icon" id="logout-button">👤</div> 
+      <div class="account-icon" id="logout-button">👤</div>
       <div class="account-info">
         <div class="account-label">LOGOUT</div>
         <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
@@ -67,12 +65,11 @@
 
 <!-- Main -->
 <main class="main">
-  <!-- Top Filters -->
   <div class="topbar">
     <div class="search-notif">
-      <input type="text" placeholder="Search...">
+      <input type="text" placeholder="Search..." />
       <a href="{% url 'notifications' %}" class="notif-wrapper">
-        <img src="{% static 'assets/bell.png' %}" alt="Notifications" class="notif-icon">
+        <img src="{% static 'assets/bell.png' %}" alt="Notifications" class="notif-icon" />
         {% if has_unread_notifications %}
           <span class="notif-badge"></span>
         {% endif %}
@@ -85,7 +82,7 @@
     <button class="filter-btn" data-filter="week">Week</button>
     <button class="filter-btn active" data-filter="month">Month</button>
     <button class="filter-btn" data-filter="year">Year</button>
-    <input type="date" id="datePicker">
+    <input type="date" id="datePicker" />
   </div>
 
   <!-- Cards -->
@@ -94,15 +91,11 @@
       <h3>Total Income</h3>
       <p>₱ {{ income|floatformat:2 }}</p>
       {% if income_change >= 0 %}
-        <img src="{% static 'assets/increase.png' %}" alt="increase" class="arrow-icon">
-        <span class="increase" style="color: green;">
-          {{ income_change|floatformat:1 }}% from last month
-        </span>
+        <img src="{% static 'assets/increase.png' %}" class="arrow-icon" />
+        <span class="increase" style="color: green;">{{ income_change|floatformat:1 }}% from last month</span>
       {% else %}
-        <img src="{% static 'assets/decrease.png' %}" alt="decrease" class="arrow-icon">
-        <span class="decrease" style="color: red;">
-          {{ income_change|floatformat:1 }}% from last month
-        </span>
+        <img src="{% static 'assets/decrease.png' %}" class="arrow-icon" />
+        <span class="decrease" style="color: red;">{{ income_change|floatformat:1 }}% from last month</span>
       {% endif %}
     </a>
   </div>
@@ -112,15 +105,11 @@
       <h3>Total Expenses</h3>
       <p>₱ {{ expenses|floatformat:2 }}</p>
       {% if expense_change >= 0 %}
-        <img src="{% static 'assets/increase.png' %}" alt="increase" class="arrow-icon">
-        <span class="decrease" style="color: red;">
-          {{ expense_change|floatformat:1 }}% from last month
-        </span>
+        <img src="{% static 'assets/increase.png' %}" class="arrow-icon" />
+        <span class="decrease" style="color: red;">{{ expense_change|floatformat:1 }}% from last month</span>
       {% else %}
-        <img src="{% static 'assets/decrease.png' %}" alt="decrease" class="arrow-icon">
-        <span class="increase" style="color: green;">
-          {{ expense_change|floatformat:1 }}% from last month
-        </span>
+        <img src="{% static 'assets/decrease.png' %}" class="arrow-icon" />
+        <span class="increase" style="color: green;">{{ expense_change|floatformat:1 }}% from last month</span>
       {% endif %}
     </a>
   </div>
@@ -130,15 +119,11 @@
       <h3>Savings</h3>
       <p>₱ {{ savings|floatformat:2 }}</p>
       {% if savings_change >= 0 %}
-        <img src="{% static 'assets/increase.png' %}" alt="increase" class="arrow-icon">
-        <span class="increase" style="color: green;">
-          {{ savings_change|floatformat:1 }}% from last month
-        </span>
+        <img src="{% static 'assets/increase.png' %}" class="arrow-icon" />
+        <span class="increase" style="color: green;">{{ savings_change|floatformat:1 }}% from last month</span>
       {% else %}
-        <img src="{% static 'assets/decrease.png' %}" alt="decrease" class="arrow-icon">
-        <span class="decrease" style="color: red;">
-          {{ savings_change|floatformat:1 }}% from last month
-        </span>
+        <img src="{% static 'assets/decrease.png' %}" class="arrow-icon" />
+        <span class="decrease" style="color: red;">{{ savings_change|floatformat:1 }}% from last month</span>
       {% endif %}
     </a>
   </div>
@@ -147,12 +132,9 @@
   <div class="grid-2">
     <div class="chart-container">
       <div class="chart-header">
-        <h4>Total Expenses</h4>
-        <a href="{% url 'analytics' %}">
-          <img src="{% static 'assets/arrow-up.png' %}" alt="Arrow Icon" style="width:20px;">
-        </a>
+        <h4>Monthly Income vs Expenses vs Balance</h4>
       </div>
-      <canvas id="expensesChart"></canvas>
+      <canvas id="analyticsChart"></canvas>
     </div>
 
     <div class="calendar-container">
@@ -161,15 +143,14 @@
         <span id="monthYear"></span>
         <button id="nextMonth">&gt;</button>
       </div>
-
       <div id="calendar"></div>
 
-      <!-- Monthly Progress -->
       <div class="monthly-progress">
         <span>Savings Goal Progress</span>
         <progress id="progress-bar" value="{{ progress_percent }}" max="100"></progress>
       </div>
     </div>
+  </div>
 
   <!-- Recent Transactions -->
   <section class="history recent-transactions">
@@ -194,9 +175,8 @@
     {% endif %}
   </section>
 
-  <!-- Plus Button -->
   <div class="plus-button">
-    <img src="{% static 'assets/add-icon.png' %}" alt="Plus Icon" id="plus-icon">
+    <img src="{% static 'assets/add-icon.png' %}" alt="Plus Icon" id="plus-icon" />
     <div class="plus-menu" id="plus-menu">
       <a href="{% url 'add_transaction' %}">Add Transaction</a>
       <a href="{% url 'add_expense' %}">Manage Expenses</a>
@@ -208,28 +188,7 @@
 <script src="{% static 'js/addButton.js' %}" defer></script>
 
 <script>
-  const ctx = document.getElementById('expensesChart').getContext('2d');
-  const expensesChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-      datasets: [{
-        label: 'Expenses',
-        data: [5000, 3000, 8000, 10000, 7000, 2000, 4000],
-        backgroundColor: '#0c4160',
-        borderRadius: 10,
-        borderSkipped: false
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-
+  // Calendar logic
   const calendar = document.getElementById('calendar');
   const monthYear = document.getElementById('monthYear');
   const prevMonth = document.getElementById('prevMonth');
@@ -264,7 +223,7 @@
   nextMonth.onclick = () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); };
   renderCalendar();
 
-  // Activate filter buttons
+  // Filter buttons logic
   document.querySelectorAll('.filter-btn').forEach(button => {
     button.addEventListener('click', () => {
       document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
@@ -274,30 +233,40 @@
     });
   });
 
+  // Date picker logic
   document.getElementById('datePicker').addEventListener('change', (e) => {
     const selectedDate = e.target.value;
     fetchDashboardData('date', selectedDate);
   });
 
+  // Fetch dashboard data based on the filter
   function fetchDashboardData(filterType, date = null) {
     const url = `/dashboard/filter/?type=${filterType}${date ? `&date=${date}` : ''}`;
     fetch(url)
       .then(response => response.json())
       .then(data => {
+        console.log('Fetched Data:', data); // Debugging: Check if data is returned
         document.querySelector('.card:nth-child(1) p').textContent = `₱ ${parseFloat(data.income).toFixed(2)}`;
         document.querySelector('.card:nth-child(2) p').textContent = `₱ ${parseFloat(data.expenses).toFixed(2)}`;
         document.querySelector('.card:nth-child(3) p').textContent = `₱ ${parseFloat(data.savings).toFixed(2)}`;
         updateChart(data.chart_data);
         updateTransactions(data.transactions);
-      });
+      })
+      .catch(error => console.error('Error fetching data:', error)); // Handle errors
   }
 
+  // Update chart with new data
   function updateChart(chartData) {
-    expensesChart.data.labels = chartData.labels;
-    expensesChart.data.datasets[0].data = chartData.values;
-    expensesChart.update();
+    if (!chartData) return;
+    console.log('Chart Data:', chartData); // Debugging: Check if chart data is received
+    analyticsChart.data.labels = chartData.labels;
+    analyticsChart.data.datasets[0].data = chartData.income;
+    analyticsChart.data.datasets[1].data = chartData.expenses;
+    analyticsChart.data.datasets[2].data = chartData.balance;
+    analyticsChart.update();
   }
 
+  // Update transactions list
   function updateTransactions(transactions) {
     const list = document.querySelector('.transaction-list');
     list.innerHTML = '';
@@ -318,11 +287,65 @@
     });
   }
 
-  // Logout confirmation
+  // Logout functionality
   document.getElementById("logout-button").addEventListener("click", function () {
-    const confirmLogout = confirm("Are you sure you want to logout?");
-    if (confirmLogout) {
+    if (confirm("Are you sure you want to logout?")) {
       window.location.href = "{% url 'logout' %}";
+    }
+  });
+
+  // Fetching the data for the Income vs Expenses Chart
+  const analyticsLabels = JSON.parse('{{ months|escapejs }}');
+  const incomeData = JSON.parse('{{ income|escapejs }}');
+  const expenseData = JSON.parse('{{ expenses|escapejs }}');
+  const balanceData = JSON.parse('{{ balance|escapejs }}');
+
+  const analyticsCtx = document.getElementById('analyticsChart').getContext('2d');
+  const analyticsChart = new Chart(analyticsCtx, {
+    type: 'line',
+    data: {
+      labels: analyticsLabels,
+      datasets: [
+        {
+          label: 'Income',
+          data: incomeData,
+          borderColor: 'green',
+          backgroundColor: 'rgba(0,128,0,0.1)',
+          tension: 0.3
+        },
+        {
+          label: 'Expenses',
+          data: expenseData,
+          borderColor: 'red',
+          backgroundColor: 'rgba(255,0,0,0.1)',
+          tension: 0.3
+        },
+        {
+          label: 'Balance',
+          data: balanceData,
+          borderColor: 'blue',
+          backgroundColor: 'rgba(0,0,255,0.1)',
+          tension: 0.3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: value => '₱' + value.toLocaleString()
+          }
+        }
+      },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
+          }
+        }
+      }
     }
   });
 </script>

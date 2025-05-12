@@ -97,7 +97,7 @@ def add_savings(request):
     else:
         form = SavingForm()
 
-    return render(request, 'add_savings.html', {'form': form})
+    return render(request, 'addsavings.html', {'form': form})
 
 @login_required
 def delete_goal(request, id):

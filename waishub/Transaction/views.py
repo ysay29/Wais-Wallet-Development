@@ -5,11 +5,10 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from .models import Transaction, UserCategory
 from django.utils import timezone
-
+from decimal import Decimal
 
 @login_required
 def add_transaction(request):
-    # Fetch all distinct categories for the logged-in user from the UserCategory model
     categories = UserCategory.objects.filter(user=request.user)
 
     if request.method == 'POST':
@@ -22,14 +21,14 @@ def add_transaction(request):
             # If it's a custom category, create a new UserCategory for the user
             if not UserCategory.objects.filter(user=request.user, category_name=cat).exists():
                 UserCategory.objects.create(user=request.user, category_name=cat)
-            
+
+            # Convert amount to Decimal before saving
+            amt = Decimal(amt)  # Convert string to Decimal
+
             Transaction.objects.create(user=request.user, type=t, category=cat, amount=amt, date=dt)
             return redirect(f"{reverse('add_transaction')}?saved=1")
 
     return render(request, 'add.html', {'categories': categories})
-
-
-
 
 @login_required
 def transactions_list(request):
@@ -56,9 +55,11 @@ def transactions_list(request):
 
 @login_required
 def total_income(request):
-    # Filter transactions by 'income' and get the total amount
+    # Filter transactions by 'income' type and get the total amount
     incomes = Transaction.objects.filter(user=request.user, type='Income')
-    total_income = incomes.aggregate(Sum('amount'))['amount__sum'] or 0
+    
+    # Sum the amounts from the filtered incomes
+    total_income = sum(income.amount for income in incomes)
 
     # Calculate category-wise totals for income
     category_totals_qs = incomes.values('category').annotate(total=Sum('amount'))
@@ -66,7 +67,7 @@ def total_income(request):
 
     return render(request, 'totalincome.html', {
         'incomes': incomes,
-        'total_income': total_income,
+        'total_income': total_income,  # Using the calculated total_income
         'category_totals': category_totals,
     })
 

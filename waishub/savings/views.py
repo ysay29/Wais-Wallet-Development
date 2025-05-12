@@ -10,9 +10,31 @@ from .forms import SavingsGoalForm, SavingForm
 
 @login_required
 def savings_summary(request):
-    selected_goal_id = request.GET.get('goal')
     goals = SavingsGoal.objects.filter(user=request.user)
 
+    # Handle POST: Add new saving
+    if request.method == 'POST':
+        amount = request.POST.get('amount')
+        date = request.POST.get('date')
+        goal_id = request.POST.get('goal')
+
+        try:
+            goal = goals.get(id=goal_id)
+        except SavingsGoal.DoesNotExist:
+            goal = None
+
+        if amount and date and goal:
+            Saving.objects.create(
+                user=request.user,
+                amount=Decimal(amount),
+                date=date,
+                goal=goal
+            )
+            # Redirect to prevent re-submission on refresh
+            return redirect('savings')  # Ensure 'savings' matches your URL name
+
+    # Handle GET: Display savings summary
+    selected_goal_id = request.GET.get('goal')
     if selected_goal_id:
         try:
             selected_goal = goals.get(id=selected_goal_id)

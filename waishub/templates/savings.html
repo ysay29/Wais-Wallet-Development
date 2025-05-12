@@ -74,16 +74,18 @@
     </form>
 
     <!-- Add Savings Form -->
-    <form method="post" class="form-inline">
+    <form method="post" class="form-inline"  action="{% url 'savings' %}">
       {% csrf_token %}
       <input type="date" name="date" required>
       <input type="number" name="amount" placeholder="Amount" required>
+      <!-- Goal Selection Dropdown -->
       <select name="goal" required>
         <option value="">Select Goal</option>
         {% for goal in goals %}
-          <option value="{{ goal.id }}">{{ goal.name }}</option>
+          <option value="{{ goal.id }}" {% if selected_goal and goal.id == selected_goal.id %}selected{% endif %}>{{ goal.name }}</option>
         {% endfor %}
       </select>
+
       <button type="submit">Add Savings</button>
     </form>
 

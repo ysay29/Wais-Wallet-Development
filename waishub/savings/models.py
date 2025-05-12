@@ -39,7 +39,12 @@ class SavingsGoal(models.Model):
     term = models.CharField(max_length=20, choices=TERM_CHOICES)
     reminder = models.CharField(max_length=20, choices=REMINDER_CHOICES)
 
+    @property
     def progress_percent(self):
         if self.target_amount == 0:
             return 0
         return (self.current_amount / self.target_amount) * 100
+
+    @property
+    def remaining(self):
+        return max(self.target_amount - self.current_amount, 0)

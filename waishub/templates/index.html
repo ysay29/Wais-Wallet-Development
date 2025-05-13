@@ -52,13 +52,13 @@
     <a href="{% url 'settings' %}">Settings</a>
     <a href="{% url 'aboutus' %}">About Us</a>
   </nav>
+  
   <div class="account-section">
     <a href="{% url 'logout' %}">
-      <div class="account-icon" id="logout-button">👤</div>
-      <div class="account-info">
-        <div class="account-label">LOGOUT</div>
-        <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
-      </div>
+    <div class="account-icon" id="logout-button">👤</div> 
+    <div class="account-info">
+      <div class="account-label">LOGOUT</div>
+      <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
     </a>
   </div>
 </aside>

@@ -95,26 +95,6 @@ def index(request):
 
     return render(request, 'index.html', context)
 
-#def index_totalincome(request):
-    user = request.user
-    today = timezone.now()
-    first_day_this_month = today.replace(day=1)
-
-    # Current month transactions
-    this_month_incomes = Transaction.objects.filter(
-        user=user, type='Income',
-        date__gte=first_day_this_month, date__lte=today
-    )
-
-    # Totals
-    total_income = this_month_incomes.aggregate(Sum('amount'))['amount__sum'] or 0
-
-    context = {
-        'total_income': total_income,
-    }
-
-    return render(request, 'index.html', context)
-
 @login_required
 def notifications_view(request):
     user = request.user

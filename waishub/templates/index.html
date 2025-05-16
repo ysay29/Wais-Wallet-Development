@@ -10,7 +10,7 @@
   <title>Wais Wallet Dashboard</title>
   <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="{% static 'css/index.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/index.css' %}?v=123" />
 </head>
 <body>
 {% if messages %}
@@ -85,11 +85,12 @@
     <input type="date" id="datePicker" />
   </div>
 
-  <!-- Cards -->
+<!-- Cards -->
+<div class="cards">
   <div class="card">
-    <a href="{% url 'totalincome' %}">
-      <h3>Total Income</h3>
-      <p>₱ {{ income|floatformat:2 }}</p>
+    <h3>Total Income</h3>
+    <p>₱ {{ income|floatformat:2 }}</p>
+    <div class="change-row">
       {% if income_change >= 0 %}
         <img src="{% static 'assets/increase.png' %}" class="arrow-icon" />
         <span class="increase" style="color: green;">{{ income_change|floatformat:1 }}% from last month</span>
@@ -97,13 +98,12 @@
         <img src="{% static 'assets/decrease.png' %}" class="arrow-icon" />
         <span class="decrease" style="color: red;">{{ income_change|floatformat:1 }}% from last month</span>
       {% endif %}
-    </a>
+    </div>
   </div>
-
   <div class="card">
-    <a href="{% url 'totalexpenses' %}">
-      <h3>Total Expenses</h3>
-      <p>₱ {{ expenses|floatformat:2 }}</p>
+    <h3>Total Expenses</h3>
+    <p>₱ {{ expenses|floatformat:2 }}</p>
+    <div class="change-row">
       {% if expense_change >= 0 %}
         <img src="{% static 'assets/increase.png' %}" class="arrow-icon" />
         <span class="decrease" style="color: red;">{{ expense_change|floatformat:1 }}% from last month</span>
@@ -111,13 +111,12 @@
         <img src="{% static 'assets/decrease.png' %}" class="arrow-icon" />
         <span class="increase" style="color: green;">{{ expense_change|floatformat:1 }}% from last month</span>
       {% endif %}
-    </a>
+    </div>
   </div>
-
   <div class="card">
-    <a href="{% url 'savings' %}">
-      <h3>Savings</h3>
-      <p>₱ {{ savings|floatformat:2 }}</p>
+    <h3>Savings</h3>
+    <p>₱ {{ savings|floatformat:2 }}</p>
+    <div class="change-row">
       {% if savings_change >= 0 %}
         <img src="{% static 'assets/increase.png' %}" class="arrow-icon" />
         <span class="increase" style="color: green;">{{ savings_change|floatformat:1 }}% from last month</span>
@@ -125,8 +124,10 @@
         <img src="{% static 'assets/decrease.png' %}" class="arrow-icon" />
         <span class="decrease" style="color: red;">{{ savings_change|floatformat:1 }}% from last month</span>
       {% endif %}
-    </a>
+    </div>
   </div>
+</div>
+
 
   <!-- Chart and Calendar -->
   <div class="grid-2">
@@ -135,6 +136,7 @@
         <h4>Monthly Income vs Expenses vs Balance</h4>
         <a href="{% url 'analytics' %}">
           <img src="{% static 'assets/arrow-up.png' %}" alt="Arrow Icon" style="width:20px;">
+        </a>
       </div>
       <canvas id="analyticsChart" style="width:100% !important; height:380px !important; min-height:320px;"></canvas>
     </div>
@@ -156,7 +158,7 @@
 
   <!-- Recent Transactions -->
   <section class="history recent-transactions">
-    <h2>Recent Transactions</h2>
+    <a href="{% url 'transactions' %}"><h2>Recent Transactions</h2>
     {% if recent_transactions %}
       <ul class="transaction-list">
         {% for transaction in recent_transactions %}
@@ -175,6 +177,7 @@
     {% else %}
       <p>No recent transactions</p>
     {% endif %}
+    </a>
   </section>
 
   <div class="plus-button">

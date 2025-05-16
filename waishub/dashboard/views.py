@@ -39,11 +39,11 @@ def index(request):
 
     # Current month transactions
     this_month_incomes = Transaction.objects.filter(
-        user=user, type__iexact='income',  # <-- Fix: use type__iexact for case-insensitive match
+        user=user, type__iexact='income',
         date__gte=first_day_this_month, date__lte=today
     )
     this_month_expenses = Transaction.objects.filter(
-        user=user, type__iexact='expense',  # <-- Fix: use type__iexact for case-insensitive match
+        user=user, type__iexact='expense',
         date__gte=first_day_this_month, date__lte=today
     )
 
@@ -61,11 +61,38 @@ def index(request):
      # Totals
     total_income = this_month_incomes.aggregate(Sum('amount'))['amount__sum'] or 0
     total_expenses = this_month_expenses.aggregate(Sum('amount'))['amount__sum'] or 0
-    savings = total_income - total_expenses
 
+    # --- Savings: Use actual savings from savings_summary ---
+    from savings.models import Saving
+    from decimal import Decimal
+
+    # Get all savings for this user for the current month
+    savings_qs = Saving.objects.filter(
+        user=user,
+        date__gte=first_day_this_month,
+        date__lte=today
+    )
+    savings_actual = sum(s.amount for s in savings_qs) or 0
+
+    # Theoretical savings (income - expenses)
+    savings_max = total_income - total_expenses
+
+    # Clamp savings to not exceed (income - expenses)
+    savings = min(savings_actual, savings_max)
+
+    # --- Last month savings for percent change ---
     last_income = last_month_incomes.aggregate(Sum('amount'))['amount__sum'] or 0
     last_expenses = last_month_expenses.aggregate(Sum('amount'))['amount__sum'] or 0
-    last_savings = last_income - last_expenses
+
+    last_month_savings_qs = Saving.objects.filter(
+        user=user,
+        date__gte=first_day_last_month,
+        date__lte=last_day_last_month
+    )
+    last_month_savings_actual = sum(s.amount for s in last_month_savings_qs) or 0
+    last_savings_max = last_income - last_expenses
+    last_savings = min(last_month_savings_actual, last_savings_max)
+
     # Percent changes (avoid division by zero)
     def percent_change(current, previous):
         if previous == 0:
@@ -195,27 +222,43 @@ def update_username(request):
 def add_expense(request):
     user = request.user
 
-    # Get distinct expense categories for the logged-in user
-    categories = UserCategory.objects.filter(user=user).values_list('category_name', flat=True)
+    # Only show categories that are actually used for expenses
+    expense_categories = (
+        UserCategory.objects.filter(user=user)
+        .exclude(category_name__iexact="income")
+        .values_list('category_name', flat=True)
+        .distinct()
+    )
 
     if request.method == 'POST':
-        category = request.POST.get('category')
+        category_name = request.POST.get('category')
         new_category = request.POST.get('new_category')
 
         # Use new_category if it's provided
-        final_category = new_category if new_category else category
+        final_category_name = new_category if new_category else category_name
 
         amount = request.POST.get('amount')
         review_period = request.POST.get('review_period')
 
-        if final_category and amount and review_period:
+        if final_category_name and amount and review_period:
+            # Ensure the Category instance exists (create if not), and set user
+            from .models import Category
+            category_obj, _ = Category.objects.get_or_create(
+                name=final_category_name,
+                defaults={'user': user}
+            )
+            # If the category exists but has no user, set it
+            if category_obj.user_id is None:
+                category_obj.user = user
+                category_obj.save()
+
             # Optionally save new category to UserCategory if it's new
             if new_category:
                 UserCategory.objects.get_or_create(user=user, category_name=new_category)
 
             Budget.objects.create(
                 user=user,
-                category=final_category,
+                category=category_obj,  # Use the Category instance
                 amount=amount,
                 review_period=review_period
             )
@@ -224,8 +267,7 @@ def add_expense(request):
         else:
             messages.error(request, 'Please fill in all fields.')
 
-    return render(request, 'addexpenses.html', {'categories': categories})
-
+    return render(request, 'addexpenses.html', {'categories': expense_categories})
 
 def filter_dashboard_data(request):
     filter_type = request.GET.get('type')

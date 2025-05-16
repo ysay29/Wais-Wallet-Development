@@ -32,7 +32,9 @@
                 <select name="category" required>
                     <option value="">Select type</option>
                     {% for category in categories %}
-                        <option value="{{ category }}">{{ category }}</option>
+                        {% if category|lower != "income" %}
+                            <option value="{{ category }}">{{ category }}</option>
+                        {% endif %}
                     {% empty %}
                         <option disabled>No expense categories available</option>
                     {% endfor %}

@@ -7,6 +7,7 @@ import json
 from .models import SavingsGoal
 from django.contrib.auth.decorators import login_required
 from .forms import SavingsGoalForm, SavingForm
+from django.urls import reverse
 
 @login_required
 def savings_summary(request):
@@ -79,23 +80,14 @@ def budget_view(request):
 @login_required
 def add_savings(request):
     if request.method == 'POST':
-        # Ensure the form data is valid
-        form = SavingForm(request.POST)
+        form = SavingsGoalForm(request.POST)
         if form.is_valid():
-            saving = form.save(commit=False)
-            saving.user = request.user  # Associate saving with the logged-in user
-            goal_id = request.POST.get('goal')
-            if goal_id:
-                try:
-                    saving.goal = SavingsGoal.objects.get(id=goal_id, user=request.user)
-                except SavingsGoal.DoesNotExist:
-                    saving.goal = None  # If goal is not found, set to None
-            saving.save()  # Save the saving to the database
-
-            # After saving, redirect to the savings summary page
-            return redirect('savings_summary')  # Redirect to the savings summary view
+            saving_goal = form.save(commit=False)
+            saving_goal.user = request.user
+            saving_goal.save()
+            return redirect('budget')
     else:
-        form = SavingForm()
+        form = SavingsGoalForm()
 
     return render(request, 'addsavings.html', {'form': form})
 

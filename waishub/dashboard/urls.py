@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import index, notifications_view, settings_view, mark_notification_read, add_expense, filter_dashboard_data, update_username, delete_all_data, landing, aboutus, delete_notification, delete_all_notifications, delete_budget
+from .views import index, notifications_view, settings_view, mark_notification_read, add_expense, filter_dashboard_data, update_username, delete_all_data, landing, aboutus, delete_notification, delete_all_notifications, delete_budget, delete_transaction
 
 urlpatterns = [
     path('', landing, name='landing'),
@@ -15,4 +15,5 @@ urlpatterns = [
     path('delete-notification/', delete_notification, name='delete_notification'), # delete notification
     path('delete-all-notifications/', delete_all_notifications, name='delete_all_notifications'), # delete all notifications
     path('delete-budget/<int:budget_id>/', delete_budget, name='delete_budget'),
+    path('delete-transaction/<int:transaction_id>/', delete_transaction, name='delete_transaction'),
 ]

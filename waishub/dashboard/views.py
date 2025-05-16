@@ -340,6 +340,14 @@ def delete_budget(request, budget_id):
     messages.success(request, "Budget deleted successfully.")
     return redirect('dashboard')
 
+@require_POST
+@login_required
+def delete_transaction(request, transaction_id):
+    transaction = get_object_or_404(Transaction, id=transaction_id, user=request.user)
+    transaction.delete()
+    messages.success(request, "Transaction deleted successfully.")
+    return redirect('transactions')
+
 @login_required
 def settings_view(request):
     try:
@@ -377,11 +385,10 @@ def update_username(request):
 def add_expense(request):
     user = request.user
 
-    # Only show categories that are actually used for expenses
+    # Only show categories that are actually used for expenses in the transaction list
     expense_categories = (
-        UserCategory.objects.filter(user=user)
-        .exclude(category_name__iexact="income")
-        .values_list('category_name', flat=True)
+        Transaction.objects.filter(user=user, type__iexact='expense')
+        .values_list('category', flat=True)
         .distinct()
     )
 
@@ -401,9 +408,6 @@ def add_expense(request):
             if category_obj.user_id is None:
                 category_obj.user = user
                 category_obj.save()
-
-            if new_category:
-                UserCategory.objects.get_or_create(user=user, category_name=new_category)
 
             # --- Replace existing budget for this user/category/review_period ---
             Budget.objects.filter(

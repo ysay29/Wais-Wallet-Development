@@ -550,3 +550,10 @@ from { opacity: 0; transform: translateY(-10px); }
 to { opacity: 1; transform: translateY(0); }
 }
 
+.budget-limit-item .delete-budget-btn {
+  display: none;
+}
+.budget-limit-item:hover .delete-budget-btn {
+  display: inline-block;
+}
+

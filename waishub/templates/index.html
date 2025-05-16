@@ -134,7 +134,7 @@
     {% if budgets %}
       <ul class="transaction-list">
         {% for budget in budgets %}
-          <li>
+          <li class="budget-limit-item" style="position:relative;">
             <div style="display: flex; align-items: center; justify-content: space-between;">
               <div>
                 <strong>{{ budget.category.name }}</strong>
@@ -144,6 +144,10 @@
               {% if budget.exceeded %}
                 <span style="color: red; font-weight: bold; margin-left: 20px;">Overspending Warning</span>
               {% endif %}
+              <form method="post" action="{% url 'delete_budget' budget.id %}" class="delete-budget-form" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="delete-budget-btn" style="display:none; margin-left:15px; background:#e74c3c; color:#fff; border:none; border-radius:5px; padding:4px 10px; cursor:pointer;">Delete</button>
+              </form>
             </div>
           </li>
         {% endfor %}
@@ -494,6 +498,20 @@
         }
       });
     }
+  });
+
+  // Show delete button on hover for budget limits
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.budget-limit-item').forEach(function(item) {
+      item.addEventListener('mouseenter', function() {
+        const btn = item.querySelector('.delete-budget-btn');
+        if (btn) btn.style.display = 'inline-block';
+      });
+      item.addEventListener('mouseleave', function() {
+        const btn = item.querySelector('.delete-budget-btn');
+        if (btn) btn.style.display = 'none';
+      });
+    });
   });
 </script>
 </body>

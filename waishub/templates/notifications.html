@@ -8,6 +8,22 @@
     <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/notifications.css' %}">
+    <style>
+        .delete-notif-btn {
+            display: none;
+            margin-left: 10px;
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 4px 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .notification:hover .delete-notif-btn {
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
     <div class="content">
@@ -18,6 +34,9 @@
             </h1>
 
             {% if today_notifications or older_notifications %}
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                    <button id="delete-all-btn" style="background:#e74c3c;color:#fff;border:none;border-radius:5px;padding:6px 16px;cursor:pointer;">Delete All</button>
+                </div>
                 <section>
                     <h2>Today</h2>
                     {% if today_notifications %}
@@ -38,8 +57,9 @@
                                             {% endif %}
                                             {{ notif.message }}
                                         </p>
-                                        <p class="time notif-date">{{ notif.timestamp|date:"M d, Y H:i" }}</p>
+                                        <p class="time notif-date">{{ notif.timestamp|date:"h:i A" }}</p>
                                     </div>
+                                    <button class="delete-notif-btn" data-id="{{ notif.id }}" style="margin-left:10px;background:#e74c3c;color:#fff;border:none;border-radius:5px;padding:4px 10px;cursor:pointer;">Delete</button>
                                     {% if not notif.read %}
                                         <div class="dot"></div>
                                     {% endif %}
@@ -70,8 +90,9 @@
                                             {% endif %}
                                             {{ notif.message }}
                                         </p>
-                                        <p class="time notif-date">{{ notif.timestamp|date:"M d, Y H:i" }}</p>
+                                        <p class="time notif-date">{{ notif.timestamp|date:"h:i A" }}</p>
                                     </div>
+                                    <button class="delete-notif-btn" data-id="{{ notif.id }}" style="margin-left:10px;background:#e74c3c;color:#fff;border:none;border-radius:5px;padding:4px 10px;cursor:pointer;">Delete</button>
                                     {% if not notif.read %}
                                         <div class="dot"></div>
                                     {% endif %}
@@ -138,6 +159,61 @@
                 }
             });
         });
+
+        document.querySelectorAll('.delete-notif-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const notifId = this.dataset.id;
+                if (confirm('Delete this notification?')) {
+                    fetch("{% url 'delete_notification' %}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        },
+                        body: `notif_id=${notifId}`
+                    }).then(response => response.json())
+                      .then(data => {
+                          if (data.status === 'success') {
+                              // Remove the notification from the DOM
+                              const notifElem = document.querySelector('.notification[data-id="' + notifId + '"]');
+                              if (notifElem) notifElem.remove();
+                              updateNotifCount();
+                          } else {
+                              alert("Error deleting notification");
+                          }
+                      }).catch(error => {
+                          alert("Error deleting notification");
+                      });
+                }
+            });
+        });
+
+        // Delete all notifications
+        const deleteAllBtn = document.getElementById('delete-all-btn');
+        if (deleteAllBtn) {
+            deleteAllBtn.addEventListener('click', function() {
+                if (confirm('Delete all notifications?')) {
+                    fetch("{% url 'delete_all_notifications' %}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        }
+                    }).then(response => response.json())
+                      .then(data => {
+                          if (data.status === 'success') {
+                              document.querySelectorAll('.notification').forEach(n => n.remove());
+                              updateNotifCount();
+                          } else {
+                              alert("Error deleting all notifications");
+                          }
+                      }).catch(error => {
+                          alert("Error deleting all notifications");
+                      });
+                }
+            });
+        }
 
         updateNotifCount();
     </script>

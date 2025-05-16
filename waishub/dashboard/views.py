@@ -17,6 +17,7 @@ from savings.models import Saving, SavingsGoal
 from savings.views import savings_summary
 import json
 from django.utils.timezone import localdate
+from django.shortcuts import get_object_or_404
 
 
 
@@ -139,9 +140,19 @@ def index(request):
     budgets = Budget.objects.filter(user=user).select_related('category')
 
     # --- Savings Goals Reminders ---
-    # Send a notification if a goal's reminder is due and within its term
+    # Send a notification if a goal's reminder is due and within its term and matches alert_time
     from savings.models import SavingsGoal
     today = localdate()
+    now_time = timezone.localtime().time()
+    # Get user's reminder (for alert_time)
+    try:
+        user_reminder = Reminder.objects.get(user=user)
+        alert_time = user_reminder.alert_time
+        notif_enabled = user_reminder.enabled
+    except Reminder.DoesNotExist:
+        alert_time = None
+        notif_enabled = False
+
     goals = SavingsGoal.objects.filter(user=user)
     for goal in goals:
         # Calculate goal term end date
@@ -157,29 +168,47 @@ def index(request):
         else:
             end_date = start_date + timedelta(days=365)
 
-        # Only remind if within term
-        if start_date <= today <= end_date:
-            # Check if reminder is due today
-            send_reminder = False
-            if goal.reminder == 'Weekly' and today.weekday() == 0:  # Monday
-                send_reminder = True
+        # Only remind if within term and notifications are enabled and alert_time matches
+        if start_date <= today <= end_date and notif_enabled and alert_time:
+            # Check if reminder is due today and at the correct time (±2 min window)
+            reminder_due = False
+            # Use correct field for reminder frequency
+            if goal.reminder == 'Daily':
+                reminder_due = True
+            elif goal.reminder == 'Weekly' and today.weekday() == 0:
+                reminder_due = True
             elif goal.reminder == 'Monthly' and today.day == 1:
-                send_reminder = True
+                reminder_due = True
             elif goal.reminder == 'Quarterly' and today.month in [1, 4, 7, 10] and today.day == 1:
-                send_reminder = True
+                reminder_due = True
 
-            if send_reminder:
-                # Only send one notification per day per goal
+            # Only send at the correct time (±2 min window)
+            if reminder_due and abs((datetime.combine(today, alert_time) - datetime.combine(today, now_time)).total_seconds()) < 120:
                 already_sent = Notification.objects.filter(
                     user=user,
-                    message__icontains=f"Reminder: Don't forget to add savings for goal '{goal.name}'",
+                    message__icontains=f"Add  savings for goal {goal.name}",
                     timestamp__date=today
                 ).exists()
                 if not already_sent:
                     Notification.objects.create(
                         user=user,
-                        message=f"Reminder: Don't forget to add savings for goal '{goal.name}'"
+                        message=f"Add  savings for goal {goal.name}"
                     )
+
+    # Transaction reminder (not for goals)
+    if notif_enabled and alert_time:
+        now_time = timezone.localtime().time()
+        send_reminder = abs((datetime.combine(today, alert_time) - datetime.combine(today, now_time)).total_seconds()) < 120
+        already_sent = Notification.objects.filter(
+            user=user,
+            message__icontains="Reminder: Don't forget to add your transaction!",
+            timestamp__date=today
+        ).exists()
+        if send_reminder and not already_sent:
+            Notification.objects.create(
+                user=user,
+                message="Reminder: Don't forget to add your transaction!"
+            )
 
     # Calculate if each budget is exceeded for the current review period
     today = timezone.localdate()
@@ -261,13 +290,16 @@ def notifications_view(request):
     today_notifications = notifications.filter(timestamp__date=today)
     older_notifications = notifications.exclude(timestamp__date=today)
     unread_count = notifications.filter(read=False).count()
-    reminder_notifications = notifications.filter(message__icontains="Reminder")
+    # Show all reminders, including goal reminders (with or without "Reminder" prefix)
+    reminder_notifications = notifications.filter(
+        Q(message__icontains="Reminder") | Q(message__icontains="Add  savings for goal") | Q(message__icontains="Add your savings for")
+    )
 
     context = {
         'today_notifications': today_notifications,
         'older_notifications': older_notifications,
         'unread_count': unread_count,
-        'reminder_notifications': reminder_notifications,
+        'reminder_notifications': reminder_notifications.distinct(),
     }
     return render(request, 'notifications.html', context) # Your notifications template
 
@@ -282,7 +314,32 @@ def mark_notification_read(request):
         return JsonResponse({'status': 'success'})
     except Notification.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Notification not found'}, status=404)
-    
+
+@require_POST
+@login_required
+def delete_notification(request):
+    notif_id = request.POST.get('notif_id')
+    try:
+        notif = Notification.objects.get(id=notif_id, user=request.user)
+        notif.delete()
+        return JsonResponse({'status': 'success'})
+    except Notification.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Notification not found'}, status=404)
+
+@require_POST
+@login_required
+def delete_all_notifications(request):
+    Notification.objects.filter(user=request.user).delete()
+    return JsonResponse({'status': 'success'})
+
+@require_POST
+@login_required
+def delete_budget(request, budget_id):
+    budget = get_object_or_404(Budget, id=budget_id, user=request.user)
+    budget.delete()
+    messages.success(request, "Budget deleted successfully.")
+    return redirect('dashboard')
+
 @login_required
 def settings_view(request):
     try:
@@ -300,7 +357,7 @@ def settings_view(request):
             reminder.alert_time = form.cleaned_data.get('alert_time')
             reminder.save()
             messages.success(request, "Reminder settings saved successfully.")
-            return redirect('settings')
+            return redirect('dashboard')  # Redirect to dashboard after saving
     else:
         form = ReminderForm(instance=reminder)
 
@@ -448,27 +505,52 @@ def filter_dashboard_data(request):
     # Calculate totals
     income = transactions.filter(type__iexact='income').aggregate(total=Sum('amount'))['total'] or 0
     expenses = transactions.filter(type__iexact='expense').aggregate(total=Sum('amount'))['total'] or 0
-    savings = income - expenses
 
-    # Chart data (aggregate by day in range)
+    # --- Use only actual savings from Saving model for the selected period ---
+    from savings.models import Saving
+    savings_qs = Saving.objects.filter(
+        user=user,
+        date__gte=start,
+        date__lte=end
+    )
+    savings = sum(s.amount for s in savings_qs) or 0
+
     chart_labels = []
     chart_income = []
     chart_expenses = []
     chart_balance = []
 
-    # Group by day for the selected range
-    date_cursor = start
-    daily_income = {t['date']: t['amount'] for t in transactions.filter(type__iexact='income').values('date').annotate(amount=Sum('amount'))}
-    daily_expenses = {t['date']: t['amount'] for t in transactions.filter(type__iexact='expense').values('date').annotate(amount=Sum('amount'))}
-    while date_cursor <= end:
-        label = date_cursor.strftime('%b %d')
-        inc = float(daily_income.get(date_cursor, 0))
-        exp = float(daily_expenses.get(date_cursor, 0))
-        chart_labels.append(label)
-        chart_income.append(inc)
-        chart_expenses.append(exp)
-        chart_balance.append(inc - exp)
-        date_cursor += timedelta(days=1)
+    if filter_type == 'year':
+        # Group by month for the year
+        from django.db.models.functions import TruncMonth
+        monthly_data = transactions.annotate(
+            month=TruncMonth('date')
+        ).values('month').order_by('month').annotate(
+            income=Sum('amount', filter=Q(type__iexact='income')),
+            expenses=Sum('amount', filter=Q(type__iexact='expense'))
+        )
+        for entry in monthly_data:
+            month = entry['month']
+            income_val = entry['income'] or 0
+            expenses_val = entry['expenses'] or 0
+            chart_labels.append(month.strftime('%b'))  # 'Jan', 'Feb', etc.
+            chart_income.append(float(income_val))
+            chart_expenses.append(float(expenses_val))
+            chart_balance.append(float(income_val) - float(expenses_val))
+    else:
+        # Group by day for other filters
+        date_cursor = start
+        daily_income = {t['date']: t['amount'] for t in transactions.filter(type__iexact='income').values('date').annotate(amount=Sum('amount'))}
+        daily_expenses = {t['date']: t['amount'] for t in transactions.filter(type__iexact='expense').values('date').annotate(amount=Sum('amount'))}
+        while date_cursor <= end:
+            label = date_cursor.strftime('%b %d')
+            inc = float(daily_income.get(date_cursor, 0))
+            exp = float(daily_expenses.get(date_cursor, 0))
+            chart_labels.append(label)
+            chart_income.append(inc)
+            chart_expenses.append(exp)
+            chart_balance.append(inc - exp)
+            date_cursor += timedelta(days=1)
 
     # Recent transactions for this filter
     tx_list = [

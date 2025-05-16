@@ -23,23 +23,22 @@
 
         <div class="option-group">
             <h2>Notifications:</h2>
-            <div class="option-row">
-                {{ form.enabled }}
-                <label for="{{ form.enabled.id_for_label }}">Enable notifications</label>
-            </div>
+            <form method="post" action="{% url 'settings' %}">
+                {% csrf_token %}
+                <div class="option-row">
+                    {{ form.enabled }}
+                    <label for="{{ form.enabled.id_for_label }}">Enable notifications</label>
+                </div>
+                <div class="input-group">
+                    <label for="{{ form.alert_time.id_for_label }}">Alert time</label>
+                    {{ form.alert_time }}
+                </div>
+                <div class="buttons">
+                    <button class="save-btn" type="submit">Save</button>
+                </div>
+            </form>
         </div>
-        
         <div class="section-divider"></div>
-        <form method="post">
-            {% csrf_token %}
-            <div class="input-group">
-                <label for="{{ form.alert_time.id_for_label }}">Alert time</label>
-                {{ form.alert_time }}
-            </div>
-            <div class="buttons">
-                <button class="save-btn" type="submit">Save</button>
-            </div>
-        </form>
 
         <!-- Delete Data Button -->
         <form action="{% url 'delete_all_data' %}" method="POST">

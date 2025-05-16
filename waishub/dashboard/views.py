@@ -18,13 +18,13 @@ from savings.views import savings_summary
 
 
 
-#@login_required
-def index(request):
-    return render(request, 'index.html')  # Your dashboard template
 
-def logout_user(request):
-    logout(request)
-    return redirect('login') 
+def landing(request):
+    return render(request, 'landing.html')  # Your dashboard template
+
+def aboutus(request):
+    return(render, 'aboutus.html')
+
 
 @never_cache
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)

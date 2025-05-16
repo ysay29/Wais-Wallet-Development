@@ -8,9 +8,24 @@
     <link rel="icon" type="image/png" href="{% static 'images/logo.png' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/notifications.css' %}">
+    <style>
+        .delete-notif-btn {
+            display: none;
+            margin-left: 10px;
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 4px 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .notification:hover .delete-notif-btn {
+            display: inline-block;
+        }
+    </style>
 </head>
 <body>
-
     <div class="content">
         <div class="container">
             <h1>
@@ -18,43 +33,77 @@
                 <span id="notif-count" class="badge">{{ unread_count }}</span>
             </h1>
 
-            {% if today_notifications %}
+            {% if today_notifications or older_notifications %}
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                    <button id="delete-all-btn" style="background:#e74c3c;color:#fff;border:none;border-radius:5px;padding:6px 16px;cursor:pointer;">Delete All</button>
+                </div>
                 <section>
                     <h2>Today</h2>
-                    {% for notif in today_notifications %}
-                        <div class="notification {% if not notif.read %}unread{% endif %}" data-id="{{ notif.id }}">
-                            <img src="{{ notif.icon_url }}" alt="icon" class="icon">
-                            <div class="text">
-                                <p class="title">{{ notif.message }}</p>
-                                <p class="time">{{ notif.timestamp|time:"h:i A" }}</p>
-                            </div>
-                            {% if not notif.read %}
-                                <div class="dot"></div>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
+                    {% if today_notifications %}
+                        <ul class="notification-list">
+                            {% for notif in today_notifications %}
+                                <li class="notification {% if not notif.read %}unread{% endif %}" data-id="{{ notif.id }}">
+                                    {% if "Overspending Warning" in notif.message %}
+                                        <img src="https://cdn-icons-png.flaticon.com/512/564/564619.png" alt="warning" class="icon">
+                                    {% elif "Reminder:" in notif.message %}
+                                        <img src="https://cdn-icons-png.flaticon.com/512/992/992700.png" alt="coins" class="icon">
+                                    {% else %}
+                                        <img src="https://cdn-icons-png.flaticon.com/512/2784/2784459.png" alt="analytics" class="icon">
+                                    {% endif %}
+                                    <div class="text">
+                                        <p class="title">
+                                            {% if "Reminder:" in notif.message %}
+                                                <input type="checkbox" class="notif-checkbox" {% if notif.read %}checked{% endif %} style="margin-right:8px;">
+                                            {% endif %}
+                                            {{ notif.message }}
+                                        </p>
+                                        <p class="time notif-date">{{ notif.timestamp|date:"h:i A" }}</p>
+                                    </div>
+                                    <button class="delete-notif-btn" data-id="{{ notif.id }}" style="margin-left:10px;background:#e74c3c;color:#fff;border:none;border-radius:5px;padding:4px 10px;cursor:pointer;">Delete</button>
+                                    {% if not notif.read %}
+                                        <div class="dot"></div>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="no-notifications">No notifications for today.</div>
+                    {% endif %}
                 </section>
-            {% endif %}
-
-            {% if older_notifications %}
                 <section>
                     <h2>Earlier</h2>
-                    {% for notif in older_notifications %}
-                        <div class="notification {% if not notif.read %}unread{% endif %}" data-id="{{ notif.id }}">
-                            <img src="{{ notif.icon_url }}" alt="icon" class="icon">
-                            <div class="text">
-                                <p class="title">{{ notif.message }}</p>
-                                <p class="time">{{ notif.timestamp|date:"M d" }} at {{ notif.timestamp|time:"h:i A" }}</p>
-                            </div>
-                            {% if not notif.read %}
-                                <div class="dot"></div>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
+                    {% if older_notifications %}
+                        <ul class="notification-list">
+                            {% for notif in older_notifications %}
+                                <li class="notification {% if not notif.read %}unread{% endif %}" data-id="{{ notif.id }}">
+                                    {% if "Overspending Warning" in notif.message %}
+                                        <img src="https://cdn-icons-png.flaticon.com/512/564/564619.png" alt="warning" class="icon">
+                                    {% elif "Reminder:" in notif.message %}
+                                        <img src="https://cdn-icons-png.flaticon.com/512/992/992700.png" alt="coins" class="icon">
+                                    {% else %}
+                                        <img src="https://cdn-icons-png.flaticon.com/512/2784/2784459.png" alt="analytics" class="icon">
+                                    {% endif %}
+                                    <div class="text">
+                                        <p class="title">
+                                            {% if "Reminder:" in notif.message %}
+                                                <input type="checkbox" class="notif-checkbox" {% if notif.read %}checked{% endif %} style="margin-right:8px;">
+                                            {% endif %}
+                                            {{ notif.message }}
+                                        </p>
+                                        <p class="time notif-date">{{ notif.timestamp|date:"h:i A" }}</p>
+                                    </div>
+                                    <button class="delete-notif-btn" data-id="{{ notif.id }}" style="margin-left:10px;background:#e74c3c;color:#fff;border:none;border-radius:5px;padding:4px 10px;cursor:pointer;">Delete</button>
+                                    {% if not notif.read %}
+                                        <div class="dot"></div>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="no-notifications">No earlier notifications.</div>
+                    {% endif %}
                 </section>
-            {% endif %}
-
-            {% if not today_notifications and not older_notifications %}
+            {% else %}
                 <div class="no-notifications">
                     You're all caught up!
                 </div>
@@ -66,17 +115,13 @@
         const notifCount = document.getElementById('notif-count');
         const notifications = document.querySelectorAll('.notification');
 
-        // Function to update the unread notifications count
         function updateNotifCount() {
             const unread = document.querySelectorAll('.notification.unread').length;
             notifCount.textContent = unread;
         }
 
-        // Function to mark notification as read
         function markAsRead(notifElement) {
             const notifId = notifElement.dataset.id;
-
-            // Make AJAX request to mark the notification as read
             fetch("{% url 'mark_notification_read' %}", {
                 method: "POST",
                 headers: {
@@ -88,9 +133,9 @@
               .then(data => {
                   if (data.status === 'success') {
                       notifElement.classList.remove('unread');
-                      const dot = notifElement.querySelector('.dot');
-                      if (dot) dot.remove(); // Remove the blue dot
-                      updateNotifCount(); // Update the unread count
+                      const checkbox = notifElement.querySelector('.notif-checkbox');
+                      if (checkbox) checkbox.checked = true;
+                      updateNotifCount();
                   } else {
                       console.log("Error marking notification as read");
                   }
@@ -99,16 +144,77 @@
               });
         }
 
-        // Add event listener to each notification
         notifications.forEach(notification => {
+            const checkbox = notification.querySelector('.notif-checkbox');
+            if (checkbox) {
+                checkbox.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (!notification.classList.contains('unread')) return;
+                    markAsRead(notification);
+                });
+            }
             notification.addEventListener('click', () => {
                 if (notification.classList.contains('unread')) {
-                    markAsRead(notification); // Mark as read if unread
+                    markAsRead(notification);
                 }
             });
         });
 
-        // Initialize unread count
+        document.querySelectorAll('.delete-notif-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const notifId = this.dataset.id;
+                if (confirm('Delete this notification?')) {
+                    fetch("{% url 'delete_notification' %}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        },
+                        body: `notif_id=${notifId}`
+                    }).then(response => response.json())
+                      .then(data => {
+                          if (data.status === 'success') {
+                              // Remove the notification from the DOM
+                              const notifElem = document.querySelector('.notification[data-id="' + notifId + '"]');
+                              if (notifElem) notifElem.remove();
+                              updateNotifCount();
+                          } else {
+                              alert("Error deleting notification");
+                          }
+                      }).catch(error => {
+                          alert("Error deleting notification");
+                      });
+                }
+            });
+        });
+
+        // Delete all notifications
+        const deleteAllBtn = document.getElementById('delete-all-btn');
+        if (deleteAllBtn) {
+            deleteAllBtn.addEventListener('click', function() {
+                if (confirm('Delete all notifications?')) {
+                    fetch("{% url 'delete_all_notifications' %}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                            "X-CSRFToken": "{{ csrf_token }}",
+                        }
+                    }).then(response => response.json())
+                      .then(data => {
+                          if (data.status === 'success') {
+                              document.querySelectorAll('.notification').forEach(n => n.remove());
+                              updateNotifCount();
+                          } else {
+                              alert("Error deleting all notifications");
+                          }
+                      }).catch(error => {
+                          alert("Error deleting all notifications");
+                      });
+                }
+            });
+        }
+
         updateNotifCount();
     </script>
 

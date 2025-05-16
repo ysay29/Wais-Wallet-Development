@@ -128,10 +128,41 @@
   </div>
 </div>
 
+<<<<<<< HEAD
+=======
+  <!-- Budget Limits Section -->
+  <section class="history recent-transactions" style="margin-bottom: 20px;">
+    <h2>Budget Limits</h2>
+    {% if budgets %}
+      <ul class="transaction-list">
+        {% for budget in budgets %}
+          <li class="budget-limit-item" style="position:relative;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div>
+                <strong>{{ budget.category.name }}</strong>
+                <span style="margin-left:10px;">Limit: ₱{{ budget.amount|floatformat:2 }}</span>
+                <span style="margin-left:10px;">Period: {{ budget.review_period|title }}</span>
+              </div>
+              {% if budget.exceeded %}
+                <span style="color: red; font-weight: bold; margin-left: 20px;">Overspending Warning</span>
+              {% endif %}
+              <form method="post" action="{% url 'delete_budget' budget.id %}" class="delete-budget-form" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="delete-budget-btn" style="display:none; margin-left:15px; background:#e74c3c; color:#fff; border:none; border-radius:5px; padding:4px 10px; cursor:pointer;">Delete</button>
+              </form>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No budget limits set.</p>
+    {% endif %}
+  </section>
+>>>>>>> 98215e1f3bc8dfa043e9a4275e92da0e8b8aeb8d
 
   <!-- Chart and Calendar -->
   <div class="grid-2">
-    <div class="chart-container" style="height: 420px; min-height: 350px;">
+    <div class="chart-container" style="height: 420px; min-height: 350px; position:relative;">
       <div class="chart-header">
         <h4>Monthly Income vs Expenses vs Balance</h4>
         <a href="{% url 'analytics' %}">
@@ -139,6 +170,9 @@
         </a>
       </div>
       <canvas id="analyticsChart" style="width:100% !important; height:380px !important; min-height:320px;"></canvas>
+      <div id="no-data-message" style="display:none; position:absolute; left:0; top:50%; width:100%; text-align:center; color:#888; font-size:1.2em; transform:translateY(-50%);">
+        No transaction data available.
+      </div>
     </div>
 
     <div class="calendar-container">
@@ -148,11 +182,6 @@
         <button id="nextMonth">&gt;</button>
       </div>
       <div id="calendar"></div>
-
-      <div class="monthly-progress">
-        <span>Savings Goal Progress</span>
-        <progress id="progress-bar" value="{{ progress_percent }}" max="100"></progress>
-      </div>
     </div>
   </div>
 
@@ -263,8 +292,26 @@
   // Update chart with new data
   function updateChart(chartData) {
     if (!chartData) return;
+    // Check if all chart data arrays are empty or zero
+    const isEmpty = (
+      !Array.isArray(chartData.labels) || chartData.labels.length === 0 ||
+      (!Array.isArray(chartData.income) || chartData.income.length === 0) ||
+      (!Array.isArray(chartData.expenses) || chartData.expenses.length === 0) ||
+      (!Array.isArray(chartData.balance) || chartData.balance.length === 0) ||
+      (chartData.income.every(v => v === 0) && chartData.expenses.every(v => v === 0) && chartData.balance.every(v => v === 0))
+    );
+    const noDataDiv = document.getElementById('no-data-message');
+    if (isEmpty) {
+      if (analyticsChart) {
+        analyticsChart.destroy();
+        analyticsChart = null;
+      }
+      noDataDiv.style.display = 'block';
+      return;
+    } else {
+      noDataDiv.style.display = 'none';
+    }
     if (!analyticsChart) {
-      // If chart is not initialized, initialize it now
       const analyticsCtx = document.getElementById('analyticsChart').getContext('2d');
       analyticsChart = new Chart(analyticsCtx, {
         type: 'line',
@@ -422,6 +469,26 @@
           }
         }
       });
+
+      // After fallback logic, check if there is no real data
+      const noDataDiv = document.getElementById('no-data-message');
+      const isEmpty = (
+        (!Array.isArray(analyticsLabels) || analyticsLabels.length === 0) ||
+        (!Array.isArray(incomeData) || incomeData.length === 0) ||
+        (!Array.isArray(expenseData) || expenseData.length === 0) ||
+        (!Array.isArray(balanceData) || balanceData.length === 0) ||
+        (incomeData.every(v => v === 0) && expenseData.every(v => v === 0) && balanceData.every(v => v === 0))
+      );
+      if (isEmpty) {
+        if (analyticsChart) {
+          analyticsChart.destroy();
+          analyticsChart = null;
+        }
+        noDataDiv.style.display = 'block';
+        return;
+      } else {
+        noDataDiv.style.display = 'none';
+      }
     } catch (e) {
       console.error('Error parsing chart data:', e);
       // Always show a fallback chart if something goes wrong
@@ -475,6 +542,20 @@
         }
       });
     }
+  });
+
+  // Show delete button on hover for budget limits
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.budget-limit-item').forEach(function(item) {
+      item.addEventListener('mouseenter', function() {
+        const btn = item.querySelector('.delete-budget-btn');
+        if (btn) btn.style.display = 'inline-block';
+      });
+      item.addEventListener('mouseleave', function() {
+        const btn = item.querySelector('.delete-budget-btn');
+        if (btn) btn.style.display = 'none';
+      });
+    });
   });
 </script>
 </body>

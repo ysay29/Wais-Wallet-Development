@@ -24,7 +24,7 @@ def send_transaction_reminders():
     for reminder in reminders:
         already_sent = Notification.objects.filter(
             user=reminder.user,
-            message__icontains="add your transaction",
+            message__icontains="Reminder: Don't forget to add your transaction!",
             timestamp__date=today
         ).exists()
 

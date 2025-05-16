@@ -16,6 +16,8 @@ from django.utils.dateparse import parse_date
 from savings.models import Saving, SavingsGoal
 from savings.views import savings_summary
 import json
+from django.utils.timezone import localdate
+from django.shortcuts import get_object_or_404
 
 
 
@@ -137,6 +139,128 @@ def index(request):
     # Fetch all budgets for the user
     budgets = Budget.objects.filter(user=user).select_related('category')
 
+    # --- Savings Goals Reminders ---
+    # Send a notification if a goal's reminder is due and within its term and matches alert_time
+    from savings.models import SavingsGoal
+    today = localdate()
+    now_time = timezone.localtime().time()
+    # Get user's reminder (for alert_time)
+    try:
+        user_reminder = Reminder.objects.get(user=user)
+        alert_time = user_reminder.alert_time
+        notif_enabled = user_reminder.enabled
+    except Reminder.DoesNotExist:
+        alert_time = None
+        notif_enabled = False
+
+    goals = SavingsGoal.objects.filter(user=user)
+    for goal in goals:
+        # Calculate goal term end date
+        start_date = goal.created_at.date() if hasattr(goal, 'created_at') and goal.created_at else today
+        if goal.term == '3 months':
+            end_date = start_date + timedelta(days=90)
+        elif goal.term == '6 months':
+            end_date = start_date + timedelta(days=180)
+        elif goal.term == '1 year':
+            end_date = start_date + timedelta(days=365)
+        elif goal.term == '2 years':
+            end_date = start_date + timedelta(days=730)
+        else:
+            end_date = start_date + timedelta(days=365)
+
+        # Only remind if within term and notifications are enabled and alert_time matches
+        if start_date <= today <= end_date and notif_enabled and alert_time:
+            # Check if reminder is due today and at the correct time (±2 min window)
+            reminder_due = False
+            # Use correct field for reminder frequency
+            if goal.reminder == 'Daily':
+                reminder_due = True
+            elif goal.reminder == 'Weekly' and today.weekday() == 0:
+                reminder_due = True
+            elif goal.reminder == 'Monthly' and today.day == 1:
+                reminder_due = True
+            elif goal.reminder == 'Quarterly' and today.month in [1, 4, 7, 10] and today.day == 1:
+                reminder_due = True
+
+            # Only send at the correct time (±2 min window)
+            if reminder_due and abs((datetime.combine(today, alert_time) - datetime.combine(today, now_time)).total_seconds()) < 120:
+                already_sent = Notification.objects.filter(
+                    user=user,
+                    message__icontains=f"Add  savings for goal {goal.name}",
+                    timestamp__date=today
+                ).exists()
+                if not already_sent:
+                    Notification.objects.create(
+                        user=user,
+                        message=f"Add  savings for goal {goal.name}"
+                    )
+
+    # Transaction reminder (not for goals)
+    if notif_enabled and alert_time:
+        now_time = timezone.localtime().time()
+        send_reminder = abs((datetime.combine(today, alert_time) - datetime.combine(today, now_time)).total_seconds()) < 120
+        already_sent = Notification.objects.filter(
+            user=user,
+            message__icontains="Reminder: Don't forget to add your transaction!",
+            timestamp__date=today
+        ).exists()
+        if send_reminder and not already_sent:
+            Notification.objects.create(
+                user=user,
+                message="Reminder: Don't forget to add your transaction!"
+            )
+
+    # Calculate if each budget is exceeded for the current review period
+    today = timezone.localdate()
+    for budget in budgets:
+        # Determine period start and end
+        if budget.review_period == 'weekly':
+            period_start = today - timedelta(days=today.weekday())
+            period_end = period_start + timedelta(days=6)
+        elif budget.review_period == 'monthly':
+            period_start = today.replace(day=1)
+            next_month = (period_start + timedelta(days=32)).replace(day=1)
+            period_end = next_month - timedelta(days=1)
+        elif budget.review_period == 'quarterly':
+            quarter = (today.month - 1) // 3 + 1
+            period_start = today.replace(month=3 * quarter - 2, day=1)
+            if quarter < 4:
+                next_quarter_month = 3 * quarter + 1
+                next_quarter_year = today.year
+            else:
+                next_quarter_month = 1
+                next_quarter_year = today.year + 1
+            next_quarter = period_start.replace(year=next_quarter_year, month=next_quarter_month, day=1)
+            period_end = next_quarter - timedelta(days=1)
+        else:
+            period_start = today
+            period_end = today
+
+        # Sum all expenses for this category and period
+        period_expenses = Transaction.objects.filter(
+            user=user,
+            category=budget.category.name,
+            type__iexact='expense',
+            date__gte=period_start,
+            date__lte=period_end
+        ).aggregate(Sum('amount'))['amount__sum'] or 0
+
+        # Mark as exceeded if expenses > budget amount
+        budget.exceeded = float(period_expenses) > float(budget.amount)
+
+        # --- Overspending Notification: only once per day ---
+        if budget.exceeded:
+            already_sent = Notification.objects.filter(
+                user=user,
+                message__icontains=f"Overspending Warning on {budget.category.name}",
+                timestamp__date=today  # Only check for today, not period_start
+            ).exists()
+            if not already_sent:
+                Notification.objects.create(
+                    user=user,
+                    message=f"Overspending Warning on {budget.category.name}"
+                )
+
     context = {
         'income': total_income,
         'expenses': total_expenses,
@@ -146,7 +270,7 @@ def index(request):
         'savings_change': savings_change,
         'recent_transactions': recent_transactions,
         'has_unread_notifications': has_unread_notifications, 
-        'budgets': budgets,  # <-- Add this line
+        'budgets': budgets,
         # Chart context for dashboard chart.js
         'months': json.dumps(labels),
         'income_chart': json.dumps(income_chart),
@@ -166,13 +290,16 @@ def notifications_view(request):
     today_notifications = notifications.filter(timestamp__date=today)
     older_notifications = notifications.exclude(timestamp__date=today)
     unread_count = notifications.filter(read=False).count()
-    reminder_notifications = notifications.filter(message__icontains="Reminder")
+    # Show all reminders, including goal reminders (with or without "Reminder" prefix)
+    reminder_notifications = notifications.filter(
+        Q(message__icontains="Reminder") | Q(message__icontains="Add  savings for goal") | Q(message__icontains="Add your savings for")
+    )
 
     context = {
         'today_notifications': today_notifications,
         'older_notifications': older_notifications,
         'unread_count': unread_count,
-        'reminder_notifications': reminder_notifications,
+        'reminder_notifications': reminder_notifications.distinct(),
     }
     return render(request, 'notifications.html', context) # Your notifications template
 
@@ -187,7 +314,40 @@ def mark_notification_read(request):
         return JsonResponse({'status': 'success'})
     except Notification.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Notification not found'}, status=404)
-    
+
+@require_POST
+@login_required
+def delete_notification(request):
+    notif_id = request.POST.get('notif_id')
+    try:
+        notif = Notification.objects.get(id=notif_id, user=request.user)
+        notif.delete()
+        return JsonResponse({'status': 'success'})
+    except Notification.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Notification not found'}, status=404)
+
+@require_POST
+@login_required
+def delete_all_notifications(request):
+    Notification.objects.filter(user=request.user).delete()
+    return JsonResponse({'status': 'success'})
+
+@require_POST
+@login_required
+def delete_budget(request, budget_id):
+    budget = get_object_or_404(Budget, id=budget_id, user=request.user)
+    budget.delete()
+    messages.success(request, "Budget deleted successfully.")
+    return redirect('dashboard')
+
+@require_POST
+@login_required
+def delete_transaction(request, transaction_id):
+    transaction = get_object_or_404(Transaction, id=transaction_id, user=request.user)
+    transaction.delete()
+    messages.success(request, "Transaction deleted successfully.")
+    return redirect('transactions')
+
 @login_required
 def settings_view(request):
     try:
@@ -200,69 +360,104 @@ def settings_view(request):
         if form.is_valid():
             reminder = form.save(commit=False)
             reminder.user = request.user
-            reminder.enabled = form.cleaned_data.get('enabled', False)  # Defaults to False if not provided
+            # Save the enabled state and alert_time from the form
+            reminder.enabled = form.cleaned_data.get('enabled', False)
+            reminder.alert_time = form.cleaned_data.get('alert_time')
             reminder.save()
-            print("Reminder saved with:")
-            print("Alert time:", form.cleaned_data['alert_time'])
-            print("Enabled:", form.cleaned_data['enabled'])
-            return redirect('settings')
-
+            messages.success(request, "Reminder settings saved successfully.")
+            return redirect('dashboard')  # Redirect to dashboard after saving
     else:
         form = ReminderForm(instance=reminder)
 
     return render(request, 'settings.html', {'form': form})
 
 @login_required
-def update_username(request):
-    if request.method == "POST":
-        new_username = request.POST.get("username")
-        if new_username:
-            request.user.username = new_username
-            request.user.save()
-            return redirect('settings')
-    return redirect('settings')
-
-@login_required
 def add_expense(request):
     user = request.user
 
-    # Only show categories that are actually used for expenses
+    # Only show categories that are actually used for expenses in the transaction list
     expense_categories = (
-        UserCategory.objects.filter(user=user)
-        .exclude(category_name__iexact="income")
-        .values_list('category_name', flat=True)
+        Transaction.objects.filter(user=user, type__iexact='expense')
+        .values_list('category', flat=True)
         .distinct()
     )
 
     if request.method == 'POST':
         category_name = request.POST.get('category')
         new_category = request.POST.get('new_category')
-
-        # Use new_category if it's provided
         final_category_name = new_category if new_category else category_name
-
         amount = request.POST.get('amount')
         review_period = request.POST.get('review_period')
 
         if final_category_name and amount and review_period:
-            # Ensure the Category instance exists (create if not), and set user
             from .models import Category
             category_obj, _ = Category.objects.get_or_create(
                 name=final_category_name,
                 defaults={'user': user}
             )
-            # If the category exists but has no user, set it
             if category_obj.user_id is None:
                 category_obj.user = user
                 category_obj.save()
 
-            # Optionally save new category to UserCategory if it's new
-            if new_category:
-                UserCategory.objects.get_or_create(user=user, category_name=new_category)
+            # --- Replace existing budget for this user/category/review_period ---
+            Budget.objects.filter(
+                user=user,
+                category=category_obj,
+                review_period=review_period
+            ).delete()
+
+            # --- Overspending Notification Logic ---
+            today = timezone.localdate()
+            if review_period == 'daily':
+                period_start = today
+                period_end = today
+            elif review_period == 'weekly':
+                period_start = today - timedelta(days=today.weekday())
+                period_end = period_start + timedelta(days=6)
+            elif review_period == 'monthly':
+                period_start = today.replace(day=1)
+                next_month = (period_start + timedelta(days=32)).replace(day=1)
+                period_end = next_month - timedelta(days=1)
+            elif review_period == 'quarterly':
+                quarter = (today.month - 1) // 3 + 1
+                period_start = today.replace(month=3 * quarter - 2, day=1)
+                if quarter < 4:
+                    next_quarter_month = 3 * quarter + 1
+                    next_quarter_year = today.year
+                else:
+                    next_quarter_month = 1
+                    next_quarter_year = today.year + 1
+                next_quarter = period_start.replace(year=next_quarter_year, month=next_quarter_month, day=1)
+                period_end = next_quarter - timedelta(days=1)
+            else:
+                period_start = today
+                period_end = today
+
+            # Sum all expenses for this category and period
+            period_expenses = Transaction.objects.filter(
+                user=user,
+                category=final_category_name,
+                type__iexact='expense',
+                date__gte=period_start,
+                date__lte=period_end
+            ).aggregate(Sum('amount'))['amount__sum'] or 0
+
+            # Overspending Notification: only once per day
+            if float(period_expenses) > float(amount):
+                already_sent = Notification.objects.filter(
+                    user=user,
+                    message__icontains=f"Overspending Warning on {final_category_name}",
+                    timestamp__date=timezone.localdate()
+                ).exists()
+                if not already_sent:
+                    Notification.objects.create(
+                        user=user,
+                        message=f"Overspending Warning on {final_category_name}"
+                    )
 
             Budget.objects.create(
                 user=user,
-                category=category_obj,  # Use the Category instance
+                category=category_obj,
                 amount=amount,
                 review_period=review_period
             )
@@ -276,9 +471,11 @@ def add_expense(request):
 def filter_dashboard_data(request):
     filter_type = request.GET.get('type')
     date_str = request.GET.get('date')
-    
+    user = request.user
+
     today = datetime.today().date()
-    
+
+    # Determine filter range
     if filter_type == 'day':
         start = end = today
     elif filter_type == 'week':
@@ -296,23 +493,60 @@ def filter_dashboard_data(request):
     else:
         return JsonResponse({'error': 'Invalid filter'}, status=400)
 
-    transactions = Transaction.objects.filter(date__range=[start, end], user=request.user)
+    # Filter transactions for the user and date range
+    transactions = Transaction.objects.filter(date__range=[start, end], user=user)
 
-    income = sum(t.amount for t in transactions if t.type == 'income')
-    expenses = sum(t.amount for t in transactions if t.type == 'expense')
-    savings = income - expenses
+    # Calculate totals
+    income = transactions.filter(type__iexact='income').aggregate(total=Sum('amount'))['total'] or 0
+    expenses = transactions.filter(type__iexact='expense').aggregate(total=Sum('amount'))['total'] or 0
 
-    # Grouping for chart (example: day-based labels)
-    grouped = {}
-    for tx in transactions:
-        label = tx.date.strftime('%b %d')
-        grouped[label] = grouped.get(label, 0) + tx.amount if tx.type == 'expense' else grouped.get(label, 0)
+    # --- Use only actual savings from Saving model for the selected period ---
+    from savings.models import Saving
+    savings_qs = Saving.objects.filter(
+        user=user,
+        date__gte=start,
+        date__lte=end
+    )
+    savings = sum(s.amount for s in savings_qs) or 0
 
-    chart_data = {
-        'labels': list(grouped.keys()),
-        'values': list(grouped.values())
-    }
+    chart_labels = []
+    chart_income = []
+    chart_expenses = []
+    chart_balance = []
 
+    if filter_type == 'year':
+        # Group by month for the year
+        from django.db.models.functions import TruncMonth
+        monthly_data = transactions.annotate(
+            month=TruncMonth('date')
+        ).values('month').order_by('month').annotate(
+            income=Sum('amount', filter=Q(type__iexact='income')),
+            expenses=Sum('amount', filter=Q(type__iexact='expense'))
+        )
+        for entry in monthly_data:
+            month = entry['month']
+            income_val = entry['income'] or 0
+            expenses_val = entry['expenses'] or 0
+            chart_labels.append(month.strftime('%b'))  # 'Jan', 'Feb', etc.
+            chart_income.append(float(income_val))
+            chart_expenses.append(float(expenses_val))
+            chart_balance.append(float(income_val) - float(expenses_val))
+    else:
+        # Group by day for other filters
+        date_cursor = start
+        daily_income = {t['date']: t['amount'] for t in transactions.filter(type__iexact='income').values('date').annotate(amount=Sum('amount'))}
+        daily_expenses = {t['date']: t['amount'] for t in transactions.filter(type__iexact='expense').values('date').annotate(amount=Sum('amount'))}
+        while date_cursor <= end:
+            label = date_cursor.strftime('%b %d')
+            inc = float(daily_income.get(date_cursor, 0))
+            exp = float(daily_expenses.get(date_cursor, 0))
+            chart_labels.append(label)
+            chart_income.append(inc)
+            chart_expenses.append(exp)
+            chart_balance.append(inc - exp)
+            date_cursor += timedelta(days=1)
+
+    # Recent transactions for this filter
     tx_list = [
         {
             'category': t.category,
@@ -320,6 +554,13 @@ def filter_dashboard_data(request):
             'type': t.type
         } for t in transactions.order_by('-date')[:5]
     ]
+
+    chart_data = {
+        'labels': chart_labels,
+        'income': chart_income,
+        'expenses': chart_expenses,
+        'balance': chart_balance,
+    }
 
     return JsonResponse({
         'income': income,
@@ -333,13 +574,16 @@ def filter_dashboard_data(request):
 @login_required
 def delete_all_data(request):
     if request.method == 'POST':
-        # Perform data deletion
-        Transaction.objects.filter(user=request.user).delete()  # Delete all transactions
-        Budget.objects.filter(user=request.user).delete()  # Delete all budgets
-        Notification.objects.filter(user=request.user).delete()  # Delete all notifications
-        Saving.objects.filter(user=request.user).delete()  # Delete all savings records
-        UserCategory.objects.filter(user=request.user).delete()  # Delete all user categories
+        # Delete all user data from all related models
+        Transaction.objects.filter(user=request.user).delete()
+        Budget.objects.filter(user=request.user).delete()
+        Notification.objects.filter(user=request.user).delete()
+        Saving.objects.filter(user=request.user).delete()
+        SavingsGoal.objects.filter(user=request.user).delete()
+        UserCategory.objects.filter(user=request.user).delete()
+        Reminder.objects.filter(user=request.user).delete()
+        Category.objects.filter(user=request.user).delete()
         messages.success(request, 'Your data has been deleted successfully.')
-        return redirect('settings')  # Redirect to the settings page after deletion
+        return redirect('dashboard')
 
     return render(request, 'settings.html')

@@ -7,7 +7,7 @@ from .models import Notification, Reminder, Budget, Category
 from .forms import ReminderForm
 from django.utils import timezone
 from Transaction.models import Transaction
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from datetime import datetime, timedelta
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -15,6 +15,7 @@ from Transaction.models import Transaction, UserCategory
 from django.utils.dateparse import parse_date
 from savings.models import Saving, SavingsGoal
 from savings.views import savings_summary
+import json
 
 
 
@@ -38,21 +39,21 @@ def index(request):
 
     # Current month transactions
     this_month_incomes = Transaction.objects.filter(
-        user=user, type='Income',
+        user=user, type__iexact='income',  # <-- Fix: use type__iexact for case-insensitive match
         date__gte=first_day_this_month, date__lte=today
     )
     this_month_expenses = Transaction.objects.filter(
-        user=user, type='Expense',
+        user=user, type__iexact='expense',  # <-- Fix: use type__iexact for case-insensitive match
         date__gte=first_day_this_month, date__lte=today
     )
 
     # Last month transactions
     last_month_incomes = Transaction.objects.filter(
-        user=user, type='Income',
+        user=user, type__iexact='income',
         date__gte=first_day_last_month, date__lte=last_day_last_month
     )
     last_month_expenses = Transaction.objects.filter(
-        user=user, type='Expense',
+        user=user, type__iexact='expense',
         date__gte=first_day_last_month, date__lte=last_day_last_month
     )
 
@@ -81,7 +82,31 @@ def index(request):
     # Recent transactions
     recent_transactions = Transaction.objects.filter(user=user).order_by('-date')[:5]
 
-    print(f"Total Income: {total_income}")
+    # Chart data for dashboard (aggregate by month for current year)
+    from django.db.models.functions import TruncMonth
+    # Use Transaction directly for accurate per-user aggregation
+    transactions = Transaction.objects.filter(user=user)
+    monthly_data = transactions.annotate(
+        month=TruncMonth('date')
+    ).values('month').order_by('month').annotate(
+        income=Sum('amount', filter=Q(type__iexact='income')),
+        expenses=Sum('amount', filter=Q(type__iexact='expense'))
+    )
+
+    labels = []
+    income_chart = []
+    expenses_chart = []
+    balance_chart = []
+
+    for entry in monthly_data:
+        month = entry['month']
+        income_val = entry['income'] or 0
+        expenses_val = entry['expenses'] or 0
+        labels.append(month.strftime('%B %Y'))
+        income_chart.append(float(income_val))
+        expenses_chart.append(float(expenses_val))
+        balance_chart.append(float(income_val) - float(expenses_val))
+
     context = {
         'income': total_income,
         'expenses': total_expenses,
@@ -91,6 +116,12 @@ def index(request):
         'savings_change': savings_change,
         'recent_transactions': recent_transactions,
         'has_unread_notifications': has_unread_notifications, 
+        # Chart context for dashboard chart.js
+        'months': json.dumps(labels),
+        'income_chart': json.dumps(income_chart),
+        'expenses_chart': json.dumps(expenses_chart),
+        'balance_chart': json.dumps(balance_chart),
+        'has_data': bool(labels),
     }
 
     return render(request, 'index.html', context)

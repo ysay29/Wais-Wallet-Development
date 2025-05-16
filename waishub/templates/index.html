@@ -159,7 +159,7 @@
 
   <!-- Chart and Calendar -->
   <div class="grid-2">
-    <div class="chart-container" style="height: 420px; min-height: 350px;">
+    <div class="chart-container" style="height: 420px; min-height: 350px; position:relative;">
       <div class="chart-header">
         <h4>Monthly Income vs Expenses vs Balance</h4>
         <a href="{% url 'analytics' %}">
@@ -167,6 +167,9 @@
         </a>
       </div>
       <canvas id="analyticsChart" style="width:100% !important; height:380px !important; min-height:320px;"></canvas>
+      <div id="no-data-message" style="display:none; position:absolute; left:0; top:50%; width:100%; text-align:center; color:#888; font-size:1.2em; transform:translateY(-50%);">
+        No transaction data available.
+      </div>
     </div>
 
     <div class="calendar-container">
@@ -286,8 +289,26 @@
   // Update chart with new data
   function updateChart(chartData) {
     if (!chartData) return;
+    // Check if all chart data arrays are empty or zero
+    const isEmpty = (
+      !Array.isArray(chartData.labels) || chartData.labels.length === 0 ||
+      (!Array.isArray(chartData.income) || chartData.income.length === 0) ||
+      (!Array.isArray(chartData.expenses) || chartData.expenses.length === 0) ||
+      (!Array.isArray(chartData.balance) || chartData.balance.length === 0) ||
+      (chartData.income.every(v => v === 0) && chartData.expenses.every(v => v === 0) && chartData.balance.every(v => v === 0))
+    );
+    const noDataDiv = document.getElementById('no-data-message');
+    if (isEmpty) {
+      if (analyticsChart) {
+        analyticsChart.destroy();
+        analyticsChart = null;
+      }
+      noDataDiv.style.display = 'block';
+      return;
+    } else {
+      noDataDiv.style.display = 'none';
+    }
     if (!analyticsChart) {
-      // If chart is not initialized, initialize it now
       const analyticsCtx = document.getElementById('analyticsChart').getContext('2d');
       analyticsChart = new Chart(analyticsCtx, {
         type: 'line',
@@ -445,6 +466,26 @@
           }
         }
       });
+
+      // After fallback logic, check if there is no real data
+      const noDataDiv = document.getElementById('no-data-message');
+      const isEmpty = (
+        (!Array.isArray(analyticsLabels) || analyticsLabels.length === 0) ||
+        (!Array.isArray(incomeData) || incomeData.length === 0) ||
+        (!Array.isArray(expenseData) || expenseData.length === 0) ||
+        (!Array.isArray(balanceData) || balanceData.length === 0) ||
+        (incomeData.every(v => v === 0) && expenseData.every(v => v === 0) && balanceData.every(v => v === 0))
+      );
+      if (isEmpty) {
+        if (analyticsChart) {
+          analyticsChart.destroy();
+          analyticsChart = null;
+        }
+        noDataDiv.style.display = 'block';
+        return;
+      } else {
+        noDataDiv.style.display = 'none';
+      }
     } catch (e) {
       console.error('Error parsing chart data:', e);
       // Always show a fallback chart if something goes wrong

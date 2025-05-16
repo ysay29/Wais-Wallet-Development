@@ -372,16 +372,6 @@ def settings_view(request):
     return render(request, 'settings.html', {'form': form})
 
 @login_required
-def update_username(request):
-    if request.method == "POST":
-        new_username = request.POST.get("username")
-        if new_username:
-            request.user.username = new_username
-            request.user.save()
-            return redirect('settings')
-    return redirect('settings')
-
-@login_required
 def add_expense(request):
     user = request.user
 
@@ -584,13 +574,16 @@ def filter_dashboard_data(request):
 @login_required
 def delete_all_data(request):
     if request.method == 'POST':
-        # Perform data deletion
-        Transaction.objects.filter(user=request.user).delete()  # Delete all transactions
-        Budget.objects.filter(user=request.user).delete()  # Delete all budgets
-        Notification.objects.filter(user=request.user).delete()  # Delete all notifications
-        Saving.objects.filter(user=request.user).delete()  # Delete all savings records
-        UserCategory.objects.filter(user=request.user).delete()  # Delete all user categories
+        # Delete all user data from all related models
+        Transaction.objects.filter(user=request.user).delete()
+        Budget.objects.filter(user=request.user).delete()
+        Notification.objects.filter(user=request.user).delete()
+        Saving.objects.filter(user=request.user).delete()
+        SavingsGoal.objects.filter(user=request.user).delete()
+        UserCategory.objects.filter(user=request.user).delete()
+        Reminder.objects.filter(user=request.user).delete()
+        Category.objects.filter(user=request.user).delete()
         messages.success(request, 'Your data has been deleted successfully.')
-        return redirect('settings')  # Redirect to the settings page after deletion
+        return redirect('dashboard')
 
     return render(request, 'settings.html')

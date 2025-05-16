@@ -134,6 +134,9 @@ def index(request):
         expenses_chart.append(float(expenses_val))
         balance_chart.append(float(income_val) - float(expenses_val))
 
+    # Fetch all budgets for the user
+    budgets = Budget.objects.filter(user=user).select_related('category')
+
     context = {
         'income': total_income,
         'expenses': total_expenses,
@@ -143,6 +146,7 @@ def index(request):
         'savings_change': savings_change,
         'recent_transactions': recent_transactions,
         'has_unread_notifications': has_unread_notifications, 
+        'budgets': budgets,  # <-- Add this line
         # Chart context for dashboard chart.js
         'months': json.dumps(labels),
         'income_chart': json.dumps(income_chart),

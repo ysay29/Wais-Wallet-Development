@@ -48,7 +48,7 @@
         <a href="{% url 'savings' %}">Savings</a>
       </div>
     </div>
-    <a href="{% url 'budget' %}">Budgets</a>
+    <a href="{% url 'budget' %}">Goals</a>
     <a href="{% url 'settings' %}">Settings</a>
     <a href="{% url 'aboutus' %}">About Us</a>
   </nav>
@@ -128,6 +128,25 @@
   </div>
 </div>
 
+  <!-- Budget Limits Section -->
+  <section class="history recent-transactions" style="margin-bottom: 20px;">
+    <h2>Budget Limits</h2>
+    {% if budgets %}
+      <ul class="transaction-list">
+        {% for budget in budgets %}
+          <li>
+            <div>
+              <strong>{{ budget.category.name }}</strong>
+              <span style="margin-left:10px;">Limit: ₱{{ budget.amount|floatformat:2 }}</span>
+              <span style="margin-left:10px;">Period: {{ budget.review_period|title }}</span>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No budget limits set.</p>
+    {% endif %}
+  </section>
 
   <!-- Chart and Calendar -->
   <div class="grid-2">

@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Budget</title>
+    <title>Manage Expenses</title>
     <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
     <link rel="stylesheet" href="{% static 'css/addexpenses.css' %}">
 </head>
 <body>
     <div class="container">
-        <h1>Manage Budget</h1>
+        <h1>Manage Expenses</h1>
 
         <!-- Django Messages -->
         {% if messages %}
@@ -51,8 +51,9 @@
             </div>
 
             <div class="form-group">
-                <label>Review Period:</label>
+                <label>Reset Period:</label>
                 <select name="review_period" required>
+                    <option value="daily">Daily</option>
                     <option value="weekly">Weekly</option>
                     <option value="monthly">Monthly</option>
                     <option value="quarterly">Quarterly</option>
@@ -61,7 +62,7 @@
 
             <div class="action-buttons">
                 <button type="submit" class="submit-btn">Submit</button>
-                <a href="{% url 'dashboard' %}" class="close-btn">Cancel</a>
+                <a href="{% url 'dashboard' %}" class="close-btn" style="text-align:center;display:inline-block;padding:10px 15px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:14px;background-color:#e74c3c;color:white;transition:background-color 0.2s;">Cancel</a>
             </div>
         </form>
     </div>

@@ -135,10 +135,15 @@
       <ul class="transaction-list">
         {% for budget in budgets %}
           <li>
-            <div>
-              <strong>{{ budget.category.name }}</strong>
-              <span style="margin-left:10px;">Limit: ₱{{ budget.amount|floatformat:2 }}</span>
-              <span style="margin-left:10px;">Period: {{ budget.review_period|title }}</span>
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div>
+                <strong>{{ budget.category.name }}</strong>
+                <span style="margin-left:10px;">Limit: ₱{{ budget.amount|floatformat:2 }}</span>
+                <span style="margin-left:10px;">Period: {{ budget.review_period|title }}</span>
+              </div>
+              {% if budget.exceeded %}
+                <span style="color: red; font-weight: bold; margin-left: 20px;">Overspending Warning</span>
+              {% endif %}
             </div>
           </li>
         {% endfor %}
@@ -167,11 +172,6 @@
         <button id="nextMonth">&gt;</button>
       </div>
       <div id="calendar"></div>
-
-      <div class="monthly-progress">
-        <span>Savings Goal Progress</span>
-        <progress id="progress-bar" value="{{ progress_percent }}" max="100"></progress>
-      </div>
     </div>
   </div>
 

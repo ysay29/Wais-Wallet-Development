@@ -281,31 +281,31 @@ nav a:hover::after {
 </head>
 <body>
   <div class="coin-rain"></div>
-  <header>
-    <div class="logo">
-  <img src="{% static 'assets/logo-icon.png' %}" alt="Logo" style="height: 30px; vertical-align: middle; margin-right: 10px;">
-  Wais Wallet
-</div>
-    <nav>
-      <a href="#">Home</a>
-      <a href="#features">Features</a>
-      <a href="{% url 'aboutus'%}">About</a>
-    </nav>
-  </header>
+<header class="center-header">
+  <div class="logo-with-nav">
+    <img src="{% static 'assets/logo.png' %}" class="header-logo" alt="Wais Wallet Logo">
+    <h1 class="header-title">Wais Wallet</h1>
+  </div>
+  <nav class="nav-links">
+    <a href="#">Home</a>
+    <a href="#features">Features</a>
+    <a href="{% url 'aboutus' %}">About</a>
+  </nav>
+</header>
 
-  <section class="hero">
-    <div class="hero-text">
-      <h1>Be <span class="gradient-text">Wais</span> with Your <span class="gradient-text">Wallet</span>. Turn Your Gastos into Goals.</h1>
-      <p class="supporting-text">
-        Take charge of every peso with <strong>Wais Wallet</strong>—track your gastos, hit your goals, and make every move count.
-        Monitor spending, set saving goals, and build better money habits—all in one smart tool.
-      </p>
-      <button class="btn btn-primary" onclick="window.location.href='/login/'">Get Started</button>
-    </div>
-    <div class="hero-image">
-      <img src="{% static 'assets/logo.png' %}" alt="Wais Wallet Illustration">
-    </div>
-  </section>
+<section class="hero">
+  <div class="hero-center">
+    <h2 class="tagline">Be <span class="gradient-text">Wais</span> with Your <span class="gradient-text">Wallet</span>. Turn Your Gastos into Goals.</h2>
+    <button class="btn btn-primary" onclick="window.location.href='/login/'">Get Started</button>
+  </div>
+</section>
+
+      <section class="supporting-text-section">
+  <p>
+    Take charge of every peso with <strong>Wais Wallet</strong>—track your gastos, hit your goals, and make every move count.
+  </p>
+</section>
+
 
   <section class="features" id="features">
     <h2>🌟 Features</h2>

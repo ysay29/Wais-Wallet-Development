@@ -237,12 +237,55 @@
   }
 }
 
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.07) 0%, transparent 80%);
+  pointer-events: none;
+  z-index: 1;
+  transition: background-position 0.1s ease;
+}
+
+nav a {
+  position: relative;
+  font-weight: 600;
+  padding: 8px 12px;
+  transition: color 0.3s;
+}
+
+nav a::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: white;
+  transition: width 0.3s;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 60px;
+}
+
+
   </style>
 </head>
 <body>
   <div class="coin-rain"></div>
   <header>
-    <div class="logo">Wais Wallet</div>
+    <div class="logo">
+  <img src="{% static 'assets/logo-icon.png' %}" alt="Logo" style="height: 30px; vertical-align: middle; margin-right: 10px;">
+  Wais Wallet
+</div>
     <nav>
       <a href="#">Home</a>
       <a href="#features">Features</a>
@@ -266,16 +309,64 @@
 
   <section class="features" id="features">
     <h2>🌟 Features</h2>
-    <ul>
-      <li style="--i:1">📊 Interactive Dashboard with income, expenses, and savings</li>
-      <li style="--i:2">📅 Filter views by day, week, month, year, or custom date</li>
-      <li style="--i:3">📈 Visual Expense Tracking with bar charts</li>
-      <li style="--i:4">🗓️ Built-in calendar for date-specific tracking</li>
-      <li style="--i:5">➕ Quick action buttons: transactions, savings, and more</li>
-      <li style="--i:6">📂 Easy navigation for transactions, budgets, settings</li>
-      <li style="--i:7">🔐 Secure login for personalized access</li>
-      <li style="--i:8">🔍 Search bar for quick lookups</li>
-    </ul>
+    <div class="feature-item">
+  <img src="{% static 'assets/features/dashboard.png' %}" alt="Dashboard">
+  <div class="feature-text">
+    <h3>📊 Smart Dashboard</h3>
+    <p>Get a full view of your income, expenses, and savings goals—all in one place with dynamic charts and breakdowns.</p>
+  </div>
+</div>
+
+<div class="feature-item">
+  <img src="{% static 'assets/features/filters.png' %}" alt="Filter by Date">
+  <div class="feature-text">
+    <h3>📅 Date-Based Filtering</h3>
+    <p>Slice your financial data by day, week, month, or a custom date range to uncover spending habits.</p>
+  </div>
+</div>
+
+<div class="feature-item">
+  <img src="{% static 'assets/features/bar-chart.png' %}" alt="Visual Tracking">
+  <div class="feature-text">
+    <h3>📈 Visual Expense Tracking</h3>
+    <p>See where your money goes with animated bar graphs, charts, and category-based tracking.</p>
+  </div>
+</div>
+
+<div class="feature-item">
+  <img src="{% static 'assets/features/calendar.png' %}" alt="Calendar">
+  <div class="feature-text">
+    <h3>🗓️ Built-in Calendar</h3>
+    <p>Log transactions on specific dates and visualize your spending timeline.</p>
+  </div>
+</div>
+
+<div class="feature-item">
+  <img src="{% static 'assets/features/quick-actions.png' %}" alt="Quick Actions">
+  <div class="feature-text">
+    <h3>➕ Quick Actions</h3>
+    <p>Speed up your workflow with one-tap buttons to add income, expenses, and savings goals.</p>
+  </div>
+</div>
+
+<div class="feature-item">
+  <img src="{% static 'assets/features/navigation.png' %}" alt="Easy Navigation">
+  <div class="feature-text">
+    <h3>📂 Easy Navigation</h3>
+    <p>Seamlessly browse between Transactions, Budgets, Settings, and Reports with a clean sidebar.</p>
+  </div>
+</div>
+
+<div class="feature-item">
+  <img src="{% static 'assets/features/security.png' %}" alt="Secure Login">
+  <div class="feature-text">
+    <h3>🔐 Secure Login</h3>
+    <p>Your data is safe with our encrypted authentication system—your wallet, your privacy.</p>
+  </div>
+</div>
+
+</div>
+
   </section>
 
   <section class="about" id="about">
@@ -317,9 +408,13 @@
   }
 
   setInterval(createCoin, 300);
+
+  document.addEventListener('mousemove', e => {
+    document.body.style.setProperty('--x', e.clientX + 'px');
+    document.body.style.setProperty('--y', e.clientY + 'px');
+  });
 </script>
 
-  </script>
   
 </body>
 </html>

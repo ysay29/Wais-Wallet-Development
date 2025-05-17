@@ -26,7 +26,7 @@ def landing(request):
     return render(request, 'landing.html')  # Your dashboard template
 
 def aboutus(request):
-    return(render, 'aboutus.html')
+    return render(request, 'aboutus.html')
 
 
 @never_cache

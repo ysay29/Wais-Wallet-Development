@@ -42,26 +42,33 @@
     }
 
 nav a {
-  position: relative;
+  margin: 0 20px;
+  text-decoration: none;
+  color: white;
   font-weight: 600;
-  padding: 8px 12px;
-  transition: color 0.3s;
+  font-size: 1.1rem;
+  position: relative;
+  transition: color 0.3s ease;
 }
 
 nav a::after {
-  content: '';
+  content: "";
   position: absolute;
-  left: 0; bottom: -4px;
   width: 0%;
   height: 2px;
-  background: white;
-  transition: width 0.3s;
+  background-color: white;
+  left: 0;
+  bottom: -4px;
+  transition: width 0.3s ease;
+}
+
+nav a:hover {
+  color: #fbc806; /* Gold highlight on hover */
 }
 
 nav a:hover::after {
   width: 100%;
 }
-
 
     .logo {
       font-size: 1.5rem;

@@ -208,171 +208,44 @@
         max-width: 100%;
       }
     }
-
-    .coin-rain {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; /* So it doesn't interfere with clicking */
-  z-index: 5;
-  overflow: hidden;
-}
-
-.coin {
-  position: absolute;
-  top: -50px;
-  width: 30px;
-  height: 30px;
-  background-image: url("{% static 'assets/coin.png' %}");
-  background-size: cover;
-  animation: fall linear forwards;
-}
-
-@keyframes fall {
-  to {
-    transform: translateY(100vh) rotate(360deg);
-    opacity: 0;
-  }
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.07) 0%, transparent 80%);
-  pointer-events: none;
-  z-index: 1;
-  transition: background-position 0.1s ease;
-}
-
-nav a {
-  position: relative;
-  font-weight: 600;
-  padding: 8px 12px;
-  transition: color 0.3s;
-}
-
-nav a::after {
-  content: '';
-  position: absolute;
-  left: 0; bottom: -4px;
-  width: 0%;
-  height: 2px;
-  background: white;
-  transition: width 0.3s;
-}
-
-nav a:hover::after {
-  width: 100%;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 60px;
-}
-
-
   </style>
 </head>
 <body>
-  <div class="coin-rain"></div>
-  <header class="center-header">
-  <div class="logo-with-nav">
-    <img src="{% static 'assets/logo.png' %}" class="header-logo" alt="Wais Wallet Logo">
-    <h1 class="header-title">Wais Wallet</h1>
-  </div>
-  <nav class="nav-links">
-    <a href="#">Home</a>
-    <a href="#features">Features</a>
-    <a href="{% url 'aboutus' %}">About</a>
-  </nav>
-</header>
+  <header>
+    <div class="logo">Wais Wallet</div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#features">Features</a>
+      <a href="{% url 'aboutus'%}">About</a>
+    </nav>
+  </header>
 
-<section class="hero">
-  <div class="hero-center">
-    <h2 class="tagline">Be <span class="gradient-text">Wais</span> with Your <span class="gradient-text">Wallet</span>. Turn Your Gastos into Goals.</h2>
-    <button class="btn btn-primary" onclick="window.location.href='/login/'">Get Started</button>
-  </div>
-</section>
-
-<section class="supporting-text-section">
-  <p>
-    Take charge of every peso with <strong>Wais Wallet</strong>—track your gastos, hit your goals, and make every move count.
-  </p>
-</section>
-
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Be <span class="gradient-text">Wais</span> with Your <span class="gradient-text">Wallet</span>. Turn Your Gastos into Goals.</h1>
+      <p class="supporting-text">
+        Take charge of every peso with <strong>Wais Wallet</strong>—track your gastos, hit your goals, and make every move count.
+        Monitor spending, set saving goals, and build better money habits—all in one smart tool.
+      </p>
+      <button class="btn btn-primary" onclick="window.location.href='/login/'">Get Started</button>
+    </div>
+    <div class="hero-image">
+      <img src="{% static 'assets/logo.png' %}" alt="Wais Wallet Illustration">
+    </div>
+  </section>
 
   <section class="features" id="features">
     <h2>🌟 Features</h2>
-    <div class="feature-item">
-  <img src="{% static 'assets/features/dashboard.png' %}" alt="Dashboard">
-  <div class="feature-text">
-    <h3>📊 Smart Dashboard</h3>
-    <p>Get a full view of your income, expenses, and savings goals—all in one place with dynamic charts and breakdowns.</p>
-  </div>
-</div>
-
-<div class="feature-item">
-  <img src="{% static 'assets/features/filters.png' %}" alt="Filter by Date">
-  <div class="feature-text">
-    <h3>📅 Date-Based Filtering</h3>
-    <p>Slice your financial data by day, week, month, or a custom date range to uncover spending habits.</p>
-  </div>
-</div>
-
-<div class="feature-item">
-  <img src="{% static 'assets/features/bar-chart.png' %}" alt="Visual Tracking">
-  <div class="feature-text">
-    <h3>📈 Visual Expense Tracking</h3>
-    <p>See where your money goes with animated bar graphs, charts, and category-based tracking.</p>
-  </div>
-</div>
-
-<div class="feature-item">
-  <img src="{% static 'assets/features/calendar.png' %}" alt="Calendar">
-  <div class="feature-text">
-    <h3>🗓️ Built-in Calendar</h3>
-    <p>Log transactions on specific dates and visualize your spending timeline.</p>
-  </div>
-</div>
-
-<div class="feature-item">
-  <img src="{% static 'assets/features/quick-actions.png' %}" alt="Quick Actions">
-  <div class="feature-text">
-    <h3>➕ Quick Actions</h3>
-    <p>Speed up your workflow with one-tap buttons to add income, expenses, and savings goals.</p>
-  </div>
-</div>
-
-<div class="feature-item">
-  <img src="{% static 'assets/features/navigation.png' %}" alt="Easy Navigation">
-  <div class="feature-text">
-    <h3>📂 Easy Navigation</h3>
-    <p>Seamlessly browse between Transactions, Budgets, Settings, and Reports with a clean sidebar.</p>
-  </div>
-</div>
-
-<div class="feature-item">
-  <img src="{% static 'assets/features/security.png' %}" alt="Secure Login">
-  <div class="feature-text">
-    <h3>🔐 Secure Login</h3>
-    <p>Your data is safe with our encrypted authentication system—your wallet, your privacy.</p>
-  </div>
-</div>
-
-<div class="feature-item">
-  <img src="{% static 'assets/features/search.png' %}" alt="Search Feature">
-  <div class="feature-text">
-    <h3>🔍 Fast Search</h3>
-    <p>Quickly find transactions, categories, or goals with a smart search bar.</p>
-  </div>
-</div>
-
+    <ul>
+      <li style="--i:1">📊 Interactive Dashboard with income, expenses, and savings</li>
+      <li style="--i:2">📅 Filter views by day, week, month, year, or custom date</li>
+      <li style="--i:3">📈 Visual Expense Tracking with bar charts</li>
+      <li style="--i:4">🗓️ Built-in calendar for date-specific tracking</li>
+      <li style="--i:5">➕ Quick action buttons: transactions, savings, and more</li>
+      <li style="--i:6">📂 Easy navigation for transactions, budgets, settings</li>
+      <li style="--i:7">🔐 Secure login for personalized access</li>
+      <li style="--i:8">🔍 Search bar for quick lookups</li>
+    </ul>
   </section>
 
   <section class="about" id="about">
@@ -396,31 +269,7 @@ nav a:hover::after {
     });
   
     featureItems.forEach(item => observer.observe(item));
-
-
-  const coinContainer = document.querySelector('.coin-rain');
-
-  function createCoin() {
-    const coin = document.createElement('div');
-    coin.classList.add('coin');
-    coin.style.left = Math.random() * 100 + 'vw';
-    coin.style.animationDuration = (2 + Math.random() * 3) + 's'; 
-    coin.style.opacity = Math.random();
-    coinContainer.appendChild(coin);
-
-    coin.addEventListener('animationend', () => {
-      coin.remove();
-    });
-  }
-
-  setInterval(createCoin, 300);
-
-  document.addEventListener('mousemove', e => {
-    document.body.style.setProperty('--x', e.clientX + 'px');
-    document.body.style.setProperty('--y', e.clientY + 'px');
-  });
-</script>
-
+  </script>
   
 </body>
 </html>

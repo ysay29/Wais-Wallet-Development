@@ -41,18 +41,41 @@
       z-index: 10;
     }
 
-    nav a {
-      margin: 0 15px;
-      text-decoration: none;
-      color: #fff;
-      font-weight: 500;
-    }
+nav a {
+  position: relative;
+  font-weight: 600;
+  padding: 8px 12px;
+  transition: color 0.3s;
+}
+
+nav a::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background: white;
+  transition: width 0.3s;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
 
     .logo {
       font-size: 1.5rem;
       font-weight: bold;
     }
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 60px;
+}
 
+.hero, .features, .about {
+  padding: 100px 0;
+}
     .hero {
       display: flex;
       align-items: center;
@@ -108,36 +131,36 @@
       padding: 100px 60px;
     }
 
-    .features {
-      min-height: 150vh;
-    }
+  .feature-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 60px;
+  gap: 40px;
+}
 
-    .features h2, .about h2 {
-      font-size: 2.5rem;
-      margin-bottom: 2rem;
-      text-align: center;
-      animation: fadeInDown 1s ease;
-    }
+.feature-item:nth-child(even) {
+  flex-direction: row-reverse;
+}
 
-    .features ul {
-      list-style: none;
-      padding: 0;
-      max-width: 800px;
-      margin: 0 auto;
-    }
+.feature-item img {
+  width: 40%;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
 
-    .features li {
-      margin: 1rem 0;
-      font-size: 1.1rem;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
+.feature-text {
+  width: 60%;
+}
 
-    .features li.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+.feature-text h3 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.feature-text p {
+  font-size: 1.1rem;
+}
+
 
     .about {
       background-color: rgba(255, 255, 255, 0.1);
@@ -269,16 +292,70 @@
 
   <section class="features" id="features">
     <h2>🌟 Features</h2>
-    <ul>
-      <li style="--i:1">📊 Interactive Dashboard with income, expenses, and savings</li>
-      <li style="--i:2">📅 Filter views by day, week, month, year, or custom date</li>
-      <li style="--i:3">📈 Visual Expense Tracking with bar charts</li>
-      <li style="--i:4">🗓️ Built-in calendar for date-specific tracking</li>
-      <li style="--i:5">➕ Quick action buttons: transactions, savings, and more</li>
-      <li style="--i:6">📂 Easy navigation for transactions, budgets, settings</li>
-      <li style="--i:7">🔐 Secure login for personalized access</li>
-      <li style="--i:8">🔍 Search bar for quick lookups</li>
-    </ul>
+    <div class="feature-item">
+  <img src="{% static 'assets/features/dashboard.png' %}" alt="Dashboard">
+  <div class="feature-text">
+    <h3>📊 Smart Dashboard</h3>
+    <p>Get a full view of your income, expenses, and savings goals—all in one place with dynamic charts and breakdowns.</p>
+  </div>
+</div>
+
+<div class="feature-item">
+  <img src="{% static 'assets/features/filters.png' %}" alt="Filter by Date">
+  <div class="feature-text">
+    <h3>📅 Date-Based Filtering</h3>
+    <p>Slice your financial data by day, week, month, or a custom date range to uncover spending habits.</p>
+  </div>
+</div>
+
+<div class="feature-item">
+  <img src="{% static 'assets/features/bar-chart.png' %}" alt="Visual Tracking">
+  <div class="feature-text">
+    <h3>📈 Visual Expense Tracking</h3>
+    <p>See where your money goes with animated bar graphs, charts, and category-based tracking.</p>
+  </div>
+</div>
+
+<div class="feature-item">
+  <img src="{% static 'assets/features/calendar.png' %}" alt="Calendar">
+  <div class="feature-text">
+    <h3>🗓️ Built-in Calendar</h3>
+    <p>Log transactions on specific dates and visualize your spending timeline.</p>
+  </div>
+</div>
+
+<div class="feature-item">
+  <img src="{% static 'assets/features/quick-actions.png' %}" alt="Quick Actions">
+  <div class="feature-text">
+    <h3>➕ Quick Actions</h3>
+    <p>Speed up your workflow with one-tap buttons to add income, expenses, and savings goals.</p>
+  </div>
+</div>
+
+<div class="feature-item">
+  <img src="{% static 'assets/features/navigation.png' %}" alt="Easy Navigation">
+  <div class="feature-text">
+    <h3>📂 Easy Navigation</h3>
+    <p>Seamlessly browse between Transactions, Budgets, Settings, and Reports with a clean sidebar.</p>
+  </div>
+</div>
+
+<div class="feature-item">
+  <img src="{% static 'assets/features/security.png' %}" alt="Secure Login">
+  <div class="feature-text">
+    <h3>🔐 Secure Login</h3>
+    <p>Your data is safe with our encrypted authentication system—your wallet, your privacy.</p>
+  </div>
+</div>
+
+<div class="feature-item">
+  <img src="{% static 'assets/features/search.png' %}" alt="Search Feature">
+  <div class="feature-text">
+    <h3>🔍 Fast Search</h3>
+    <p>Quickly find transactions, categories, or goals with a smart search bar.</p>
+  </div>
+</div>
+
   </section>
 
   <section class="about" id="about">

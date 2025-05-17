@@ -281,17 +281,14 @@ nav a:hover::after {
 </head>
 <body>
   <div class="coin-rain"></div>
-<header class="center-header">
-  <div class="logo-with-nav">
-    <img src="{% static 'assets/logo.png' %}" class="header-logo" alt="Wais Wallet Logo">
-    <h1 class="header-title">Wais Wallet</h1>
-  </div>
-  <nav class="nav-links">
-    <a href="#">Home</a>
-    <a href="#features">Features</a>
-    <a href="{% url 'aboutus' %}">About</a>
-  </nav>
-</header>
+  <header>
+    <div class="logo">Wais Wallet</div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#features">Features</a>
+      <a href="{% url 'aboutus'%}">About</a>
+    </nav>
+  </header>
 
 <section class="hero">
   <div class="hero-center">
@@ -309,64 +306,16 @@ nav a:hover::after {
 
   <section class="features" id="features">
     <h2>🌟 Features</h2>
-    <div class="feature-item">
-  <img src="{% static 'assets/features/dashboard.png' %}" alt="Dashboard">
-  <div class="feature-text">
-    <h3>📊 Smart Dashboard</h3>
-    <p>Get a full view of your income, expenses, and savings goals—all in one place with dynamic charts and breakdowns.</p>
-  </div>
-</div>
-
-<div class="feature-item">
-  <img src="{% static 'assets/features/filters.png' %}" alt="Filter by Date">
-  <div class="feature-text">
-    <h3>📅 Date-Based Filtering</h3>
-    <p>Slice your financial data by day, week, month, or a custom date range to uncover spending habits.</p>
-  </div>
-</div>
-
-<div class="feature-item">
-  <img src="{% static 'assets/features/bar-chart.png' %}" alt="Visual Tracking">
-  <div class="feature-text">
-    <h3>📈 Visual Expense Tracking</h3>
-    <p>See where your money goes with animated bar graphs, charts, and category-based tracking.</p>
-  </div>
-</div>
-
-<div class="feature-item">
-  <img src="{% static 'assets/features/calendar.png' %}" alt="Calendar">
-  <div class="feature-text">
-    <h3>🗓️ Built-in Calendar</h3>
-    <p>Log transactions on specific dates and visualize your spending timeline.</p>
-  </div>
-</div>
-
-<div class="feature-item">
-  <img src="{% static 'assets/features/quick-actions.png' %}" alt="Quick Actions">
-  <div class="feature-text">
-    <h3>➕ Quick Actions</h3>
-    <p>Speed up your workflow with one-tap buttons to add income, expenses, and savings goals.</p>
-  </div>
-</div>
-
-<div class="feature-item">
-  <img src="{% static 'assets/features/navigation.png' %}" alt="Easy Navigation">
-  <div class="feature-text">
-    <h3>📂 Easy Navigation</h3>
-    <p>Seamlessly browse between Transactions, Budgets, Settings, and Reports with a clean sidebar.</p>
-  </div>
-</div>
-
-<div class="feature-item">
-  <img src="{% static 'assets/features/security.png' %}" alt="Secure Login">
-  <div class="feature-text">
-    <h3>🔐 Secure Login</h3>
-    <p>Your data is safe with our encrypted authentication system—your wallet, your privacy.</p>
-  </div>
-</div>
-
-</div>
-
+    <ul>
+      <li style="--i:1">📊 Interactive Dashboard with income, expenses, and savings</li>
+      <li style="--i:2">📅 Filter views by day, week, month, year, or custom date</li>
+      <li style="--i:3">📈 Visual Expense Tracking with bar charts</li>
+      <li style="--i:4">🗓️ Built-in calendar for date-specific tracking</li>
+      <li style="--i:5">➕ Quick action buttons: transactions, savings, and more</li>
+      <li style="--i:6">📂 Easy navigation for transactions, budgets, settings</li>
+      <li style="--i:7">🔐 Secure login for personalized access</li>
+      <li style="--i:8">🔍 Search bar for quick lookups</li>
+    </ul>
   </section>
 
   <section class="about" id="about">

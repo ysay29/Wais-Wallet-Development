@@ -16,14 +16,25 @@
     text-decoration: none;
     color: inherit;
   }
+
+  img, .navbar-logo {
+  max-width: 100%;
+  height: auto;
+}
+
+body, .main, .sidebar, .card, .calendar-container, .chart-container {
+  font-size: 1em;
+  word-break: break-word;
+}
+
   /* Sidebar */
   .sidebar {
     height: 100vh;
     width: 250px;
+    min-width: 200px;
     position: fixed;
     left: 0;
     top: 0;
-    background:  #a4c1df;
     padding: 20px 0 20px 0;
     display: flex;
     flex-direction: column;
@@ -33,17 +44,16 @@
     transition: width 0.3s, background 0.3s;
     z-index: 100;
     box-shadow: 2px 0 12px rgba(12,65,96,0.05);
+    background-color: #a4c1df;
   }
-
   .sidebar.closed{
     width: 80px;
   }
   
-/* Change the navbar styles to match your welcome message */
-/* Remove or reset existing navbar styles */
 .navbar {
   display: flex;
   align-items: center;
+  flex-direction: row; /* Make horizontal on desktop */
   padding: 15px 24px 15px 24px;
   background-color: transparent;
   margin-bottom: 20px;
@@ -59,6 +69,8 @@
   display: flex;
   flex-direction: column;
   line-height: 1.3;
+  min-width: 0;
+  flex: 1;
 }
 
 .hello-text {
@@ -140,8 +152,8 @@
 .account-section {
   display: flex;
   align-items: center;
-  justify-content: center;      /* Center horizontally */
-  width: 80%;                   /* Make it a bit smaller */
+  justify-content: center;      
+  width: 80%;                   
   min-width: 0;
   background: #11486b;
   border-radius: 16px;
@@ -151,8 +163,8 @@
   box-sizing: border-box;
   margin-top: auto;
   margin-bottom: 5px;
-  margin-left: auto;            /* Center horizontally */
-  margin-right: auto;           /* Center horizontally */
+  margin-left: auto;            
+  margin-right: auto;           
 }
 
 .account-icon {
@@ -194,12 +206,25 @@
 }
 
 .account-name {
-  font-size: 18px;
+  font-size: 14px;
   font-weight: bold;
   color: #fff;
   line-height: 1.1;
+  margin-bottom: 2px;
 }
 
+.logout-link {
+  display: block;
+  font-size: 12px; 
+  color: #cbe6fa;
+  letter-spacing: 1px;
+  margin-top: 2px;
+  transition: color 0.2s;
+}
+
+.logout-link:hover {
+  color: #fff;
+}
   /* Main */
   .main {
     flex: 1;
@@ -208,7 +233,7 @@
     flex-direction: column;
     overflow-y: auto;
     animation: fadeInMain 0.7s cubic-bezier(.4,2,.6,1);
-    margin-left: 250px; /* width of .sidebar */
+    margin-left: 250px; 
     min-width: 0;
     min-height: 100vh;
     box-sizing: border-box;
@@ -304,6 +329,23 @@ cursor: pointer;
   flex-wrap: wrap; /* Allow wrapping if not enough space */
   width: 100%;
   animation: fadeInCards 0.8s cubic-bezier(.4,2,.6,1);
+}
+
+.cards, .grid-2 {
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 900px) {
+  .cards, .grid-2 {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .card, .chart-container, .calendar-container {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
   @keyframes fadeInCards {
@@ -646,30 +688,30 @@ to { opacity: 1; transform: translateY(0); }
 }
 
 /* Responsive sidebar */
-@media (max-width: 900px) {
+@media (max-width: 600px) {
   .sidebar {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start; /* Start by default */
-  height: 100vh;
-  }
-  .navbar, .account-section, .nav-links {
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-  .navbar-logo {
-    width: 32px;
-    height: 32px;
-  }
-  .wallet-name, .hello-text, .account-label, .account-name {
-    font-size: 12px;
-  }
-  .nav-links a, .dropbtn {
-    font-size: 13px;
-    padding-left: 8px;
+    width: 70px;
+    min-width: 70px;
+    padding: 10px 0;
   }
   .main {
     margin-left: 70px;
+    padding: 10px;
+  }
+  .navbar, .account-section, .nav-links {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .navbar-logo {
+    width: 28px;
+    height: 28px;
+  }
+  .wallet-name, .hello-text, .account-label, .account-name {
+    font-size: 11px;
+  }
+  .nav-links a, .dropbtn {
+    font-size: 12px;
+    padding-left: 4px;
   }
 }
 

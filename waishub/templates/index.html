@@ -62,11 +62,15 @@
     <div class="account-name">
       {% if user.is_authenticated %}
         {{ user.get_full_name|default:user.username }}
+        <div>
+          <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+        </div>
       {% else %}
-        Login
+        <a href="{% url 'login' %}" class="logout-link">Login</a>
       {% endif %}
     </div>
   </div>
+</div>
 </aside>
 
 <!-- Main -->
@@ -604,7 +608,6 @@
     }
   });
 
-  // Show delete button on hover for budget limits
   document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.budget-limit-item').forEach(function(item) {
       item.addEventListener('mouseenter', function() {
@@ -617,6 +620,7 @@
       });
     });
   });
+
 </script>
 </body>
 </html>

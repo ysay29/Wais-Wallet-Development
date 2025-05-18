@@ -7,7 +7,7 @@
   <title>Add Transaction</title>
   <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/add.css' %}">
+  <link rel="stylesheet" href="{% static 'css/add.css' %}?v=2">
 </head>
 <body>
   <div class="container">
@@ -15,36 +15,35 @@
     
     <form id="transaction-form" method="POST">
       {% csrf_token %}
-      <label for="type"><strong>Type</strong></label>
-      <select id="type" name="type" required>
-        <option value="">Select type</option>
-        <option value="Income">Income</option>
-        <option value="Expense">Expense</option>
-      </select>
-
-      <label for="category"><strong>Category</strong></label>
-      <select id="category" name="category">
-        <option value="">Select category</option>
-        {% for category in categories %}
-          <option value="{{ category.category_name }}">{{ category.category_name }}</option>
-        {% empty %}
-          <option>No categories available</option>
-        {% endfor %}
-      </select>
-
-      <p>Or enter a new category:</p>
-      <input type="text" id="new_category" name="new_category" placeholder="e.g. Food, Bills" />
-
-
-
-      <label for="amount"><strong>Amount (₱)</strong></label>
-      <input type="number" id="amount" name="amount" required />
-
-
-      <label for="date"><strong>Date</strong></label>
-      <input type="date" id="date" name="date" required />
-
-
+      <div class="form-group">
+        <label for="type"><strong>Type</strong></label>
+        <select id="type" name="type" required>
+          <option value="">Select type</option>
+          <option value="Income">Income</option>
+          <option value="Expense">Expense</option>
+        </select>
+      </div>
+      <div class="form-group category-row">
+        <label class="category-label" for="category"><strong>Category</strong></label>
+        <select id="category" name="category" class="category-select">
+          <option value="">Select category</option>
+          {% for category in categories %}
+            <option value="{{ category.category_name }}">{{ category.category_name }}</option>
+          {% empty %}
+            <option>No categories available</option>
+          {% endfor %}
+        </select>
+        <label class="category-new-label" for="new_category">Or enter a new category:</label>
+        <input type="text" id="new_category" name="new_category" class="category-new-input" placeholder="e.g. Food, Bills" />
+      </div>
+      <div class="form-group">
+        <label for="amount"><strong>Amount (₱)</strong></label>
+        <input type="number" id="amount" name="amount" required />
+      </div>
+      <div class="form-group">
+        <label for="date"><strong>Date</strong></label>
+        <input type="date" id="date" name="date" required />
+      </div>
       <button type="submit" class="save-btn">Save Transaction</button>
     </form>
   </div>

@@ -462,7 +462,7 @@ def add_expense(request):
                 review_period=review_period
             )
             messages.success(request, 'Budget saved successfully!')
-            return redirect('add_expense')
+            return redirect('dashboard')
         else:
             messages.error(request, 'Please fill in all fields.')
 

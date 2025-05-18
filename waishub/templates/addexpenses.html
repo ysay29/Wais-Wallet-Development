@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Expenses</title>
     <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
-    <link rel="stylesheet" href="{% static 'css/addexpenses.css' %}">
+    <link rel="stylesheet" href="{% static 'css/addexpenses.css' %}?v=3">
 </head>
 <body>
     <div class="container">
@@ -62,7 +62,7 @@
 
             <div class="action-buttons">
                 <button type="submit" class="submit-btn">Submit</button>
-                <a href="{% url 'dashboard' %}" class="close-btn" style="text-align:center;display:inline-block;padding:10px 15px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:14px;background-color:#e74c3c;color:white;transition:background-color 0.2s;">Cancel</a>
+                <a href="{% url 'dashboard' %}" class="close-btn" >Close</a>
             </div>
         </form>
     </div>

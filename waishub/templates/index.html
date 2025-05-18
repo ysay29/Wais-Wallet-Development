@@ -48,7 +48,7 @@
         <a href="{% url 'savings' %}">Savings</a>
       </div>
     </div>
-    <a href="{% url 'budget' %}">Budgets</a>
+    <a href="{% url 'budget' %}">Goals</a>
     <a href="{% url 'settings' %}">Settings</a>
     <a href="{% url 'aboutus' %}">About Us</a>
   </nav>
@@ -160,13 +160,23 @@
   <!-- Chart and Calendar -->
   <div class="grid-2">
     <div class="chart-container" style="height: 420px; min-height: 350px; position:relative;">
-      <div class="chart-header">
-        <h4>Monthly Income vs Expenses vs Balance</h4>
-        <a href="{% url 'analytics' %}">
-          <img src="{% static 'assets/arrow-up.png' %}" alt="Arrow Icon" style="width:20px;">
-        </a>
+      <div class="chart-header" style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <h4 style="display:inline;">Monthly Income vs Expenses vs Balance</h4>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <select id="chartTypeSelect" style="padding:4px 8px;border-radius:6px;border:1px solid #ccc;">
+            <option value="bar">Bar</option>
+            <option value="line">Line</option>
+          </select>
+          <a href="{% url 'analytics' %}">
+            <img src="{% static 'assets/arrow-up.png' %}" alt="Arrow Icon" style="width:20px;">
+          </a>
+        </div>
       </div>
-      <canvas id="analyticsChart" style="width:100% !important; height:380px !important; min-height:320px;"></canvas>
+      <div style="width:100%;height:380px;min-height:320px;">
+        <canvas id="analyticsChart" style="width:100% !important; height:100% !important; min-height:320px; display:block;"></canvas>
+      </div>
       <div id="no-data-message" style="display:none; position:absolute; left:0; top:50%; width:100%; text-align:center; color:#888; font-size:1.2em; transform:translateY(-50%);">
         No transaction data available.
       </div>
@@ -280,6 +290,7 @@
         document.querySelector('.card:nth-child(1) p').textContent = `₱ ${parseFloat(data.income).toFixed(2)}`;
         document.querySelector('.card:nth-child(2) p').textContent = `₱ ${parseFloat(data.expenses).toFixed(2)}`;
         document.querySelector('.card:nth-child(3) p').textContent = `₱ ${parseFloat(data.savings).toFixed(2)}`;
+        window.lastChartData = data.chart_data;
         updateChart(data.chart_data);
         updateTransactions(data.transactions);
       })
@@ -308,62 +319,11 @@
     } else {
       noDataDiv.style.display = 'none';
     }
-    if (!analyticsChart) {
-      const analyticsCtx = document.getElementById('analyticsChart').getContext('2d');
-      analyticsChart = new Chart(analyticsCtx, {
-        type: 'line',
-        data: {
-          labels: chartData.labels,
-          datasets: [
-            {
-              label: 'Income',
-              data: chartData.income,
-              borderColor: 'green',
-              backgroundColor: 'rgba(0,128,0,0.1)',
-              tension: 0.3
-            },
-            {
-              label: 'Expenses',
-              data: chartData.expenses,
-              borderColor: 'red',
-              backgroundColor: 'rgba(255,0,0,0.1)',
-              tension: 0.3
-            },
-            {
-              label: 'Balance',
-              data: chartData.balance,
-              borderColor: 'blue',
-              backgroundColor: 'rgba(0,0,255,0.1)',
-              tension: 0.3
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: value => '₱' + value.toLocaleString()
-              }
-            }
-          },
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
-              }
-            }
-          }
-        }
-      });
-    } else {
-      analyticsChart.data.labels = chartData.labels;
-      analyticsChart.data.datasets[0].data = chartData.income;
-      analyticsChart.data.datasets[1].data = chartData.expenses;
-      analyticsChart.data.datasets[2].data = chartData.balance;
-      analyticsChart.update();
+    if (analyticsChart) {
+      analyticsChart.destroy();
+      analyticsChart = null;
     }
+    analyticsChart = createAnalyticsChart(currentChartType, chartData);
   }
 
   // Logout functionality
@@ -374,6 +334,77 @@
   });
 
   let analyticsChart = null; // Make chart variable global
+  let currentChartType = 'bar';
+
+  function createAnalyticsChart(type, chartData) {
+    const analyticsCtx = document.getElementById('analyticsChart').getContext('2d');
+    return new Chart(analyticsCtx, {
+      type: type,
+      data: {
+        labels: chartData.labels,
+        datasets: [
+          {
+            label: 'Income',
+            data: chartData.income,
+            borderColor: 'green',
+            backgroundColor: type === 'bar' ? 'rgba(0,128,0,0.5)' : 'rgba(0,128,0,0.1)',
+            borderWidth: 2,
+            tension: 0.3
+          },
+          {
+            label: 'Expenses',
+            data: chartData.expenses,
+            borderColor: 'red',
+            backgroundColor: type === 'bar' ? 'rgba(255,0,0,0.5)' : 'rgba(255,0,0,0.1)',
+            borderWidth: 2,
+            tension: 0.3
+          },
+          {
+            label: 'Balance',
+            data: chartData.balance,
+            borderColor: 'blue',
+            backgroundColor: type === 'bar' ? 'rgba(0,0,255,0.5)' : 'rgba(0,0,255,0.1)',
+            borderWidth: 2,
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            display: true,
+            title: { display: false }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: value => '₱' + value.toLocaleString()
+            }
+          }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
+            }
+          },
+          legend: {
+            display: true
+          }
+        }
+      }
+    });
+  }
+
+  document.getElementById('chartTypeSelect').addEventListener('change', function() {
+    currentChartType = this.value;
+    // Re-render chart with the current data
+    if (window.lastChartData) {
+      updateChart(window.lastChartData);
+    }
+  });
 
   // Fetching the data for the Income vs Expenses Chart
   document.addEventListener("DOMContentLoaded", function () {
@@ -417,6 +448,14 @@
         console.warn("No chart data found or all values are zero, using fallback data.");
       }
 
+      let chartData = {
+        labels: analyticsLabels,
+        income: incomeData,
+        expenses: expenseData,
+        balance: balanceData
+      };
+      window.lastChartData = chartData;
+
       const analyticsCtx = document.getElementById('analyticsChart').getContext('2d');
       analyticsChart = new Chart(analyticsCtx, {
         type: 'bar',
@@ -450,6 +489,10 @@
           responsive: true,
           maintainAspectRatio: false, // Ensures the chart fills the container
           scales: {
+            x: {
+              display: true,
+              title: { display: false }
+            },
             y: {
               beginAtZero: true,
               ticks: {
@@ -462,6 +505,9 @@
               callbacks: {
                 label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
               }
+            },
+            legend: {
+              display: true
             }
           }
         }
@@ -486,6 +532,11 @@
       } else {
         noDataDiv.style.display = 'none';
       }
+      if (analyticsChart) {
+        analyticsChart.destroy();
+        analyticsChart = null;
+      }
+      analyticsChart = createAnalyticsChart(currentChartType, chartData);
     } catch (e) {
       console.error('Error parsing chart data:', e);
       // Always show a fallback chart if something goes wrong
@@ -520,8 +571,12 @@
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false,
+          maintainAspectRatio: false, // Ensures the chart fills the container
           scales: {
+            x: {
+              display: true,
+              title: { display: false }
+            },
             y: {
               beginAtZero: true,
               ticks: {
@@ -534,6 +589,9 @@
               callbacks: {
                 label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
               }
+            },
+            legend: {
+              display: true
             }
           }
         }

@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Transactions</title>
-  <link rel="stylesheet" href="{% static 'css/transactions.css' %}">
+  <link rel="stylesheet" href="{% static 'css/transactions.css' %}?v=2">
 </head>
 <body>
   <!-- Sidebar -->
@@ -85,38 +85,18 @@
         <tr class="transaction-row" style="position:relative;">
           <td class="transaction-type {{ transaction.type|lower }}">{{ transaction.type|title }}</td>
           <td>{{ transaction.category }}</td>
-          <td class="transaction-amount {{ transaction.type|lower }}">₱{{ transaction.amount }}</td>
+          <td class="{{ transaction.type|lower }}">{{ transaction.amount }}</td>
           <td>{{ transaction.date }}</td>
           <td style="position:relative;">
             <form method="post" action="{% url 'delete_transaction' transaction.id %}" class="delete-transaction-form" style="display:inline;">
               {% csrf_token %}
-              <button type="submit" class="delete-transaction-btn" style="display:none; background:#e74c3c; color:#fff; border:none; border-radius:5px; padding:4px 10px; cursor:pointer;">Delete</button>
+              <button type="submit" class="delete-transaction-btn">Delete</button>
             </form>
           </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-    <style>
-      .delete-transaction-btn {
-        display: none;
-      }
-      .transaction-row:hover .delete-transaction-btn {
-        display: inline-block;
-      }
-    </style>
-    <script>
-      document.querySelectorAll('.transaction-row').forEach(function(row) {
-        row.addEventListener('mouseenter', function() {
-          const btn = row.querySelector('.delete-transaction-btn');
-          if (btn) btn.style.display = 'inline-block';
-        });
-        row.addEventListener('mouseleave', function() {
-          const btn = row.querySelector('.delete-transaction-btn');
-          if (btn) btn.style.display = 'none';
-        });
-      });
-    </script>
     {% else %}
     <div class="empty-state">
     No transactions{% if selected_month %} for {{ selected_month }}{% endif %}.
@@ -125,17 +105,14 @@
   </div>
 
   <script>
-    const tabs = document.querySelectorAll('.month-tab');
-    const emptyState = document.querySelector('.empty-state');
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-
-        if (emptyState) {
-          emptyState.textContent = `No transactions for ${tab.textContent}.`;
-        }
+    document.querySelectorAll('.transaction-row').forEach(function(row) {
+      row.addEventListener('mouseenter', function() {
+        const btn = row.querySelector('.delete-transaction-btn');
+        if (btn) btn.style.display = 'inline-block';
+      });
+      row.addEventListener('mouseleave', function() {
+        const btn = row.querySelector('.delete-transaction-btn');
+        if (btn) btn.style.display = 'none';
       });
     });
   </script>

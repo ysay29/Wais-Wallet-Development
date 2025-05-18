@@ -211,30 +211,6 @@
     align-items: center;
     margin-bottom: 20px;
   }
-  
-  /* Top Filters */
-  .filters {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  .filters button {
-    padding: 8px 16px;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 12px;
-    cursor: pointer;
-  }
-  .filters .active {
-    background: #0c4160;
-    color: #fff;
-  }
-  .filters input[type="date"] {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 12px;
-  }
 
   .notif-wrapper {
   position: relative;

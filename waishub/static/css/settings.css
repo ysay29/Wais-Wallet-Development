@@ -1,82 +1,115 @@
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f5f5f5;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #e3eaf3 0%, #f0f2f5 100%);
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
     color: #333;
+    animation: fadeInBg 1.2s;
+}
+
+@keyframes fadeInBg {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .container {
     background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 25px;
-    width: 320px;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0, 49, 71, 0.10), 0 2px 8px rgba(12,65,96,0.07);
+    padding: 40px 30px;
+    width: 400px;
+    animation: popIn 0.7s cubic-bezier(.4,2,.6,1);
+    margin: 40px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+@keyframes popIn {
+    0% { opacity: 0; transform: scale(0.95) translateY(30px);}
+    100% { opacity: 1; transform: scale(1) translateY(0);}
 }
 
 h1 {
-    font-size: 22px;
+    font-size: 2rem;
     text-align: center;
     margin-bottom: 25px;
-    color: #2c3e50;
+    color: #003147;
+    font-weight: bold;
+    letter-spacing: 1px;
 }
 
 h2 {
     font-size: 16px;
     margin: 20px 0 10px 0;
-    color: #2c3e50;
+    color: #003147;
 }
 
-.input-group {
-    margin-bottom: 15px;
+.input-group, .option-group {
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 }
 
 label {
     display: block;
     margin-bottom: 8px;
-    font-size: 14px;
-    color: #555;
+    font-size: 15px;
+    color: #003147;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
 
-input, select {
+input, select, .time-picker {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    padding: 11px 14px;
+    border-radius: 8px;
+    border: 1.5px solid #cfd8dc;
+    outline: none;
+    font-size: 15px;
+    background: #f7fafd;
+    transition: border 0.2s, box-shadow 0.2s;
+    margin-bottom: 0;
     box-sizing: border-box;
-    font-size: 14px;
-    margin-bottom: 5px;
 }
 
-.option-group {
-    margin-bottom: 15px;
+input:focus, select:focus, .time-picker:focus {
+    border-color: #003147;
+    box-shadow: 0 0 0 2px #e3eaf3;
 }
 
 .option-row {
     display: flex;
     align-items: center;
     margin-bottom: 8px;
+    gap: 10px;
 }
 
 .option-row input[type="checkbox"] {
     width: 18px;
     height: 18px;
     accent-color: #27ae60;
+    margin-right: 8px;
 }
 
 .option-row label {
     margin-bottom: 0;
-    margin-left: 10px;
-    color: #333;
+    color: #003147;
+    font-size: 15px;
+    font-weight: 500;
 }
 
 .buttons {
     display: flex;
-    justify-content: flex-end;
+    gap: 10px;
+    align-items: stretch;
     margin-top: 25px;
+    flex-direction: row;
+    justify-content: stretch;
 }
 
 button {
@@ -90,120 +123,149 @@ button {
 }
 
 .save-btn {
-    background-color: #27ae60;
+    flex: 1 1 0;
+    width: 100%;
+    background: linear-gradient(90deg, #003147 0%, #4ca1af 100%);
     color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 8px rgba(12,65,96,0.08);
+    transition: background 0.3s, transform 0.2s;
+    margin-top: 0;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .save-btn:hover {
-    background-color: #219955;
+    background: linear-gradient(90deg, #001f2f 0%, #357e9b 100%);
+    transform: scale(1.03);
 }
 
 .section-divider {
     border-top: 1px solid #eee;
     margin: 20px 0;
 }
-.time-picker {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
-}
 
 .delete-button {
-background-color: red;
-color: white;
-border: none;
-padding: 16px 32px;
-border-radius: 8px;
-font-size: 20px;
-margin-top: 30px;
-cursor: pointer;
-transition: transform 0.2s;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 8px;
+    font-size: 20px;
+    margin-top: 30px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    width: 100%;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(231,76,60,0.08);
 }
 
 .delete-button:hover {
-transform: scale(1.05);
+    background-color: #c0392b;
+    transform: scale(1.05);
 }
 
 /* Popup Styles */
 .popup {
-display: none;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-background: #fff;
-padding: 30px;
-border-radius: 15px;
-box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-text-align: center;
-position: fixed;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-z-index: 1000;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    min-width: 320px;
 }
 
 .popup-buttons {
-margin-top: 20px;
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
 }
 
 .popup-buttons button {
-margin: 0 10px;
-padding: 10px 20px;
-border: none;
-border-radius: 8px;
-font-weight: bold;
-cursor: pointer;
+    margin: 0;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
 .popup-buttons button:hover {
-transform: scale(1.05);
-transition: transform 0.2s;
-}  
-
-.yes-btn {
-background-color: #28a745; 
-color: white;
-border: none;
-padding: 10px 20px;
-border-radius: 8px;
-font-size: 16px;
-cursor: pointer;
-transition: background-color 0.1s;
+    transform: scale(1.05);
 }
 
-#confirm-yes:hover {
-background-color: #218838; 
+.yes-btn {
+    background-color: #28a745; 
+    color: white;
+    border: none;
+}
+
+.yes-btn:hover {
+    background-color: #218838; 
 }
 
 .cancel-btn {
-background-color: #dc3545; 
-color: white;
-border: none;
-padding: 10px 20px;
-border-radius: 8px;
-font-size: 16px;
-cursor: pointer;
-transition: background-color 0.1s;
+    background-color: #dc3545; 
+    color: white;
+    border: none;
 }
 
-#confirm-cancel:hover {
-background-color: #c82333;
+.cancel-btn:hover {
+    background-color: #c82333;
 }
 
 .success-icon {
-font-size: 50px;
-color: #28a745;
-margin-bottom: 10px;
+    font-size: 50px;
+    color: #28a745;
+    margin-bottom: 10px;
 }
 
 .dismiss-btn {
-margin-top: 20px;
-padding: 10px 20px;
-background-color: #0057B8;
-color: rgb(255, 255, 255);
-border: none;
-border-radius: 8px;
-font-weight: bold;
-cursor: pointer;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #003147;
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.dismiss-btn:hover {
+    background-color: #001f2f;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .container, .popup {
+        width: 98vw;
+        padding: 18px 4vw;
+    }
+    h1, h2 {
+        font-size: 20px;
+    }
+    .save-btn, .delete-button {
+        font-size: 14px;
+        padding: 10px;
+    }
 }

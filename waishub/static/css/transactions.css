@@ -21,41 +21,43 @@ a {
 
 
 /* Sidebar */
-.sidebar {
-  height: 100vh;
-  width: 250px;
-  position: relative;
-  background: #a4c1df;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border-right: 1px solid #ddd;
-  overflow-x: hidden;
-  transition: width 0.3s;
-}
+  .sidebar {
+    height: 100vh;
+    width: 250px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background:  #a4c1df;
+    padding: 20px 0 20px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-right: 1px solid #ddd;
+    overflow-x: hidden;
+    transition: width 0.3s, background 0.3s;
+    z-index: 100;
+    box-shadow: 2px 0 12px rgba(12,65,96,0.05);
+  }
 
-
-.sidebar.closed {
-  width: 80px;
-}
-
-
+  .sidebar.closed{
+    width: 80px;
+  }
+  
+/* Change the navbar styles to match your welcome message */
+/* Remove or reset existing navbar styles */
 .navbar {
   display: flex;
   align-items: center;
-  padding: 15px;
+  padding: 15px 24px 15px 24px;
   background-color: transparent;
   margin-bottom: 20px;
 }
 
-
 .navbar-logo {
-  width: 40px;
+  width: 40px; /* Adjust logo size as needed */
   height: 40px;
-  margin-right: 10px;
+  margin-right: 10px; /* Space between logo and text */
 }
-
 
 .welcome-texts {
   display: flex;
@@ -63,90 +65,93 @@ a {
   line-height: 1.3;
 }
 
-
 .hello-text {
-  font-size: 12px;
-  color: #fff;
+  font-size: 12px; /* Slightly larger than 10px */
+  color: #0c4160;
   font-weight: normal;
-  margin-bottom: 2px;
-  text-align: left;
+  margin-bottom: 2px; /* Tighter spacing */
+  text-align: left; /* Align left when beside logo */
 }
 
-
 .wallet-name {
-  font-size: 20px;
+  font-size: 20px; /* Increased from 15px */
   font-weight: bold;
   color: #0c4160;
   text-transform: capitalize;
-  letter-spacing: 1px;
+  letter-spacing: 1px; /* Slightly more spacing */
 }
 
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 24px;
+}
 
 .nav-links a, .dropbtn {
   display: block;
-  color: #333;
-  padding: 10px 0;
+  color: #223b58;
+  padding: 12px 0 12px 12px;
   text-decoration: none;
-  transition: color 0.3s;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
 }
-
 
 .nav-links a:hover, .dropbtn:hover {
-  color: #0c4160;
+  color: #fff;
+  background: #0c4160;
 }
 
-
-.nav-links a[href="index.html"],
 .nav-links a.active {
   color: #0c4160;
+  background: #e3eaf3;
   font-weight: bold;
 }
 
-
-.dropdown {
-  position: relative;
-}
-
-
+.dropdown { position: relative; }
 .dropbtn {
   background: none;
   border: none;
   width: 100%;
   text-align: left;
   cursor: pointer;
-  font-size: 95%;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 0 12px 12px;
+  border-radius: 8px;
 }
-
 
 .dropdown-img {
   width: 15px;
   height: 15px;
+  margin-left: 8px;
 }
-
 
 .dropdown-content {
   display: none;
   flex-direction: column;
-  margin-top: 5px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(12,65,96,0.08);
+  padding: 5px 0;
+  margin-top: 2px;
+  margin-left: 10px;
 }
 
-
-.dropdown:hover .dropdown-content {
-  display: flex;
-}
-
-
-/* Account Section */
+.dropdown:hover .dropdown-content { display: flex; }
+ 
+  /* Account Section Styling */
+/* Account Section with Icon */
 .account-section {
   display: flex;
   align-items: center;
   margin-top: auto;
-  padding: 10px 15px;
+  padding: 10px 24px;
   background: #0c4160;
-  border-radius: 10px;
-  gap: 12px;
+  gap: 10px;
+  margin-bottom: 10px;
 }
-
 
 .account-icon {
   width: 36px;
@@ -160,11 +165,16 @@ a {
   color: #0c4160;
 }
 
+/* Alternative for using an icon font (Font Awesome example) */
+/* <i class="fas fa-user-circle account-icon"></i> */
+.account-icon i {
+  font-size: 24px;
+  color: #fff;
+}
 
 .account-info {
   flex: 1;
 }
-
 
 .account-label {
   font-size: 11px;
@@ -172,7 +182,6 @@ a {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-
 
 .account-name {
   font-size: 14px;
@@ -190,6 +199,9 @@ a {
   background: #f4f6fc;
   min-height: 100vh;
   animation: fadeInMain 0.5s;
+  margin-left: 250px; /* Match sidebar width */
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 @keyframes fadeInMain {
@@ -350,6 +362,32 @@ tr.active-row {
   }
 }
 
+@media (max-width: 900px) {
+  .sidebar {
+    width: 70px;
+    padding: 10px 0;
+  }
+  .navbar, .account-section, .nav-links {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .navbar-logo {
+    width: 32px;
+    height: 32px;
+  }
+  .wallet-name, .hello-text, .account-label, .account-name {
+    font-size: 12px;
+  }
+  .nav-links a, .dropbtn {
+    font-size: 13px;
+    padding-left: 8px;
+  }
+  .main-content {
+    padding: 15px;
+    margin-left: 70px;
+  }
+}
+
 @media (max-width: 800px) {
   .main-content {
     padding: 10px;
@@ -365,6 +403,47 @@ tr.active-row {
 }
 
 @media (max-width: 600px) {
+  .sidebar {
+    position: fixed;
+    width: 100vw;
+    height: auto;
+    min-height: 0;
+    flex-direction: row;
+    align-items: flex-start;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 2px 12px rgba(12,65,96,0.08);
+    padding: 6px 0;
+  }
+  .navbar, .account-section, .nav-links {
+    flex-direction: row;
+    align-items: center;
+    padding: 0 8px;
+    margin-bottom: 0;
+  }
+  .nav-links {
+    flex-direction: row;
+    gap: 4px;
+    padding: 0 4px;
+  }
+  .nav-links a, .dropbtn {
+    font-size: 12px;
+    padding: 8px 4px;
+    border-radius: 6px;
+  }
+  .dropdown-content {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    min-width: 120px;
+    z-index: 10;
+  }
+  .main-content {
+    margin-left: 0;
+    margin-top: 80px; /* add top margin if sidebar is on top */
+  }
   .main-content {
     padding: 5px;
   }

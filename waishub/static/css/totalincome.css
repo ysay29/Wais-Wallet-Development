@@ -6,239 +6,370 @@
   
   body {
     font-family: 'Segoe UI', sans-serif;
-    background: #f4f6fc;
+    background: linear-gradient(135deg, #e3eaf3 0%, #f0f2f5 100%);
     display: flex;
     min-height: 100vh;
+    margin: 0;
+    color: #223b58;
+    animation: fadeInBg 1.2s;
+  }
+
+  @keyframes fadeInBg {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
   a {
     text-decoration: none;
     color: inherit;
   }
-  /* Sidebar */
+/* Sidebar */
   .sidebar {
     height: 100vh;
     width: 250px;
-    position: relative;
-    background: #a4c1df;
-    padding: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background:  #a4c1df;
+    padding: 20px 0 20px 0;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
     border-right: 1px solid #ddd;
     overflow-x: hidden;
-    transition: width 0.3s;
+    transition: width 0.3s, background 0.3s;
+    z-index: 100;
+    box-shadow: 2px 0 12px rgba(12,65,96,0.05);
   }
 
   .sidebar.closed{
     width: 80px;
   }
   
+/* Change the navbar styles to match your welcome message */
+/* Remove or reset existing navbar styles */
 .navbar {
-display: flex;
-align-items: center; /* Align logo and text vertically */
-padding: 15px;
-background-color: transparent;
-margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  padding: 15px 24px 15px 24px;
+  background-color: transparent;
+  margin-bottom: 20px;
 }
 
 .navbar-logo {
-width: 40px; /* Adjust logo size as needed */
-height: 40px;
-margin-right: 10px; /* Space between logo and text */
+  width: 40px; /* Adjust logo size as needed */
+  height: 40px;
+  margin-right: 10px; /* Space between logo and text */
 }
 
 .welcome-texts {
-display: flex;
-flex-direction: column;
-line-height: 1.3;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
 }
 
 .hello-text {
-font-size: 12px; /* Slightly larger than 10px */
-color: #555;
-font-weight: normal;
-margin-bottom: 2px; /* Tighter spacing */
-text-align: left; /* Align left when beside logo */
+  font-size: 12px; /* Slightly larger than 10px */
+  color: #0c4160;
+  font-weight: normal;
+  margin-bottom: 2px; /* Tighter spacing */
+  text-align: left; /* Align left when beside logo */
 }
 
 .wallet-name {
-font-size: 20px; /* Increased from 15px */
-font-weight: bold;
-color: #0c4160;
-text-transform: capitalize;
-letter-spacing: 1px; /* Slightly more spacing */
+  font-size: 20px; /* Increased from 15px */
+  font-weight: bold;
+  color: #0c4160;
+  text-transform: capitalize;
+  letter-spacing: 1px; /* Slightly more spacing */
 }
 
-  .nav-links a, .dropbtn {
-    display: block;
-    color: #333;
-    padding: 10px 0;
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-
-  .nav-links a:hover, .dropbtn:hover {
-    color: #0056d2;
-  }
-
-  .nav-links a[href="index.html"],
-  .nav-links a.active {
-    color:#0c4160;
-    font-weight: bold;
-  }
-  .dropdown { position: relative; }
-  .dropbtn {
-    background: none;
-    border: none;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
-    font-size: 95%;
-  }
-
-  .dropdown-img {
-width: 15px;
-height: 15px;
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 24px;
 }
 
-  .dropdown-content {
-    display: none;
-    flex-direction: column;
-    background: #a4c1df;
-    margin-top: 5px;
-  }
-  .dropdown:hover .dropdown-content { display: flex; }
+.nav-links a, .dropbtn {
+  display: block;
+  color: #223b58;
+  padding: 12px 0 12px 12px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nav-links a:hover, .dropbtn:hover {
+  color: #fff;
+  background: #0c4160;
+}
+
+.nav-links a.active {
+  color: #0c4160;
+  background: #e3eaf3;
+  font-weight: bold;
+}
+
+.dropdown { position: relative; }
+.dropbtn {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 0 12px 12px;
+  border-radius: 8px;
+}
+
+.dropdown-img {
+  width: 15px;
+  height: 15px;
+  margin-left: 8px;
+}
+
+.dropdown-content {
+  display: none;
+  flex-direction: column;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(12,65,96,0.08);
+  padding: 5px 0;
+  margin-top: 2px;
+  margin-left: 10px;
+}
+
+.dropdown:hover .dropdown-content { display: flex; }
  
   /* Account Section Styling */
+/* Account Section with Icon */
 .account-section {
-display: flex;
-align-items: center;
-margin-top: auto;
-padding: 10px 15px;
-background: #0c4160;
-border-radius: 10px;
-gap: 12px;
+  display: flex;
+  align-items: center;
+  margin-top: auto;
+  padding: 10px 24px;
+  background: #0c4160;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .account-icon {
-width: 36px;
-height: 36px;
-background: #f0f4f8;
-border-radius: 50%;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 18px;
-color: #0c4160;
+  width: 36px;
+  height: 36px;
+  background: #f0f4f8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #0c4160;
 }
 
 /* Alternative for using an icon font (Font Awesome example) */
 /* <i class="fas fa-user-circle account-icon"></i> */
 .account-icon i {
-font-size: 24px;
-color: #fff;
+  font-size: 24px;
+  color: #fff;
 }
 
 .account-info {
-flex: 1;
+  flex: 1;
 }
 
 .account-label {
-font-size: 11px;
-color: #fff;
-text-transform: uppercase;
-letter-spacing: 0.5px;
+  font-size: 11px;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .account-name {
-font-size: 14px;
-font-weight: 600;
-color: #fff;
-margin-top: 2px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 2px;
 }
 
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: #f4f6f8;
-  }
+
   .main-content {
-    margin-left: 10px;
+    margin-left: 250px; /* Match sidebar width */
     padding: 30px;
     flex: 1;
     overflow-y: auto;
     max-height: 100vh;
+    animation: fadeInMain 0.7s cubic-bezier(.4,2,.6,1);
+    min-width: 0;
+    min-height: 100vh;
+    box-sizing: border-box;
   }
+
+  @keyframes fadeInMain {
+    from { opacity: 0; transform: translateY(30px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+
   .header {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-    color: #223b58;
+    font-size: 2.2rem;
+    margin-bottom: 28px;
+    color: #003147;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(12,65,96,0.06);
   }
+
   .content-box {
     background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+    padding: 32px 24px;
+    border-radius: 18px;
+    box-shadow: 0px 8px 24px rgba(12,65,96,0.10), 0 1.5px 4px rgba(12,65,96,0.07);
     margin-bottom: 30px;
+    animation: popIn 0.7s cubic-bezier(.4,2,.6,1);
   }
+
+  @keyframes popIn {
+    0% { opacity: 0; transform: scale(0.97) translateY(30px);}
+    100% { opacity: 1; transform: scale(1) translateY(0);}
+  }
+
   table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(12,65,96,0.08);
+    animation: fadeInTable 0.5s;
   }
+
+  @keyframes fadeInTable {
+    from { opacity: 0; transform: translateY(20px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+
   th, td {
-    padding: 12px 10px;
+    padding: 14px 10px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #e3eaf3;
+    font-size: 15px;
+    transition: background 0.2s;
   }
+
   th {
-    background-color: #f0f4f8;
-    color: #223b58;
+    background-color: #0c4160;
+    color: white;
     font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 1px;
   }
+
   td {
     color: #33475b;
   }
+
   .summary {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: bold;
-    color: green;
+    color: #27ae60;
+    margin-bottom: 10px;
+    text-align: right;
   }
+
   .summary.red {
     color: #e74c3c;
   }
+
   .form-inline {
     margin-bottom: 20px;
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    align-items: center;
   }
+
   .form-inline input, .form-inline select {
     padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+    border-radius: 8px;
+    border: 1.5px solid #cfd8dc;
     font-size: 1rem;
+    background: #f7fafd;
+    transition: border 0.2s, box-shadow 0.2s;
   }
+
+  .form-inline input:focus, .form-inline select:focus {
+    border-color: #003147;
+    box-shadow: 0 0 0 2px #e3eaf3;
+  }
+
   .form-inline button {
-    background: #0c4160;
+    background: linear-gradient(90deg, #003147 0%, #4ca1af 100%);
     color: white;
-    padding: 8px 14px;
+    padding: 8px 18px;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 1rem;
+    font-weight: bold;
+    transition: background 0.3s, transform 0.2s;
   }
+
   .form-inline button:hover {
-    background: #0056b3;
+    background: linear-gradient(90deg, #001f2f 0%, #357e9b 100%);
+    transform: scale(1.03);
   }
+
   .filter-box {
     margin-bottom: 10px;
   }
 
-#incomeChart {
-  height: 300px !important; 
-  max-width: 100%;
-  margin-top: 30px;
-}
+  #incomeChart {
+    height: 600px !important; 
+    max-width: 100%;
+    margin-top: 30px;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 2px 8px rgba(12,65,96,0.08);
+    padding: 10px;
+    animation: fadeInTable 0.5s;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .main-content {
+      padding: 10px;
+      margin-left: 70px;
+    }
+    .content-box {
+      padding: 16px 6px;
+    }
+    .header {
+      font-size: 1.3rem;
+    }
+    th, td {
+      font-size: 13px;
+      padding: 8px 4px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .main-content {
+      padding: 5px;
+      margin-left: 0;
+      margin-top: 80px; /* if sidebar is on top */
+    }
+    .header {
+      font-size: 1.1rem;
+    }
+    .content-box {
+      padding: 10px 2px;
+    }
+    th, td {
+      font-size: 12px;
+      padding: 6px 2px;
+    }
+  }
 

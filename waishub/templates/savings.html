@@ -8,7 +8,7 @@
   <title>Wais Wallet - Savings</title>
   <link rel="icon" href="{% static 'favicon.png' %}" sizes="any">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="{% static 'css/savings.css' %}">
+  <link rel="stylesheet" href="{% static 'css/savings.css' %}?v=125">
 </head>
 
 <body>
@@ -25,7 +25,7 @@
     
     </div>    
     <nav class="nav-links">
-      <a href="{% url 'dashboard' %}" class="active">Dashboard</a>      
+      <a href="{% url 'dashboard' %}">Dashboard</a>      
       <a href="{% url 'transactions' %}">Transactions</a>
     
       <div class="dropdown">
@@ -37,7 +37,7 @@
           <a href="{% url 'analytics' %}">Analytics</a>
           <a href="{% url 'totalincome' %}">Total Income</a>
           <a href="{% url 'totalexpenses' %}">Total Expenses</a>
-          <a href="{% url 'savings' %}">Savings</a>
+          <a href="{% url 'savings' %}" class="active">Savings</a>
         </div>
       </div>
     
@@ -113,27 +113,9 @@
         Saved: ₱{{ total_savings|floatformat:0|intcomma }} / ₱{{ selected_goal.target_amount|floatformat:0|intcomma }}
       </div>
     {% else %}
-      <div class="month-header"><strong>{{ current_month|date:"F Y" }}</strong></div>
       <div class="summary" id="totalSavings">Total Savings this month: ₱{{ total_savings|floatformat:0|intcomma }}</div>
+      <div class="month-header"><strong>{{ current_month|date:"F Y" }}</strong></div>
     {% endif %}
-
-    <div class="progress-container">
-      <div class="progress-bar" style="width: {{ progress_percent }}%;">{{ progress_percent|floatformat:0 }}%</div>
-    </div>
-    <div class="progress-labels">
-      <span>0%</span><span>20%</span><span>40%</span><span>60%</span><span>80%</span><span>100%</span>
-    </div>
-
-    <div class="items-container">
-      {% for saving in savings|slice:":5" %}
-        <div class="item">
-          {{ saving.date|date:"M d, Y" }}: ₱{{ saving.amount|floatformat:2 }}
-          {% if saving.goal %} ({{ saving.goal.name }}) {% endif %}
-        </div>
-      {% empty %}
-        <div class="item">No recent savings.</div>
-      {% endfor %}
-    </div>
 
 
     <!-- Chart -->

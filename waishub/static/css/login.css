@@ -6,10 +6,9 @@ body {
     height: 100vh;
     margin: 0;
    /* Animated gradient background */
-    background: linear-gradient(-45deg, #f5f5f5, #e3eaf3, #a4c1df, #b1f8a3);
     background-size: 400% 400%;
     animation: gradientBG 8s ease-in-out infinite;
-    background: linear-gradient(135deg, #232526, #414345);
+    background: linear-gradient(135deg, #0c4160, #a4c1df);
   min-height: 100vh;
   overflow: hidden;
   position: relative;

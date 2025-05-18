@@ -141,13 +141,14 @@
   display: flex;
   align-items: center;
   width: 90%;
-  margin: 0 auto 24px auto;
   background: #11486b;
   border-radius: 16px;
   padding: 14px 18px;
   gap: 14px;
   color: #fff;
   box-sizing: border-box;
+  margin-top: auto;
+  margin-bottom: 24px; /* or 16px for spacing from the bottom edge */
 }
 
 .account-icon {
@@ -643,8 +644,10 @@ to { opacity: 1; transform: translateY(0); }
 /* Responsive sidebar */
 @media (max-width: 900px) {
   .sidebar {
-    width: 70px;
-    padding: 10px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Start by default */
+  height: 100vh;
   }
   .navbar, .account-section, .nav-links {
     padding-left: 8px;

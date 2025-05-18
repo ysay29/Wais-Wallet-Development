@@ -55,12 +55,11 @@
   
 <div class="account-section">
   <div class="account-icon">
-    <img src="{% static 'assets/your-avatar.png' %}" alt="User Avatar" style="width:32px;height:32px;border-radius:50%;">
+    👤
   </div>
   <div class="account-info">
     <div class="account-label">Account</div>
     <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
-    <a href="{% url 'logout' %}" class="logout-link">Logout</a>
   </div>
 </div>
 </aside>

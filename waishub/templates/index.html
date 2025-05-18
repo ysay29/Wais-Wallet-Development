@@ -86,20 +86,20 @@
 
 <!-- Cards -->
 <div class="cards">
-  <div class="card">
-    <h3>Total Income</h3>
+  <div class="card"> <a href="{% url 'totalincome' %}">
+    <h3 >Total Income</h3>
     <p>₱ {{ income|floatformat:2 }}</p>
     <div class="change-row">
       {% if income_change >= 0 %}
         <img src="{% static 'assets/increase.png' %}" class="arrow-icon" />
-        <span class="increase" style="color: green;">{{ income_change|floatformat:1 }}% from last month</span>
+        <span class="increase" style="color: green;" >{{ income_change|floatformat:1 }}% from last month</span>
       {% else %}
         <img src="{% static 'assets/decrease.png' %}" class="arrow-icon" />
         <span class="decrease" style="color: red;">{{ income_change|floatformat:1 }}% from last month</span>
       {% endif %}
-    </div>
+    </div></a>
   </div>
-  <div class="card">
+  <div class="card"> <a href="{% url 'totalexpenses' %}">
     <h3>Total Expenses</h3>
     <p>₱ {{ expenses|floatformat:2 }}</p>
     <div class="change-row">
@@ -110,9 +110,9 @@
         <img src="{% static 'assets/decrease.png' %}" class="arrow-icon" />
         <span class="increase" style="color: green;">{{ expense_change|floatformat:1 }}% from last month</span>
       {% endif %}
-    </div>
+    </div></a>
   </div>
-  <div class="card">
+  <div class="card"> <a href="{% url 'savings' %}">
     <h3>Savings</h3>
     <p>₱ {{ savings|floatformat:2 }}</p>
     <div class="change-row">
@@ -123,7 +123,7 @@
         <img src="{% static 'assets/decrease.png' %}" class="arrow-icon" />
         <span class="decrease" style="color: red;">{{ savings_change|floatformat:1 }}% from last month</span>
       {% endif %}
-    </div>
+    </div></a>
   </div>
 </div>
 

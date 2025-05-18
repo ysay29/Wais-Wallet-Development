@@ -362,7 +362,7 @@
     #savingsChart {
       width: 100% !important;
       max-width: 100%;
-      min-height: 320px;
+      min-height: 220px;
       margin-top: 30px;
       background: #fff;
       border-radius: 18px;
@@ -371,7 +371,7 @@
       animation: fadeInTable 0.5s;
       display: block;
       box-sizing: border-box;
-      height: 420px !important;
+      height: 300px !important;
     }
 
     /* Responsive */
@@ -390,11 +390,7 @@
         font-size: 13px;
         padding: 8px 4px;
       }
-      #savingsChart {
-        padding: 16px 10px 16px 10px;
-        height: 320px !important;
-        min-height: 180px;
-      }
+      
     }
 
     @media (max-width: 600px) {

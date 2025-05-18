@@ -137,8 +137,7 @@
 
 .dropdown:hover .dropdown-content { display: flex; }
  
-  /* Account Section Styling */
-/* Account Section with Icon */
+ 
 .account-section {
   display: flex;
   align-items: center;
@@ -161,8 +160,7 @@
   color: #0c4160;
 }
 
-/* Alternative for using an icon font (Font Awesome example) */
-/* <i class="fas fa-user-circle account-icon"></i> */
+
 .account-icon i {
   font-size: 24px;
   color: #fff;
@@ -228,6 +226,35 @@
   border: 2px solid white; /* Optional: makes the dot cleaner */
 }
 
+/*top bar*/
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.filters button {
+  padding: 8px 16px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  cursor: pointer;
+}
+.filters .active {
+  background: #0c4160;
+  color: #fff;
+}
+.filters input[type="date"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+}
+
+.filters button:hover {
+  background: #0c4160;
+  color: white;
+  transition: 0.3s;
+}
   .topbar {
 display: flex;
 justify-content: flex-end;

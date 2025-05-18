@@ -41,40 +41,88 @@
       z-index: 10;
     }
 
-    nav a {
-      margin: 0 15px;
-      text-decoration: none;
-      color: #fff;
-      font-weight: 500;
-    }
+nav a {
+  margin: 0 20px;
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  background-color: white;
+  left: 0;
+  bottom: -4px;
+  transition: width 0.3s ease;
+}
+
+nav a:hover {
+  color: #fbc806; 
+}
+nav a:hover::after {
+  width: 100%;
+}
 
     .logo {
       font-size: 1.5rem;
       font-weight: bold;
     }
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 60px;
+}
 
-    .hero {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 120px 60px 60px;
-    }
+.features h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  animation: fadeInDown 1s ease;
+}
 
-    .hero-text {
-      max-width: 50%;
-    }
+.hero, .features, .about {
+  padding: 100px 0;
+}
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100vh;
+  padding: 10rem 2rem 2rem; 
+  position: relative;
+  box-sizing: border-box;
+}
 
-    .hero-text h1 {
-      font-size: 3rem;
-      margin-bottom: 20px;
-      animation: fadeInDown 1s ease;
-    }
+.hero-text {
+  max-width: 700px;
+  margin-bottom: 2rem;
+}
 
-    .hero-text p {
-      font-size: 1.2rem;
-      margin-bottom: 30px;
-      animation: fadeInUp 1s ease;
-    }
+.hero-text h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  animation: fadeInDown 1s ease;
+}
+
+.hero-text p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  animation: fadeInUp 1s ease;
+}
+
+.hero-image img {
+  width: 200px;
+  animation: fadeInUp 1.5s ease;
+}
+
 
     .hero-text .btn {
       padding: 12px 24px;
@@ -108,36 +156,35 @@
       padding: 100px 60px;
     }
 
-    .features {
-      min-height: 150vh;
-    }
+  .feature-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 60px;
+  gap: 40px;
+}
 
-    .features h2, .about h2 {
-      font-size: 2.5rem;
-      margin-bottom: 2rem;
-      text-align: center;
-      animation: fadeInDown 1s ease;
-    }
+.feature-item:nth-child(even) {
+  flex-direction: row-reverse;
+}
 
-    .features ul {
-      list-style: none;
-      padding: 0;
-      max-width: 800px;
-      margin: 0 auto;
-    }
+.feature-item img {
+  width: 40%;
+  border-radius: 15px;
+}
 
-    .features li {
-      margin: 1rem 0;
-      font-size: 1.1rem;
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
+.feature-text {
+  width: 60%;
+}
 
-    .features li.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+.feature-text h3 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.feature-text p {
+  font-size: 1.1rem;
+}
+
 
     .about {
       background-color: rgba(255, 255, 255, 0.1);
@@ -208,7 +255,7 @@
         max-width: 100%;
       }
     }
-
+    /* Coin Rain Animation */
     .coin-rain {
   position: fixed;
   top: 0;
@@ -237,53 +284,25 @@
   }
 }
 
-body::before {
-  content: "";
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.07) 0%, transparent 80%);
-  pointer-events: none;
-  z-index: 1;
-  transition: background-position 0.1s ease;
+/* animation visibilty*/
+.feature-item {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-nav a {
-  position: relative;
-  font-weight: 600;
-  padding: 8px 12px;
-  transition: color 0.3s;
+.feature-item.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
-
-nav a::after {
-  content: '';
-  position: absolute;
-  left: 0; bottom: -4px;
-  width: 0%;
-  height: 2px;
-  background: white;
-  transition: width 0.3s;
-}
-
-nav a:hover::after {
-  width: 100%;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 60px;
-}
-
 
   </style>
 </head>
 <body>
   <div class="coin-rain"></div>
   <header>
-    <div class="logo">
-  <img src="{% static 'assets/logo-icon.png' %}" alt="Logo" style="height: 30px; vertical-align: middle; margin-right: 10px;">
+<div class="logo">
+  <img src="{% static 'assets/logo.png' %}" alt="Logo" style="height: 30px; vertical-align: middle; margin-right: 10px;">
   Wais Wallet
 </div>
     <nav>
@@ -310,7 +329,7 @@ nav a:hover::after {
   <section class="features" id="features">
     <h2>🌟 Features</h2>
     <div class="feature-item">
-  <img src="{% static 'assets/features/dashboard.png' %}" alt="Dashboard">
+  <img src="{% static 'assets/dashboard.png' %}" alt="Dashboard">
   <div class="feature-text">
     <h3>📊 Smart Dashboard</h3>
     <p>Get a full view of your income, expenses, and savings goals—all in one place with dynamic charts and breakdowns.</p>
@@ -318,7 +337,7 @@ nav a:hover::after {
 </div>
 
 <div class="feature-item">
-  <img src="{% static 'assets/features/filters.png' %}" alt="Filter by Date">
+  <img src="{% static 'assets/date-filter.png' %}" alt="Filter by Date">
   <div class="feature-text">
     <h3>📅 Date-Based Filtering</h3>
     <p>Slice your financial data by day, week, month, or a custom date range to uncover spending habits.</p>
@@ -326,7 +345,7 @@ nav a:hover::after {
 </div>
 
 <div class="feature-item">
-  <img src="{% static 'assets/features/bar-chart.png' %}" alt="Visual Tracking">
+  <img src="{% static 'assets/bar-chart.png' %}" alt="Visual Tracking">
   <div class="feature-text">
     <h3>📈 Visual Expense Tracking</h3>
     <p>See where your money goes with animated bar graphs, charts, and category-based tracking.</p>
@@ -334,7 +353,7 @@ nav a:hover::after {
 </div>
 
 <div class="feature-item">
-  <img src="{% static 'assets/features/calendar.png' %}" alt="Calendar">
+  <img src="{% static 'assets/calendar.png' %}" alt="Calendar">
   <div class="feature-text">
     <h3>🗓️ Built-in Calendar</h3>
     <p>Log transactions on specific dates and visualize your spending timeline.</p>
@@ -342,7 +361,7 @@ nav a:hover::after {
 </div>
 
 <div class="feature-item">
-  <img src="{% static 'assets/features/quick-actions.png' %}" alt="Quick Actions">
+  <img src="{% static 'assets/quick-actions.png' %}" alt="Quick Actions">
   <div class="feature-text">
     <h3>➕ Quick Actions</h3>
     <p>Speed up your workflow with one-tap buttons to add income, expenses, and savings goals.</p>
@@ -350,7 +369,7 @@ nav a:hover::after {
 </div>
 
 <div class="feature-item">
-  <img src="{% static 'assets/features/navigation.png' %}" alt="Easy Navigation">
+  <img src="{% static 'assets/navigation.png' %}" alt="Easy Navigation">
   <div class="feature-text">
     <h3>📂 Easy Navigation</h3>
     <p>Seamlessly browse between Transactions, Budgets, Settings, and Reports with a clean sidebar.</p>
@@ -358,18 +377,10 @@ nav a:hover::after {
 </div>
 
 <div class="feature-item">
-  <img src="{% static 'assets/features/security.png' %}" alt="Secure Login">
+  <img src="{% static 'assets/security.png' %}" alt="Secure Login">
   <div class="feature-text">
     <h3>🔐 Secure Login</h3>
     <p>Your data is safe with our encrypted authentication system—your wallet, your privacy.</p>
-  </div>
-</div>
-
-<div class="feature-item">
-  <img src="{% static 'assets/features/search.png' %}" alt="Search Feature">
-  <div class="feature-text">
-    <h3>🔍 Fast Search</h3>
-    <p>Quickly find transactions, categories, or goals with a smart search bar.</p>
   </div>
 </div>
 
@@ -381,8 +392,8 @@ nav a:hover::after {
   </section>
 
   <script>
-    const featureItems = document.querySelectorAll('.features li');
-  
+const featureItems = document.querySelectorAll('.feature-item');
+
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -397,30 +408,28 @@ nav a:hover::after {
   
     featureItems.forEach(item => observer.observe(item));
 
-
+    // Coin Rain Animation
   const coinContainer = document.querySelector('.coin-rain');
 
   function createCoin() {
     const coin = document.createElement('div');
     coin.classList.add('coin');
     coin.style.left = Math.random() * 100 + 'vw';
-    coin.style.animationDuration = (2 + Math.random() * 3) + 's'; 
+    coin.style.animationDuration = (2 + Math.random() * 3) + 's'; // 2s to 5s
     coin.style.opacity = Math.random();
     coinContainer.appendChild(coin);
 
+    // Remove coin after animation ends
     coin.addEventListener('animationend', () => {
       coin.remove();
     });
   }
 
+  // Continuously drop coins every 300ms
   setInterval(createCoin, 300);
-
-  document.addEventListener('mousemove', e => {
-    document.body.style.setProperty('--x', e.clientX + 'px');
-    document.body.style.setProperty('--y', e.clientY + 'px');
-  });
 </script>
 
+</script>
   
 </body>
 </html>

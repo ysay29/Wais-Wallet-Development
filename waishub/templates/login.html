@@ -6,10 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
-    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}?v=3">
 </head>
 <body>
-    <div class="login-container">
+    <body>
+  <div class="coin-rain"></div>
+  <div class="hero-image">
+    <img src="{% static 'assets/logo.png' %}" alt="Wais Wallet Illustration" class="blurred-hero">
+  </div>
+  <div class="login-container">
       <h1>Login</h1>
 
       {% if messages %}
@@ -40,5 +45,22 @@
         Don’t have an account? <a href="{% url 'register' %}">Sign up</a>
       </div>
     </div>
+
+    <script>
+  const coinContainer = document.querySelector('.coin-rain');
+  function createCoin() {
+    const coin = document.createElement('div');
+    coin.classList.add('coin');
+    coin.style.left = Math.random() * 100 + 'vw';
+    coin.style.animationDuration = (2 + Math.random() * 3) + 's';
+    coin.style.opacity = Math.random();
+    coinContainer.appendChild(coin);
+    coin.addEventListener('animationend', () => {
+      coin.remove();
+    });
+  }
+  setInterval(createCoin, 300);
+</script>
+
   </body>
   </html>

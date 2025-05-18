@@ -5,7 +5,71 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #f5f5f5;
+   /* Animated gradient background */
+    background-size: 400% 400%;
+    animation: gradientBG 8s ease-in-out infinite;
+    background: linear-gradient(135deg, #0c4160, #a4c1df);
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+@keyframes gradientBG {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+
+.hero-image {
+  position: fixed;           /* fixed so it stays centered on screen */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  width: 700px;              /* make it very big */
+  height: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.blurred-hero {
+  width: 100%;
+  height: 100%;
+  filter: blur(18px) opacity(0.5); /* more blur, more transparent */
+  object-fit: contain;
+}
+
+
+.coin-rain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(6px);
+  overflow: hidden;
+}
+
+.coin {
+  position: absolute;
+  top: -50px;
+  width: 30px;
+  height: 30px;
+  background-image: url("../assets/coin.png");
+  background-size: cover;
+  animation: fall linear forwards;
+  filter: blur(2px);
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
 }
 
 .login-container {
@@ -14,6 +78,8 @@ body {
     border-radius: 2px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     width: 250px;
+    position: relative;
+    z-index: 10;
 }
 
 h1 {
@@ -54,7 +120,8 @@ button {
 }
 
 button:hover {
-    background-color: #146da0;
+    color: #155724;
+    background: transparent;
 }
 
 .signup-link {
@@ -80,25 +147,31 @@ button:hover {
   
 .message {
     position: relative;
-    padding: 12px 40px 12px 15px;
+    padding: 12px 15px;
     margin-bottom: 10px;
     border-radius: 8px;
     background-color: #d4edda; /* green success bg */
     color: #155724; /* green text */
     font-size: 14px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
 }
   
 .close-btn {
-    position: absolute;
-    top: 50%;
-    right: 12px;
-    transform: translateY(-50%);
     background: transparent;
     border: none;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: bold;
-    color: #155724;
+    color: #000000;
     cursor: pointer;
+    line-height: 5;
+    min-width: 18px;
+    width: 18px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-  

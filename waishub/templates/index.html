@@ -10,7 +10,7 @@
   <title>Wais Wallet Dashboard</title>
   <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="{% static 'css/index.css' %}?v=123" />
+  <link rel="stylesheet" href="{% static 'css/index.css' %}?v=3" />
 </head>
 <body>
 {% if messages %}
@@ -48,26 +48,35 @@
         <a href="{% url 'savings' %}">Savings</a>
       </div>
     </div>
-    <a href="{% url 'budget' %}">Budgets</a>
+    <a href="{% url 'budget' %}">Goals</a>
     <a href="{% url 'settings' %}">Settings</a>
     <a href="{% url 'aboutus' %}">About Us</a>
   </nav>
   
-  <div class="account-section">
-    <a href="{% url 'logout' %}">
-    <div class="account-icon" id="logout-button">👤</div> 
-    <div class="account-info">
-      <div class="account-label">LOGOUT</div>
-      <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
-    </a>
+<div class="account-section">
+  <div class="account-icon">
+    👤
   </div>
+  <div class="account-info">
+    <div class="account-label">ACCOUNT</div>
+    <div class="account-name">
+      {% if user.is_authenticated %}
+        {{ user.get_full_name|default:user.username }}
+        <div>
+          <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+        </div>
+      {% else %}
+        <a href="{% url 'login' %}" class="logout-link">Login</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
 </aside>
 
 <!-- Main -->
 <main class="main">
   <div class="topbar">
     <div class="search-notif">
-      <input type="text" placeholder="Search..." />
       <a href="{% url 'notifications' %}" class="notif-wrapper">
         <img src="{% static 'assets/bell.png' %}" alt="Notifications" class="notif-icon" />
         {% if has_unread_notifications %}
@@ -78,29 +87,29 @@
   </div>
 
   <div class="filters">
-    <button class="filter-btn" data-filter="day">Day</button>
-    <button class="filter-btn" data-filter="week">Week</button>
-    <button class="filter-btn active" data-filter="month">Month</button>
-    <button class="filter-btn" data-filter="year">Year</button>
-    <input type="date" id="datePicker" />
-  </div>
+  <button class="filter-btn" data-filter="day">Day</button>
+  <button class="filter-btn" data-filter="week">Week</button>
+  <button class="filter-btn active" data-filter="month">Month</button>
+  <button class="filter-btn" data-filter="year">Year</button>
+  <input type="date" id="datePicker" />
+</div>
 
 <!-- Cards -->
 <div class="cards">
-  <div class="card">
-    <h3>Total Income</h3>
+  <div class="card"> <a href="{% url 'totalincome' %}">
+    <h3 >Total Income</h3>
     <p>₱ {{ income|floatformat:2 }}</p>
     <div class="change-row">
       {% if income_change >= 0 %}
         <img src="{% static 'assets/increase.png' %}" class="arrow-icon" />
-        <span class="increase" style="color: green;">{{ income_change|floatformat:1 }}% from last month</span>
+        <span class="increase" style="color: green;" >{{ income_change|floatformat:1 }}% from last month</span>
       {% else %}
         <img src="{% static 'assets/decrease.png' %}" class="arrow-icon" />
         <span class="decrease" style="color: red;">{{ income_change|floatformat:1 }}% from last month</span>
       {% endif %}
-    </div>
+    </div></a>
   </div>
-  <div class="card">
+  <div class="card"> <a href="{% url 'totalexpenses' %}">
     <h3>Total Expenses</h3>
     <p>₱ {{ expenses|floatformat:2 }}</p>
     <div class="change-row">
@@ -111,9 +120,9 @@
         <img src="{% static 'assets/decrease.png' %}" class="arrow-icon" />
         <span class="increase" style="color: green;">{{ expense_change|floatformat:1 }}% from last month</span>
       {% endif %}
-    </div>
+    </div></a>
   </div>
-  <div class="card">
+  <div class="card"> <a href="{% url 'savings' %}">
     <h3>Savings</h3>
     <p>₱ {{ savings|floatformat:2 }}</p>
     <div class="change-row">
@@ -124,7 +133,7 @@
         <img src="{% static 'assets/decrease.png' %}" class="arrow-icon" />
         <span class="decrease" style="color: red;">{{ savings_change|floatformat:1 }}% from last month</span>
       {% endif %}
-    </div>
+    </div></a>
   </div>
 </div>
 
@@ -160,13 +169,23 @@
   <!-- Chart and Calendar -->
   <div class="grid-2">
     <div class="chart-container" style="height: 420px; min-height: 350px; position:relative;">
-      <div class="chart-header">
-        <h4>Monthly Income vs Expenses vs Balance</h4>
-        <a href="{% url 'analytics' %}">
-          <img src="{% static 'assets/arrow-up.png' %}" alt="Arrow Icon" style="width:20px;">
-        </a>
+      <div class="chart-header" style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <h4 style="display:inline;">Monthly Income vs Expenses vs Balance</h4>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <select id="chartTypeSelect" style="padding:4px 8px;border-radius:6px;border:1px solid #ccc;">
+            <option value="bar">Bar</option>
+            <option value="line">Line</option>
+          </select>
+          <a href="{% url 'analytics' %}">
+            <img src="{% static 'assets/arrow-up.png' %}" alt="Arrow Icon" style="width:20px;">
+          </a>
+        </div>
       </div>
-      <canvas id="analyticsChart" style="width:100% !important; height:380px !important; min-height:320px;"></canvas>
+      <div style="width:100%;height:380px;min-height:320px;">
+        <canvas id="analyticsChart" style="width:100% !important; height:100% !important; min-height:320px; display:block;"></canvas>
+      </div>
       <div id="no-data-message" style="display:none; position:absolute; left:0; top:50%; width:100%; text-align:center; color:#888; font-size:1.2em; transform:translateY(-50%);">
         No transaction data available.
       </div>
@@ -280,6 +299,7 @@
         document.querySelector('.card:nth-child(1) p').textContent = `₱ ${parseFloat(data.income).toFixed(2)}`;
         document.querySelector('.card:nth-child(2) p').textContent = `₱ ${parseFloat(data.expenses).toFixed(2)}`;
         document.querySelector('.card:nth-child(3) p').textContent = `₱ ${parseFloat(data.savings).toFixed(2)}`;
+        window.lastChartData = data.chart_data;
         updateChart(data.chart_data);
         updateTransactions(data.transactions);
       })
@@ -308,62 +328,11 @@
     } else {
       noDataDiv.style.display = 'none';
     }
-    if (!analyticsChart) {
-      const analyticsCtx = document.getElementById('analyticsChart').getContext('2d');
-      analyticsChart = new Chart(analyticsCtx, {
-        type: 'line',
-        data: {
-          labels: chartData.labels,
-          datasets: [
-            {
-              label: 'Income',
-              data: chartData.income,
-              borderColor: 'green',
-              backgroundColor: 'rgba(0,128,0,0.1)',
-              tension: 0.3
-            },
-            {
-              label: 'Expenses',
-              data: chartData.expenses,
-              borderColor: 'red',
-              backgroundColor: 'rgba(255,0,0,0.1)',
-              tension: 0.3
-            },
-            {
-              label: 'Balance',
-              data: chartData.balance,
-              borderColor: 'blue',
-              backgroundColor: 'rgba(0,0,255,0.1)',
-              tension: 0.3
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: value => '₱' + value.toLocaleString()
-              }
-            }
-          },
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
-              }
-            }
-          }
-        }
-      });
-    } else {
-      analyticsChart.data.labels = chartData.labels;
-      analyticsChart.data.datasets[0].data = chartData.income;
-      analyticsChart.data.datasets[1].data = chartData.expenses;
-      analyticsChart.data.datasets[2].data = chartData.balance;
-      analyticsChart.update();
+    if (analyticsChart) {
+      analyticsChart.destroy();
+      analyticsChart = null;
     }
+    analyticsChart = createAnalyticsChart(currentChartType, chartData);
   }
 
   // Logout functionality
@@ -374,6 +343,77 @@
   });
 
   let analyticsChart = null; // Make chart variable global
+  let currentChartType = 'bar';
+
+  function createAnalyticsChart(type, chartData) {
+    const analyticsCtx = document.getElementById('analyticsChart').getContext('2d');
+    return new Chart(analyticsCtx, {
+      type: type,
+      data: {
+        labels: chartData.labels,
+        datasets: [
+          {
+            label: 'Income',
+            data: chartData.income,
+            borderColor: 'green',
+            backgroundColor: type === 'bar' ? 'rgba(0,128,0,0.5)' : 'rgba(0,128,0,0.1)',
+            borderWidth: 2,
+            tension: 0.3
+          },
+          {
+            label: 'Expenses',
+            data: chartData.expenses,
+            borderColor: 'red',
+            backgroundColor: type === 'bar' ? 'rgba(255,0,0,0.5)' : 'rgba(255,0,0,0.1)',
+            borderWidth: 2,
+            tension: 0.3
+          },
+          {
+            label: 'Balance',
+            data: chartData.balance,
+            borderColor: 'blue',
+            backgroundColor: type === 'bar' ? 'rgba(0,0,255,0.5)' : 'rgba(0,0,255,0.1)',
+            borderWidth: 2,
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            display: true,
+            title: { display: false }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: value => '₱' + value.toLocaleString()
+            }
+          }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
+            }
+          },
+          legend: {
+            display: true
+          }
+        }
+      }
+    });
+  }
+
+  document.getElementById('chartTypeSelect').addEventListener('change', function() {
+    currentChartType = this.value;
+    // Re-render chart with the current data
+    if (window.lastChartData) {
+      updateChart(window.lastChartData);
+    }
+  });
 
   // Fetching the data for the Income vs Expenses Chart
   document.addEventListener("DOMContentLoaded", function () {
@@ -417,6 +457,14 @@
         console.warn("No chart data found or all values are zero, using fallback data.");
       }
 
+      let chartData = {
+        labels: analyticsLabels,
+        income: incomeData,
+        expenses: expenseData,
+        balance: balanceData
+      };
+      window.lastChartData = chartData;
+
       const analyticsCtx = document.getElementById('analyticsChart').getContext('2d');
       analyticsChart = new Chart(analyticsCtx, {
         type: 'bar',
@@ -450,6 +498,10 @@
           responsive: true,
           maintainAspectRatio: false, // Ensures the chart fills the container
           scales: {
+            x: {
+              display: true,
+              title: { display: false }
+            },
             y: {
               beginAtZero: true,
               ticks: {
@@ -462,6 +514,9 @@
               callbacks: {
                 label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
               }
+            },
+            legend: {
+              display: true
             }
           }
         }
@@ -486,6 +541,11 @@
       } else {
         noDataDiv.style.display = 'none';
       }
+      if (analyticsChart) {
+        analyticsChart.destroy();
+        analyticsChart = null;
+      }
+      analyticsChart = createAnalyticsChart(currentChartType, chartData);
     } catch (e) {
       console.error('Error parsing chart data:', e);
       // Always show a fallback chart if something goes wrong
@@ -520,8 +580,12 @@
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false,
+          maintainAspectRatio: false, // Ensures the chart fills the container
           scales: {
+            x: {
+              display: true,
+              title: { display: false }
+            },
             y: {
               beginAtZero: true,
               ticks: {
@@ -534,6 +598,9 @@
               callbacks: {
                 label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
               }
+            },
+            legend: {
+              display: true
             }
           }
         }
@@ -541,7 +608,6 @@
     }
   });
 
-  // Show delete button on hover for budget limits
   document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.budget-limit-item').forEach(function(item) {
       item.addEventListener('mouseenter', function() {
@@ -554,6 +620,7 @@
       });
     });
   });
+
 </script>
 </body>
 </html>

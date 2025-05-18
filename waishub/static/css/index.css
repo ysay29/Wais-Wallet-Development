@@ -203,7 +203,8 @@
 
 .logout-link {
   display: block;
-  font-size: 14px;      /* smaller */
+  font-size: 10px; 
+  font-weight: normal;    
   color: #cbe6fa;
   margin-top: 2px;
   text-decoration: underline;

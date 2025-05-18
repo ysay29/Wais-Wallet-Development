@@ -79,8 +79,8 @@ button:hover {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 0;      
-  width: 400px;         
-  height: 400px;
+  width: 700px;         
+  height: 700px;
   display: flex;
   align-items: center;
   justify-content: center;

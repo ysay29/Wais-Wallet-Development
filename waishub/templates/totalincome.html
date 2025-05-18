@@ -7,7 +7,7 @@
   <title>Wais Wallet – Total Income</title>
   <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="{% static 'css/totalincome.css' %}"
+  <link rel="stylesheet" href="{% static 'css/totalincome.css' %}?v=2"
 </head>
 <body>
 <!-- Sidebar -->
@@ -23,7 +23,7 @@
     
     </div>    
     <nav class="nav-links">
-      <a href="{% url 'dashboard' %}" class="active">Dashboard</a>      
+      <a href="{% url 'dashboard' %}" >Dashboard</a>      
       <a href="{% url 'transactions' %}">Transactions</a>
     
       <div class="dropdown">
@@ -33,7 +33,7 @@
         </button>
         <div class="dropdown-content">
           <a href="{% url 'analytics' %}">Analytics</a>
-          <a href="{% url 'totalincome' %}">Total Income</a>
+          <a href="{% url 'totalincome' %}" class="active">Total Income</a>
           <a href="{% url 'totalexpenses' %}">Total Expenses</a>
           <a href="{% url 'savings' %}">Savings</a>
         </div>
@@ -100,7 +100,6 @@
 
     </div>
     </div>
-    <a href="{% url 'dashboard' %}" class="back-button">← Back to Home</a>
   </div>
   </div>
 

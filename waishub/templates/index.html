@@ -10,7 +10,7 @@
   <title>Wais Wallet Dashboard</title>
   <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="{% static 'css/index.css' %}?v=123" />
+  <link rel="stylesheet" href="{% static 'css/index.css' %}?v=3" />
 </head>
 <body>
 {% if messages %}
@@ -67,7 +67,6 @@
 <main class="main">
   <div class="topbar">
     <div class="search-notif">
-      <input type="text" placeholder="Search..." />
       <a href="{% url 'notifications' %}" class="notif-wrapper">
         <img src="{% static 'assets/bell.png' %}" alt="Notifications" class="notif-icon" />
         {% if has_unread_notifications %}

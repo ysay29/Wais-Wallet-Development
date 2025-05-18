@@ -140,8 +140,8 @@
 .account-section {
   display: flex;
   align-items: center;
-  justify-content: center;      /* Center horizontally */
-  width: 80%;                   /* Make it a bit smaller */
+  justify-content: center;      
+  width: 80%;                   
   min-width: 0;
   background: #11486b;
   border-radius: 16px;
@@ -151,8 +151,8 @@
   box-sizing: border-box;
   margin-top: auto;
   margin-bottom: 5px;
-  margin-left: auto;            /* Center horizontally */
-  margin-right: auto;           /* Center horizontally */
+  margin-left: auto;            
+  margin-right: auto;           
 }
 
 .account-icon {

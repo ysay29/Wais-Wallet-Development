@@ -58,10 +58,15 @@
     👤
   </div>
   <div class="account-info">
-    <div class="account-label">Account</div>
-    <div class="account-name">{{ user.get_full_name|default:user.username }}</div>
+    <div class="account-label">ACCOUNT</div>
+    <div class="account-name">
+      {% if user.is_authenticated %}
+        {{ user.get_full_name|default:user.username }}
+      {% else %}
+        Login
+      {% endif %}
+    </div>
   </div>
-</div>
 </aside>
 
 <!-- Main -->

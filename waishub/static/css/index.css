@@ -140,30 +140,31 @@
 .account-section {
   display: flex;
   align-items: center;
-  width: 100%;
-  background: #7da2c1;
-  gap: 10px;
-  margin-bottom: 0;
-  margin-top: auto;
-  padding: 10px 0;
-  border-radius: 0;
+  width: 90%;
+  margin: 0 auto 24px auto;
+  background: #11486b;
+  border-radius: 16px;
+  padding: 14px 18px;
+  gap: 14px;
+  color: #fff;
   box-sizing: border-box;
 }
 
 .account-icon {
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   background: #fff;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 22px;
+  color: #11486b;
   overflow: hidden;
 }
 
 
-.account-icon img, .account-icon i {
+.account-icon img {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -177,11 +178,10 @@
 }
 
 .account-label {
-  font-size: 13px;
-  color: #223b58;
-  font-weight: normal;
-  text-transform: none;
-  letter-spacing: 0;
+  font-size: 12px;
+  color: #cbe6fa;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
 }
 
 .account-info {
@@ -189,10 +189,9 @@
 }
 
 .account-name {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
-  color: #223b58;
-  margin-top: 0;
+  color: #fff;
   line-height: 1.1;
 }
 

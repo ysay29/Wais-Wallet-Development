@@ -9,6 +9,10 @@ body {
     background: linear-gradient(-45deg, #f5f5f5, #e3eaf3, #a4c1df, #b1f8a3);
     background-size: 400% 400%;
     animation: gradientBG 8s ease-in-out infinite;
+    background: linear-gradient(135deg, #232526, #414345);
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
 }
 
 @keyframes gradientBG {
@@ -17,6 +21,51 @@ body {
     100% {background-position: 0% 50%;}
 }
 
+.hero-image {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  width: 350px;
+  pointer-events: none;
+}
+
+.blurred-hero {
+  width: 100%;
+  filter: blur(10px) opacity(0.7);
+}
+
+
+.coin-rain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(6px);
+  overflow: hidden;
+}
+
+.coin {
+  position: absolute;
+  top: -50px;
+  width: 30px;
+  height: 30px;
+  background-image: url("../assets/coin.png");
+  background-size: cover;
+  animation: fall linear forwards;
+  filter: blur(2px);
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
 
 .login-container {
     background-color: white;
@@ -24,6 +73,8 @@ body {
     border-radius: 2px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     width: 250px;
+    position: relative;
+    z-index: 10;
 }
 
 h1 {

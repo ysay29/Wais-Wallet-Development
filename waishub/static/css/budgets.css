@@ -2,14 +2,14 @@
 margin: 0;
 padding: 0;
 box-sizing: border-box;
-font-family: 'Poppins', sans-serif;
+font-family: 'Segoe UI', sans-serif;
 }
 
 body {
 background-color: #f8fafc;
 display: flex;
 justify-content: center;
-align-items: center;
+align-items: flex-start;
 min-height: 100vh;
 padding: 40px;
 }
@@ -17,6 +17,11 @@ padding: 40px;
 .budgets-section {
 width: 100%;
 max-width: 1200px;
+min-height: 80vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+position: relative;
 }
 
 .title {
@@ -24,33 +29,45 @@ text-align: center;
 font-size: 2rem;
 color: #003147;
 margin-bottom: 40px;
+font-weight: bold;
+letter-spacing: 1px;
+text-shadow: 0 2px 8px rgba(12,65,96,0.06);
 }
 
 .budget-grid {
 display: grid;
 grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
 gap: 30px;
+width: 100%;
+margin-bottom: 60px;
 }
 
 .budget-card {
 background: #fff;
 padding: 25px;
-border-radius: 15px;
-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+border-radius: 18px;
+box-shadow: 0 8px 24px rgba(12,65,96,0.10), 0 1.5px 4px rgba(12,65,96,0.07);
 display: flex;
 flex-direction: column;
 justify-content: space-between;
-transition: transform 0.2s ease;
+transition: transform 0.25s cubic-bezier(.4,2,.6,1), box-shadow 0.25s;
+border: 1.5px solid #e3eaf3;
+position: relative;
+overflow: hidden;
 }
 
 .budget-card:hover {
-transform: translateY(-5px);
+transform: translateY(-8px) scale(1.03) rotate(-1deg);
+box-shadow: 0 16px 32px rgba(12,65,96,0.13), 0 2px 8px rgba(12,65,96,0.09);
+border-color: #b3d0ea;
 }
 
 .budget-card h2 {
-font-size: 18px;
-color: #333;
+font-size: 20px;
+color: #003147;
 margin-bottom: 15px;
+font-weight: 600;
+letter-spacing: 0.5px;
 }
 
 .amounts {
@@ -64,6 +81,7 @@ margin-bottom: 10px;
 font-size: 28px;
 color: #0a0a23;
 font-weight: bold;
+letter-spacing: 1px;
 }
 
 .left {
@@ -90,62 +108,101 @@ background-color: #d9e3ec;
 height: 10px;
 border-radius: 5px;
 overflow: hidden;
+margin-bottom: 18px;
+width: 100%;
 }
 
 .progress {
-background-color: #1b4d72;
+background: linear-gradient(90deg, #1b4d72 0%, #4ca1af 100%);
 height: 100%;
-width: 0%;
-transition: width 0.5s ease;
+width: 0%; /* Start at 0 for animation */
+border-radius: 5px;
+box-shadow: 0 1px 6px rgba(27,77,114,0.08);
+transition: width 1.2s cubic-bezier(.4,2,.6,1);
+will-change: width;
+animation: progressBarBg 2s linear infinite alternate;
+}
+
+@keyframes progressBarBg {
+0% {
+background-position: 0% 50%;
+}
+100% {
+background-position: 100% 50%;
+}
 }
 
 .close-button {
-  display: inline-block;
-  margin-top: 30px; /* Position it below the title */
-  text-align: center; 
-  width: 100%;
+width: 100%;
+display: flex;
+justify-content: center;
+position: absolute;
+left: 0;
+bottom: 30px;
+z-index: 2;
+pointer-events: none;
+}
+
+.close-button a, .close-button button {
+pointer-events: auto;
 }
 
 .close-button button {
-  background-color: #0c4160;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
-  width: 200px; /* Adjust width as needed */
-  transition: background-color 0.3s ease;
+background: linear-gradient(90deg, #0c4160 0%, #4ca1af 100%);
+color: white;
+border: none;
+padding: 13px 48px;
+font-size: 18px;
+cursor: pointer;
+border-radius: 8px;
+font-weight: 600;
+box-shadow: 0 4px 16px rgba(12,65,96,0.10);
+transition: background 0.3s, transform 0.2s;
+letter-spacing: 1px;
 }
 
 .close-button button:hover {
-  background-color: #084a63;
+background: linear-gradient(90deg, #084a63 0%, #357e9b 100%);
+transform: scale(1.05) rotate(-1deg);
 }
 
 .delete-btn {
-  background-color: #e74c3c;
-  color: #fff;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
+background-color: #e74c3c;
+color: #fff;
+border: none;
+padding: 7px 18px;
+border-radius: 6px;
+cursor: pointer;
+font-size: 15px;
+font-weight: 500;
+box-shadow: 0 2px 8px rgba(231,76,60,0.08);
+transition: background 0.2s, transform 0.2s;
+margin-top: 8px;
 }
 
 .delete-btn:hover {
-  background-color: #c0392b;
+background-color: #c0392b;
+transform: scale(1.07);
 }
-
 
 /* RESPONSIVE */
 @media (max-width: 992px) {
 .budget-grid {
     grid-template-columns: repeat(2, 1fr); /* 2 cards per row for tablets */
 }
+.close-button {
+    bottom: 18px;
+}
 }
 
 @media (max-width: 600px) {
 .budget-grid {
     grid-template-columns: 1fr; /* 1 card per row for phones */
+}
+.budgets-section {
+    padding-bottom: 80px;
+}
+.close-button {
+    bottom: 10px;
 }
 }

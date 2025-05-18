@@ -7,7 +7,21 @@
   <title>Goals</title>
   <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/budgets.css' %}">
+  <link rel="stylesheet" href="{% static 'css/budgets.css' %}?v={{ timestamp|default:123 }}">
+  <script>
+    // Animate progress bars on page load
+    document.addEventListener("DOMContentLoaded", function() {
+      var bars = document.querySelectorAll('.progress');
+      var percents = [{% for goal in goals %}{{ goal.progress_percent|floatformat:0 }}{% if not forloop.last %}, {% endif %}{% endfor %}];
+      bars.forEach(function(bar, idx) {
+        // Set width to 0 first for animation
+        bar.style.width = "0%";
+        setTimeout(function() {
+          bar.style.width = percents[idx] + "%";
+        }, 150 + idx * 80); // stagger for effect
+      });
+    });
+  </script>
 </head>
 <body>
 
@@ -29,7 +43,7 @@
             Term: {{ goal.term }} — Reminder: {{ goal.reminder }}
           </p>
           <div class="progress-bar">
-            <div class="progress" style="width: {{ goal.progress_percent|floatformat:0 }}%;"></div>
+            <div class="progress"></div>
           </div>
           <!-- Delete Button -->
            <br>

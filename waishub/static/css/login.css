@@ -21,18 +21,24 @@ body {
 }
 
 .hero-image {
-  position: absolute;
-  top: 60px;
+  position: fixed;           /* fixed so it stays centered on screen */
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   z-index: 1;
-  width: 350px;
+  width: 700px;              /* make it very big */
+  height: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   pointer-events: none;
 }
 
 .blurred-hero {
   width: 100%;
-  filter: blur(10px) opacity(0.7);
+  height: 100%;
+  filter: blur(18px) opacity(0.5); /* more blur, more transparent */
+  object-fit: contain;
 }
 
 

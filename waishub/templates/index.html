@@ -26,10 +26,6 @@
 
 <!-- Sidebar -->
 <aside class="sidebar">
-  <div class="sidebar-hero-image">
-  <img src="{% static 'assets/logo.png' %}" alt="Wais Wallet Illustration" class="sidebar-blurred-hero">
-</div>
-<div class="sidebar-coin-rain"></div>
   <div class="navbar">
     <img src="{% static 'assets/logo.png' %}" alt="Logo" class="navbar-logo" />
     <div class="welcome-texts">
@@ -625,17 +621,6 @@
     });
   });
 
-  const sidebarCoinContainer = document.querySelector('.sidebar-coin-rain');
-function createSidebarCoin() {
-  if (!sidebarCoinContainer) return;
-  const coin = document.createElement('div');
-  coin.classList.add('sidebar-coin');
-  coin.style.left = Math.random() * 90 + '%';
-  coin.style.animationDuration = (2 + Math.random() * 2) + 's';
-  sidebarCoinContainer.appendChild(coin);
-  coin.addEventListener('animationend', () => coin.remove());
-}
-setInterval(createSidebarCoin, 400);
 </script>
 </body>
 </html>

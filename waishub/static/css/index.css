@@ -44,65 +44,8 @@ body, .main, .sidebar, .card, .calendar-container, .chart-container {
     transition: width 0.3s, background 0.3s;
     z-index: 100;
     box-shadow: 2px 0 12px rgba(12,65,96,0.05);
-    background: linear-gradient(135deg, #0c4160, #a4c1df);
-  background-size: 400% 400%;
-  animation: gradientBG 8s ease-in-out infinite;
-  position: relative;
-  overflow: hidden;
+    background-color: #a4c1df;
   }
-
-  @keyframes gradientBG {
-  0% {background-position: 0% 50%;}
-  50% {background-position: 100% 50%;}
-  100% {background-position: 0% 50%;}
-}
-
-.sidebar-hero-image {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 0;
-  width: 300px;
-  height: 300px;
-  pointer-events: none;
-}
-
-.sidebar-blurred-hero {
-  width: 100%;
-  height: 100%;
-  filter: blur(12px) opacity(0.5);
-  object-fit: contain;
-}
-
-.sidebar-coin-rain {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-  filter: blur(4px);
-  overflow: hidden;
-}
-.sidebar-coin {
-  position: absolute;
-  top: -40px;
-  width: 24px;
-  height: 24px;
-  background-image: url("{% static 'assets/coin.png' %}");
-  background-size: cover;
-  animation: sidebar-fall linear forwards;
-  opacity: 0.7;
-}
-
-@keyframes sidebar-fall {
-  to {
-    transform: translateY(110vh) rotate(360deg);
-    opacity: 0;
-  }
-}
   .sidebar.closed{
     width: 80px;
   }

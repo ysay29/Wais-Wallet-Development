@@ -6,9 +6,12 @@ body {
     height: 100vh;
     margin: 0;
     /* Animated gradient background */
-    background: linear-gradient(-45deg, #f5f5f5, #e3eaf3, #a4c1df, #b1f8a3);
     background-size: 400% 400%;
     animation: gradientBG 8s ease-in-out infinite;
+    background: linear-gradient(135deg, #0c4160, #a4c1df);
+     min-height: 100vh;
+  overflow: hidden;
+  position: relative;
 }
 
 @keyframes gradientBG {
@@ -53,7 +56,7 @@ input {
 button {
     width: 100%;
     padding: 10px;
-    background-color: #4CAF50;
+    background-color: #0c4160;
     color: white;
     border: none;
     border-radius: 4px;
@@ -66,6 +69,59 @@ button:hover {
     background-color: #45a049;
 
 }
+
+.hero-image {
+  position: fixed;           /* fixed so it stays centered on screen */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  width: 700px;              /* make it very big */
+  height: 700px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.blurred-hero {
+  width: 100%;
+  height: 100%;
+  filter: blur(18px) opacity(0.5); /* more blur, more transparent */
+  object-fit: contain;
+}
+
+
+.coin-rain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(6px);
+  overflow: hidden;
+}
+
+.coin {
+  position: absolute;
+  top: -50px;
+  width: 30px;
+  height: 30px;
+  background-image: url("../assets/coin.png");
+  background-size: cover;
+  animation: fall linear forwards;
+  filter: blur(2px);
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
 .signup-link {
     text-align: center;
     margin-top: 15px;

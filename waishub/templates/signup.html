@@ -9,8 +9,12 @@
     <link rel="stylesheet" href="{% static 'css/signup.css' %}?v=2">
 </head>
 <body>
-    <div class="login-container">
-      <h1>Sign up</h1>
+<body>
+  <div class="coin-rain"></div>
+  <div class="hero-image">
+    <img src="{% static 'assets/logo.png' %}" alt="Wais Wallet Illustration" class="blurred-hero">
+  </div>
+  <div class="login-container">      <h1>Sign up</h1>
       {% if messages %}
         <div class="message-list">
           {% for message in messages %}
@@ -45,5 +49,22 @@
             <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
       </form>
     </div>
+
+    <script>
+  const coinContainer = document.querySelector('.coin-rain');
+  function createCoin() {
+    const coin = document.createElement('div');
+    coin.classList.add('coin');
+    coin.style.left = Math.random() * 100 + 'vw';
+    coin.style.animationDuration = (2 + Math.random() * 3) + 's';
+    coin.style.opacity = Math.random();
+    coinContainer.appendChild(coin);
+    coin.addEventListener('animationend', () => {
+      coin.remove();
+    });
+  }
+  setInterval(createCoin, 300);
+</script>
+
   </body>
   </html>

@@ -24,8 +24,9 @@ body {
     background-color: white;
     padding: 45px;
     border-radius: 2px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     width: 250px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  background: rgba(255,255,255,0.95);
 }
 
 h1 {
@@ -87,7 +88,7 @@ button:hover {
 .blurred-hero {
   width: 100%;
   height: 100%;
-  filter: blur(18px) opacity(0.5); /* more blur, more transparent */
+  filter: blur(8px) opacity(0.85); /* more blur, more transparent */
   object-fit: contain;
 }
 

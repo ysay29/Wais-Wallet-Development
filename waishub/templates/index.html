@@ -306,7 +306,6 @@
         document.querySelector('.card:nth-child(1) p').textContent = `₱ ${parseFloat(data.income).toFixed(2)}`;
         document.querySelector('.card:nth-child(2) p').textContent = `₱ ${parseFloat(data.expenses).toFixed(2)}`;
         document.querySelector('.card:nth-child(3) p').textContent = `₱ ${parseFloat(data.savings).toFixed(2)}`;
-        window.lastChartData = data.chart_data;
         updateChart(data.chart_data);
         updateTransactions(data.transactions);
       })
@@ -316,31 +315,65 @@
   // Update chart with new data
   function updateChart(chartData) {
     if (!chartData) return;
-    // Check if all chart data arrays are empty or zero
-    const isEmpty = (
-      !Array.isArray(chartData.labels) || chartData.labels.length === 0 ||
-      (!Array.isArray(chartData.income) || chartData.income.length === 0) ||
-      (!Array.isArray(chartData.expenses) || chartData.expenses.length === 0) ||
-      (!Array.isArray(chartData.balance) || chartData.balance.length === 0) ||
-      (chartData.income.every(v => v === 0) && chartData.expenses.every(v => v === 0) && chartData.balance.every(v => v === 0))
-    );
-    const noDataDiv = document.getElementById('no-data-message');
-    if (isEmpty) {
-      if (window.analyticsChart) {
-        window.analyticsChart.destroy();
-        window.analyticsChart = null;
-      }
-      noDataDiv.style.display = 'block';
-      return;
+    if (!analyticsChart) {
+      // If chart is not initialized, initialize it now
+      const analyticsCtx = document.getElementById('analyticsChart').getContext('2d');
+      analyticsChart = new Chart(analyticsCtx, {
+        type: 'line',
+        data: {
+          labels: chartData.labels,
+          datasets: [
+            {
+              label: 'Income',
+              data: chartData.income,
+              borderColor: 'green',
+              backgroundColor: 'rgba(0,128,0,0.1)',
+              tension: 0.3
+            },
+            {
+              label: 'Expenses',
+              data: chartData.expenses,
+              borderColor: 'red',
+              backgroundColor: 'rgba(255,0,0,0.1)',
+              tension: 0.3
+            },
+            {
+              label: 'Balance',
+              data: chartData.balance,
+              borderColor: 'blue',
+              backgroundColor: 'rgba(0,0,255,0.1)',
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: value => '₱' + value.toLocaleString()
+              }
+            }
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
+              }
+            }
+          }
+        }
+      });
     } else {
-      noDataDiv.style.display = 'none';
+      analyticsChart.data.labels = chartData.labels;
+      analyticsChart.data.datasets[0].data = chartData.income;
+      analyticsChart.data.datasets[1].data = chartData.expenses;
+      analyticsChart.data.datasets[2].data = chartData.balance;
+      analyticsChart.update();
     }
-    if (window.analyticsChart) {
-      window.analyticsChart.destroy();
-      window.analyticsChart = null;
-    }
-    window.analyticsChart = createAnalyticsChart(currentChartType, chartData);
   }
+
 
   // Logout functionality
   document.getElementById("logout-button").addEventListener("click", function () {
@@ -414,11 +447,13 @@
     });
   }
 
-  // Chart type selector
   document.getElementById('chartTypeSelect').addEventListener('change', function() {
     currentChartType = this.value;
     if (window.lastChartData) {
-      updateChart(window.lastChartData);
+      if (analyticsChart) {
+        analyticsChart.destroy();
+      }
+      analyticsChart = createAnalyticsChart(currentChartType, window.lastChartData);
     }
   });
 
@@ -432,7 +467,10 @@
       balance: JSON.parse('{{ balance_chart|escapejs }}')
     };
     window.lastChartData = chartData;
-    updateChart(chartData);
+    if (analyticsChart) {
+      analyticsChart.destroy();
+    }
+    analyticsChart = createAnalyticsChart(currentChartType, chartData);
   });
 
   // Fetching the data for the Income vs Expenses Chart
@@ -447,6 +485,7 @@
       console.log('Chart expenses:', expenseData);
       console.log('Chart balance:', balanceData);
 
+
       // If any of the arrays are not the same length, fix them for Chart.js
       const maxLen = Math.max(analyticsLabels.length, incomeData.length, expenseData.length, balanceData.length);
       function pad(arr, len) {
@@ -457,6 +496,7 @@
       pad(incomeData, maxLen);
       pad(expenseData, maxLen);
       pad(balanceData, maxLen);
+
 
       // Fallback: If all arrays are empty, use dummy data to show a visible graph
       let labels = analyticsLabels;
@@ -477,13 +517,6 @@
         console.warn("No chart data found or all values are zero, using fallback data.");
       }
 
-      let chartData = {
-        labels: analyticsLabels,
-        income: incomeData,
-        expenses: expenseData,
-        balance: balanceData
-      };
-      window.lastChartData = chartData;
 
       const analyticsCtx = document.getElementById('analyticsChart').getContext('2d');
       analyticsChart = new Chart(analyticsCtx, {
@@ -518,10 +551,6 @@
           responsive: true,
           maintainAspectRatio: false, // Ensures the chart fills the container
           scales: {
-            x: {
-              display: true,
-              title: { display: false }
-            },
             y: {
               beginAtZero: true,
               ticks: {
@@ -534,38 +563,10 @@
               callbacks: {
                 label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
               }
-            },
-            legend: {
-              display: true
             }
           }
         }
       });
-
-      // After fallback logic, check if there is no real data
-      const noDataDiv = document.getElementById('no-data-message');
-      const isEmpty = (
-        (!Array.isArray(analyticsLabels) || analyticsLabels.length === 0) ||
-        (!Array.isArray(incomeData) || incomeData.length === 0) ||
-        (!Array.isArray(expenseData) || expenseData.length === 0) ||
-        (!Array.isArray(balanceData) || balanceData.length === 0) ||
-        (incomeData.every(v => v === 0) && expenseData.every(v => v === 0) && balanceData.every(v => v === 0))
-      );
-      if (isEmpty) {
-        if (analyticsChart) {
-          analyticsChart.destroy();
-          analyticsChart = null;
-        }
-        noDataDiv.style.display = 'block';
-        return;
-      } else {
-        noDataDiv.style.display = 'none';
-      }
-      if (analyticsChart) {
-        analyticsChart.destroy();
-        analyticsChart = null;
-      }
-      analyticsChart = createAnalyticsChart(currentChartType, chartData);
     } catch (e) {
       console.error('Error parsing chart data:', e);
       // Always show a fallback chart if something goes wrong
@@ -600,12 +601,8 @@
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false, // Ensures the chart fills the container
+          maintainAspectRatio: false,
           scales: {
-            x: {
-              display: true,
-              title: { display: false }
-            },
             y: {
               beginAtZero: true,
               ticks: {
@@ -618,14 +615,13 @@
               callbacks: {
                 label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
               }
-            },
-            legend: {
-              display: true
             }
           }
         }
       });
     }
+  });
+
 
     // Set default filter to 'month' on initial load (only once)
     fetchDashboardData('month');
@@ -644,7 +640,6 @@
         btn.classList.add('active');
       }
     });
-  });
 
   document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.budget-limit-item').forEach(function(item) {

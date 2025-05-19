@@ -10,6 +10,10 @@
   <link rel="stylesheet" href="{% static 'css/add.css' %}?v=2">
 </head>
 <body>
+  <div class="hero-image">
+  <img src="{% static 'assets/logo.png' %}" alt="Logo" class="blurred-hero">
+</div>
+<div class="coin-rain"></div>
   <div class="container">
     <h2><strong>Add Transaction</strong></h2>
     
@@ -137,6 +141,17 @@
         categoryInput.style.display = 'none';
       }
     });
+    const coinContainer = document.querySelector('.coin-rain');
+function createCoin() {
+  if (!coinContainer) return;
+  const coin = document.createElement('div');
+  coin.classList.add('coin');
+  coin.style.left = Math.random() * 100 + 'vw';
+  coin.style.animationDuration = (2 + Math.random() * 2) + 's';
+  coinContainer.appendChild(coin);
+  coin.addEventListener('animationend', () => coin.remove());
+}
+setInterval(createCoin, 400);
   });
 </script>
 </body>

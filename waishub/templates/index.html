@@ -608,19 +608,13 @@
     }
 
     // Set default filter to 'month' on initial load (only once)
-    let dashboardDefaultLoaded = false;
-    if (!dashboardDefaultLoaded) {
-      dashboardDefaultLoaded = true;
-      setTimeout(function() {
-        fetchDashboardData('month');
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-          btn.classList.remove('active');
-          if (btn.getAttribute('data-filter') === 'month') {
-            btn.classList.add('active');
-          }
-        });
-      }, 0);
-    }
+    fetchDashboardData('month');
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.getAttribute('data-filter') === 'month') {
+        btn.classList.add('active');
+      }
+    });
 
     // Set default filter to 'month' on initial load
     fetchDashboardData('month');

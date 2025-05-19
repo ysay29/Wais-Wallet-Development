@@ -107,11 +107,12 @@ def index(request):
     from django.db.models.functions import TruncMonth
     # Use Transaction directly for accurate per-user aggregation
     transactions = Transaction.objects.filter(user=user)
+    # Only include months with at least one transaction
     monthly_data = transactions.annotate(
         month=TruncMonth('date')
     ).values('month').order_by('month').annotate(
-        income=Sum('amount', filter=Q(type__iexact='income')),
-        expenses=Sum('amount', filter=Q(type__iexact='expense'))
+        income=Sum('amount', filter=Q(type__iexact='Income')),
+        expenses=Sum('amount', filter=Q(type__iexact='Expense'))
     )
 
     labels = []
@@ -121,12 +122,14 @@ def index(request):
 
     for entry in monthly_data:
         month = entry['month']
-        income_val = entry['income'] or 0
-        expenses_val = entry['expenses'] or 0
-        labels.append(month.strftime('%B %Y'))
-        income_chart.append(float(income_val))
-        expenses_chart.append(float(expenses_val))
-        balance_chart.append(float(income_val) - float(expenses_val))
+        income_val = float(entry['income'] or 0)
+        expenses_val = float(entry['expenses'] or 0)
+        # Only add months that have at least one transaction
+        if income_val > 0 or expenses_val > 0:
+            labels.append(month.strftime('%B %Y'))
+            income_chart.append(income_val)
+            expenses_chart.append(expenses_val)
+            balance_chart.append(income_val - expenses_val)
 
     # Fetch all budgets for the user
     budgets = Budget.objects.filter(user=user).select_related('category')

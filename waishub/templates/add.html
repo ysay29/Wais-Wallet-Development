@@ -10,13 +10,12 @@
   <link rel="stylesheet" href="{% static 'css/add.css' %}?v=2">
 </head>
 <body>
- <div class="coin-rain"></div>
+  <div class="coin-rain"></div>
   <div class="hero-image">
     <img src="{% static 'assets/logo.png' %}" alt="Wais Wallet Illustration" class="blurred-hero">
   </div>
-<div class="container">
+  <div class="container">
     <h2><strong>Add Transaction</strong></h2>
-    
     <form id="transaction-form" method="POST">
       {% csrf_token %}
       <div class="form-group">
@@ -52,7 +51,6 @@
     </form>
   </div>
 
-
   <div class="popup" id="confirm-popup">
     <div class="popup-content">
       <p>Are you sure you want to save this transaction?</p>
@@ -63,7 +61,6 @@
     </div>
   </div>
 
-
   <div class="popup" id="saved-popup">
     <div class="popup-content">
       <p>Your Transaction is saved</p>
@@ -71,90 +68,89 @@
     </div>
   </div>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('transaction-form');
+      const confirmPopup = document.getElementById('confirm-popup');
+      const savedPopup = document.getElementById('saved-popup');
+      const yesBtn = document.getElementById('confirm-yes');
+      const cancelBtn = document.getElementById('confirm-cancel');
+      const closePopup = document.getElementById('close-popup');
+      let allowSubmit = false;
 
- <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('transaction-form');
-    const confirmPopup = document.getElementById('confirm-popup');
-    const savedPopup = document.getElementById('saved-popup');
-    const yesBtn = document.getElementById('confirm-yes');
-    const cancelBtn = document.getElementById('confirm-cancel');
-    const closePopup = document.getElementById('close-popup');
-    let allowSubmit = false;
+      form.addEventListener('submit', function(e) {
+        if (!allowSubmit) {
+          e.preventDefault();
+          confirmPopup.style.display = 'flex';
+        }
+      });
 
-    form.addEventListener('submit', function(e) {
-      if (!allowSubmit) {
-        e.preventDefault();
-        confirmPopup.style.display = 'flex';
+      yesBtn.addEventListener('click', () => {
+        allowSubmit = true;
+        confirmPopup.style.display = 'none';
+
+        // Check if the user entered a custom category
+        const categoryDropdown = document.querySelector('#category');
+        const newCategoryInput = document.querySelector('#new_category');
+        
+        // If the input is not empty, add the new category to the form
+        if (newCategoryInput.value.trim() !== '') {
+          // Create a hidden input field with the new category value
+          const newCategoryField = document.createElement('input');
+          newCategoryField.type = 'hidden';
+          newCategoryField.name = 'category';
+          newCategoryField.value = newCategoryInput.value.trim();
+          form.appendChild(newCategoryField);
+        }
+
+        form.submit();
+      });
+
+      cancelBtn.addEventListener('click', () => {
+        confirmPopup.style.display = 'none';
+      });
+
+      closePopup.addEventListener('click', () => {
+        window.location.href = "{% url 'dashboard' %}";
+      });
+
+      // coin rain effect
+      const coinContainer = document.querySelector('.coin-rain');
+      function createCoin() {
+        const coin = document.createElement('div');
+        coin.classList.add('coin');
+        coin.style.left = Math.random() * 100 + 'vw';
+        coin.style.animationDuration = (2 + Math.random() * 3) + 's';
+        coin.style.opacity = Math.random();
+        coinContainer.appendChild(coin);
+        coin.addEventListener('animationend', () => {
+          coin.remove();
+        });
       }
-    });
+      setInterval(createCoin, 300);
 
-    yesBtn.addEventListener('click', () => {
-      allowSubmit = true;
-      confirmPopup.style.display = 'none';
+      // Show saved popup if ?saved=1 in URL
+      const isSaved = "{{ request.GET.saved|default:'' }}" === "1";
+      if (isSaved) {
+        savedPopup.style.display = 'flex';
+      }
 
-      // Check if the user entered a custom category
+      // Custom category input toggle (optional, keep if you want)
       const categoryDropdown = document.querySelector('#category');
-      const newCategoryInput = document.querySelector('#new_category');
-      
-      // If the input is not empty, add the new category to the form
-      if (newCategoryInput.value.trim() !== '') {
-        // Create a hidden input field with the new category value
-        const newCategoryField = document.createElement('input');
-        newCategoryField.type = 'hidden';
-        newCategoryField.name = 'category';
-        newCategoryField.value = newCategoryInput.value.trim();
-        form.appendChild(newCategoryField);
-      }
+      const categoryInput = document.createElement('input');
+      categoryInput.type = 'text';
+      categoryInput.id = 'category-custom';
+      categoryInput.placeholder = 'Enter custom category';
 
-      form.submit();
+      categoryDropdown.addEventListener('change', function() {
+        if (categoryDropdown.value === '') {
+          categoryInput.style.display = 'block';
+          categoryDropdown.parentElement.appendChild(categoryInput);
+        } else {
+          categoryInput.style.display = 'none';
+        }
+      });
     });
-
-    cancelBtn.addEventListener('click', () => {
-      confirmPopup.style.display = 'none';
-    });
-
-    closePopup.addEventListener('click', () => {
-      window.location.href = "{% url 'dashboard' %}";
-    });
-//coin rain effect
-    const coinContainer = document.querySelector('.coin-rain');
-  function createCoin() {
-    const coin = document.createElement('div');
-    coin.classList.add('coin');
-    coin.style.left = Math.random() * 100 + 'vw';
-    coin.style.animationDuration = (2 + Math.random() * 3) + 's';
-    coin.style.opacity = Math.random();
-    coinContainer.appendChild(coin);
-    coin.addEventListener('animationend', () => {
-      coin.remove();
-    });
-  }
-  setInterval(createCoin, 300);
-    // Show saved popup if ?saved=1 in URL
-    const isSaved = "{{ request.GET.saved|default:'' }}" === "1";
-    if (isSaved) {
-      savedPopup.style.display = 'flex';
-    }
-
-    const categoryDropdown = document.querySelector('#category');
-    const categoryInput = document.createElement('input');
-    categoryInput.type = 'text';
-    categoryInput.id = 'category-custom';
-    categoryInput.placeholder = 'Enter custom category';
-
-    // When dropdown is selected, show input field for custom category
-    categoryDropdown.addEventListener('change', function() {
-      if (categoryDropdown.value === '') {
-        // If no option is selected, show the input for a new category
-        categoryInput.style.display = 'block';
-        categoryDropdown.parentElement.appendChild(categoryInput);
-      } else {
-        // If an option is selected, hide the input field
-        categoryInput.style.display = 'none';
-      }
-    });
-  });
-</script>
+  </script>
 </body>
 </html>

@@ -10,7 +10,7 @@
   <title>Wais Wallet Dashboard</title>
   <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="{% static 'css/index.css' %}?v=3" />
+  <link rel="stylesheet" href="{% static 'css/index.css' %}" />
 </head>
 <body>
 {% if messages %}
@@ -23,6 +23,7 @@
   {% endfor %}
 </div>
 {% endif %}
+
 
 <!-- Sidebar -->
 <aside class="sidebar">
@@ -48,12 +49,12 @@
         <a href="{% url 'savings' %}">Savings</a>
       </div>
     </div>
-    <a href="{% url 'budget' %}">Goals</a>
+    <a href="{% url 'budget' %}">Budgets</a>
     <a href="{% url 'settings' %}">Settings</a>
     <a href="{% url 'aboutus' %}">About Us</a>
   </nav>
-  
-<div class="account-section">
+ 
+  <div class="account-section">
   <div class="account-icon">
     👤
   </div>
@@ -63,7 +64,8 @@
       {% if user.is_authenticated %}
         {{ user.get_full_name|default:user.username }}
         <div>
-          <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+          <a href="{% url 'logout' %}" class="logout-link" id="logout-button"
+>Logout</a>
         </div>
       {% else %}
         <a href="{% url 'login' %}" class="logout-link">Login</a>
@@ -71,6 +73,9 @@
     </div>
   </div>
 </div>
+
+</aside>
+
 </aside>
 
 <!-- Main -->
@@ -182,7 +187,7 @@
         <h4>Monthly Income vs Expenses vs Balance</h4>
       </div>
       <div>
-        <select id="chartTypeSelect" class ="chart-type-select">
+        <select id="chartTypeSelect" class="chart-type-select">
           <option value="bar">Bar</option>
           <option value="line">Line</option>
         </select>
@@ -191,12 +196,8 @@
         </a>
       </div>
     </div>
-    <div>
-      <canvas id="analyticsChart"></canvas>
-    </div>
-    <div id="no-data-message">
-      No transaction data available.
-    </div>
+    <canvas id="analyticsChart"></canvas>
+    <div id="no-data-message" style="display: none;">No transaction data available.</div>
   </div>
     <div class="calendar-container">
       <div class="calendar-header">
@@ -329,11 +330,28 @@ document.getElementById("logout-button").addEventListener("click", function () {
 
   function initializeChart(chartData) {
     const ctx = document.getElementById('analyticsChart').getContext('2d');
-    
+    const noDataDiv = document.getElementById('no-data-message');
+    // Check if all chart data arrays are empty or zero
+    const isEmpty = (
+      !chartData ||
+      !Array.isArray(chartData.labels) || chartData.labels.length === 0 ||
+      (!Array.isArray(chartData.income) || chartData.income.length === 0) ||
+      (!Array.isArray(chartData.expenses) || chartData.expenses.length === 0) ||
+      (!Array.isArray(chartData.balance) || chartData.balance.length === 0) ||
+      (chartData.income.every(v => v === 0) && chartData.expenses.every(v => v === 0) && chartData.balance.every(v => v === 0))
+    );
+    if (isEmpty) {
+      noDataDiv.style.display = 'block';
+      if (analyticsChart) {
+        analyticsChart.destroy();
+        analyticsChart = null;
+      }
+      return;
+    }
+    noDataDiv.style.display = 'none';
     if (analyticsChart) {
       analyticsChart.destroy();
     }
-  
     analyticsChart = new Chart(ctx, {
       type: document.getElementById('chartTypeSelect').value || 'bar',
       data: {
@@ -347,7 +365,7 @@ document.getElementById("logout-button").addEventListener("click", function () {
             borderWidth: 2
           },
           {
-            label: 'Expenses', 
+            label: 'Expenses',
             data: chartData.expenses,
             backgroundColor: 'rgba(255,0,0,0.5)',
             borderColor: 'red',
@@ -357,7 +375,7 @@ document.getElementById("logout-button").addEventListener("click", function () {
             label: 'Balance',
             data: chartData.balance,
             backgroundColor: 'rgba(0,0,255,0.5)',
-            borderColor: 'blue', 
+            borderColor: 'blue',
             borderWidth: 2
           }
         ]
@@ -383,7 +401,7 @@ document.getElementById("logout-button").addEventListener("click", function () {
     });
   }
 
-  // Initial load - Make sure this runs first
+  // Initial load
   document.addEventListener('DOMContentLoaded', function() {
     try {
       const chartData = {
@@ -392,30 +410,21 @@ document.getElementById("logout-button").addEventListener("click", function () {
         expenses: JSON.parse('{{ expenses_chart|escapejs }}'),
         balance: JSON.parse('{{ balance_chart|escapejs }}')
       };
-      
-      console.log('Initial Chart Data:', chartData); // Debug logging
       initializeChart(chartData);
-      
-      // Handle chart type changes
       document.getElementById('chartTypeSelect').addEventListener('change', function() {
-        analyticsChart.config.type = this.value;
-        analyticsChart.update();
+        if (analyticsChart) {
+          analyticsChart.config.type = this.value;
+          analyticsChart.update();
+        }
       });
     } catch (e) {
+      document.getElementById('no-data-message').style.display = 'block';
       console.error('Error initializing chart:', e);
     }
   });
 
-  // Set default filter to 'month' on initial load (only once)
-  fetchDashboardData('month');
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.classList.remove('active');
-    if (btn.getAttribute('data-filter') === 'month') {
-      btn.classList.add('active');
-    }
-  });
-
-  // Set default filter to 'month' on initial load
+  // Remove duplicate event listeners and filter calls
+  // Keep only one instance of:
   fetchDashboardData('month');
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.classList.remove('active');

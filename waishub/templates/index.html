@@ -155,7 +155,7 @@
               {% endif %}
               <form method="post" action="{% url 'delete_budget' budget.id %}" class="delete-budget-form" style="display:inline;">
                 {% csrf_token %}
-                <button type="submit" class="delete-budget-btn" style="display:none; margin-left:15px; background:#e74c3c; color:#fff; border:none; border-radius:5px; padding:4px 10px; cursor:pointer;">Delete</button>
+                <button type="submit" class="delete-budget-btn">Delete</button>
               </form>
             </div>
           </li>

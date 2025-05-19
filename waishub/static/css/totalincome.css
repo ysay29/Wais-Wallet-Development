@@ -45,9 +45,7 @@
   .sidebar.closed{
     width: 80px;
   }
-  
-/* Change the navbar styles to match your welcome message */
-/* Remove or reset existing navbar styles */
+
 .navbar {
   display: flex;
   align-items: center;

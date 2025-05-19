@@ -5,15 +5,19 @@
     font-family: 'Segoe UI', 'Arial', sans-serif;  }
  
 body {
-  background: linear-gradient(135deg, #0c4160, #a4c1df);
-  background-size: 400% 400%;
-  animation: gradientBG 8s ease-in-out infinite;
-  min-height: 100vh;
+  font-family: 'Segoe UI', 'Arial', sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
+  margin: 0;
+  /* Animated gradient background */
+  background-size: 400% 400%;
+  animation: gradientBG 8s ease-in-out infinite;
+  background: linear-gradient(135deg, #0c4160, #a4c1df);
+  min-height: 100vh;
+  overflow: hidden;
   position: relative;
-  overflow-x: hidden;
 }
 
 @keyframes gradientBG {
@@ -27,24 +31,19 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 0;
-  width: 350px;
-  height: 350px;
+  z-index: 0;      
+  width: 500px;         
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   pointer-events: none;
-  animation: heroMove 10s ease-in-out infinite alternate;
 }
 
 .blurred-hero {
   width: 100%;
   height: 100%;
-  filter: blur(12px) opacity(0.25);
-  object-fit: contain;
-}
-
-@keyframes heroMove {
-  0% { transform: translate(-50%, -50%) scale(1);}
-  50% { transform: translate(-50%, -48%) scale(1.08);}
-  100% { transform: translate(-50%, -50%) scale(1);}
+  filter: blur(4px) opacity(0.7); 
 }
 
 .coin-rain {
@@ -54,38 +53,38 @@ body {
   width: 100vw;
   height: 100vh;
   pointer-events: none;
-  z-index: 1;
+  z-index: 0;
+  filter: blur(6px);
   overflow: hidden;
 }
 
 .coin {
   position: absolute;
-  top: -40px;
-  width: 32px;
-  height: 32px;
-  background-image: url("{% static 'assets/coin.png' %}");
+  top: -50px;
+  width: 30px;
+  height: 30px;
+  background-image: url("../assets/coin.png");
   background-size: cover;
-  opacity: 0.7;
-  animation: coin-fall linear forwards;
+  animation: fall linear forwards;
+  filter: blur(2px);
 }
 
-@keyframes coin-fall {
+@keyframes fall {
   to {
-    transform: translateY(110vh) rotate(360deg);
+    transform: translateY(100vh) rotate(360deg);
     opacity: 0;
   }
 }
+
 .container {
   position: relative;
-  z-index: 2;
+  z-index: 2; 
   background-color: white;
-  padding: 28px 18px;
-  border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(0, 49, 71, 0.10), 0 2px 8px rgba(12,65,96,0.07);
-  width: 340px;
-  max-width: 94vw;
-  margin: 40px auto;
-  animation: popIn 0.7s cubic-bezier(.4,2,.6,1);
+  padding: 45px;
+  border-radius: 2px;
+  width: 250px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  background: rgba(255,255,255,0.95);
 }
 
   @keyframes popIn {

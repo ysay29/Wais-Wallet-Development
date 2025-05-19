@@ -118,7 +118,7 @@
     <p>₱ {{ expenses|floatformat:2 }}</p>
     <div class="change-row">
       {% if expense_change >= 0 %}
-        <img src="{% static 'assets/increase.png' %}" class="arrow-icon" />
+        <img src="{% static 'assets/increase-expenses.png' %}" class="arrow-icon" />
         <span class="decrease" style="color: red;">{{ expense_change|floatformat:1 }}% from last month</span>
       {% else %}
         <img src="{% static 'assets/decrease.png' %}" class="arrow-icon" />

@@ -83,15 +83,16 @@ def index(request):
         date__gte=first_day_last_month,
         date__lte=last_day_last_month
     )
-    last_month_savings_actual = sum(s.amount for s in last_month_savings_qs) or 0
-    last_savings_max = last_income - last_expenses
-    last_savings = min(last_month_savings_actual, last_savings_max)
+    last_savings = sum(s.amount for s in last_month_savings_qs) or 0
 
     # Percent changes (avoid division by zero)
     def percent_change(current, previous):
         if previous == 0:
-            return 100.0 if current > 0 else 0.0
-        return ((current - previous) / previous) * 100
+            if current == 0:
+                return 0.0
+            else:
+                return 100.0
+        return ((current - previous) / abs(previous)) * 100
 
     income_change = percent_change(total_income, last_income)
     expense_change = percent_change(total_expenses, last_expenses)

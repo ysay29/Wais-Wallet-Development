@@ -441,6 +441,12 @@ cursor: pointer;
     margin-bottom: 10px;
   }
 
+  .chart-type-select{
+    padding:4px 8px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    }
+
   .grid-2 > div {
     animation: fadeInGrid 0.9s cubic-bezier(.4,2,.6,1);
   }

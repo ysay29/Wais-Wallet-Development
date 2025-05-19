@@ -34,7 +34,7 @@ def aboutus(request):
 @login_required(login_url='login')
 def index(request):
     user = request.user
-    today = timezone.now()
+    today = timezone.localdate()  # Use localdate for consistency with filter_dashboard_data
     first_day_this_month = today.replace(day=1)
     first_day_last_month = (first_day_this_month - timedelta(days=1)).replace(day=1)
     last_day_last_month = first_day_this_month - timedelta(days=1)
@@ -64,23 +64,15 @@ def index(request):
     total_income = this_month_incomes.aggregate(Sum('amount'))['amount__sum'] or 0
     total_expenses = this_month_expenses.aggregate(Sum('amount'))['amount__sum'] or 0
 
-    # --- Savings: Use actual savings from savings_summary ---
+    # --- Savings: Use actual savings from Saving model for the current month (like filter_dashboard_data) ---
     from savings.models import Saving
-    from decimal import Decimal
 
-    # Get all savings for this user for the current month
     savings_qs = Saving.objects.filter(
         user=user,
         date__gte=first_day_this_month,
         date__lte=today
     )
-    savings_actual = sum(s.amount for s in savings_qs) or 0
-
-    # Theoretical savings (income - expenses)
-    savings_max = total_income - total_expenses
-
-    # Clamp savings to not exceed (income - expenses)
-    savings = min(savings_actual, savings_max)
+    savings = sum(s.amount for s in savings_qs) or 0
 
     # --- Last month savings for percent change ---
     last_income = last_month_incomes.aggregate(Sum('amount'))['amount__sum'] or 0

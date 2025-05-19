@@ -7,7 +7,7 @@
   <title>Wais Wallet – Total Income</title>
   <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="{% static 'css/totalincome.css' %}?v=2">
+  <link rel="stylesheet" href="{% static 'css/totalincome.css' %}?v=2"
 </head>
 <body>
 <!-- Sidebar -->
@@ -20,84 +20,99 @@
         <p class="wallet-name">Wais Wallet</p>
       </div>
     </div>
+    
+    </div>    
+    <nav class="nav-links">
+      <a href="{% url 'dashboard' %}" >Dashboard</a>      
+      <a href="{% url 'transactions' %}">Transactions</a>
+    
+      <div class="dropdown">
+        <button class="dropbtn">
+          Evaluation
+          <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
+        </button>
+        <div class="dropdown-content">
+          <a href="{% url 'analytics' %}">Analytics</a>
+          <a href="{% url 'totalincome' %}" class="active">Total Income</a>
+          <a href="{% url 'totalexpenses' %}">Total Expenses</a>
+          <a href="{% url 'savings' %}">Savings</a>
+        </div>
+      </div>
+    
+      <a href="{% url 'budget' %}">Goals</a>
+      <a href="{% url 'settings' %}">Settings</a>
+      <a href="{% url 'aboutus' %}">About Us</a>
+    </nav>
+    
+<div class="account-section">
+  <div class="account-icon">
+    👤
   </div>
-  <nav class="nav-links">
-    <a href="{% url 'dashboard' %}" >Dashboard</a>
-    <a href="{% url 'transactions' %}">Transactions</a>
-    <div class="dropdown">
-      <button class="dropbtn">
-        Evaluation
-        <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
-      </button>
-      <div class="dropdown-content">
-        <a href="{% url 'analytics' %}">Analytics</a>
-        <a href="{% url 'totalincome' %}" class="active">Total Income</a>
-        <a href="{% url 'totalexpenses' %}">Total Expenses</a>
-        <a href="{% url 'savings' %}">Savings</a>
-      </div>
-    </div>
-    <a href="{% url 'budget' %}">Goals</a>
-    <a href="{% url 'settings' %}">Settings</a>
-    <a href="{% url 'aboutus' %}">About Us</a>
-  </nav>
-  <div class="account-section">
-    <div class="account-icon">
-      👤
-    </div>
-    <div class="account-info">
-      <div class="account-label">ACCOUNT</div>
-      <div class="account-name">
-        {% if user.is_authenticated %}
-          {{ user.get_full_name|default:user.username }}
-          <div>
-            <a href="{% url 'logout' %}" class="logout-link">Logout</a>
-          </div>
-        {% else %}
-          <a href="{% url 'login' %}" class="logout-link">Login</a>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-</aside>
-
-<div class="main-content">
-  <div class="content-box">
-    <div class="header"><strong>Total Income</strong></div>
-    <form method="POST" action="{% url 'add_transaction' %}">
-      {% csrf_token %}
-      <div class="form-inline">
-        <input type="hidden" name="type" value="Income">
-        <input type="date" name="date" required>
-        <input type="text" name="category" placeholder="Category" required>
-        <input type="number" name="amount" placeholder="Amount" step="0.01" required>
-        <button type="submit">Add Income</button>
-      </div>
-    </form>
-
-    <table id="incomeTable">
-      <thead>
-        <tr><th>Date</th><th>Category</th><th>Amount</th></tr>
-      </thead>
-      <tbody>
-        {% for inc in incomes %}
-        <tr>
-          <td>{{ inc.date }}</td>
-          <td>{{ inc.category }}</td>
-          <td>₱{{ inc.amount }}</td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="3">No income records yet.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-
-    <div class="summary">Total Income: ₱{{ total_income }}</div>
-
-    <div style="position: relative; height: 300px;">
-      <canvas id="incomeChart"></canvas>
+  <div class="account-info">
+    <div class="account-label">ACCOUNT</div>
+    <div class="account-name">
+      {% if user.is_authenticated %}
+        {{ user.get_full_name|default:user.username }}
+        <div>
+          <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+        </div>
+      {% else %}
+        <a href="{% url 'login' %}" class="logout-link">Login</a>
+      {% endif %}
     </div>
   </div>
 </div>
+  
+</aside>
+
+  <div class="main-content">
+    <div id="incomePage" class="content-box">
+      <div class="header"><strong>Total Income</strong></div>
+      <div id="incomePage" class="content-box">
+      <form method="POST" action="{% url 'add_transaction' %}">
+        {% csrf_token %}
+        <div class="form-inline">
+          <input type="hidden" name="type" value="Income"> <!-- Set transaction type -->
+          <input type="date" name="date" required>
+          <input type="text" name="category" placeholder="Category" required>
+          <input type="number" name="amount" placeholder="Amount" step="0.01" required>
+          <button type="submit">Add Income</button>
+        </div>
+      </form>
+    </div>
+      <!-- Income Table -->
+      <table id="incomeTable">
+        <thead>
+          <tr><th>Date</th><th>Category</th><th>Amount</th></tr>
+        </thead>
+        <tbody>
+          {% for inc in incomes %}
+          <tr>
+            <td>{{ inc.date }}</td>
+            <td>{{ inc.category }}</td>
+            <td>₱{{ inc.amount }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3">No income records yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+
+      <!-- Total Summary -->
+      <div class="summary">Total Income: ₱{{ total_income }}</div>
+
+
+      <!-- Chart -->
+      <div style="position: relative; height: 300px;">
+        <canvas id="incomeChart"></canvas>
+      </div>
+
+    </div>
+    </div>
+  </div>
+  </div>
+
 
 <script id="income-data" type="application/json">
   {
@@ -114,6 +129,7 @@
   const chartCanvas = document.getElementById('incomeChart');
   const ctx = chartCanvas.getContext('2d');
 
+  // 💥 Destroy any existing chart on this canvas (using a custom global var)
   if (window.incomeChartInstance) {
     window.incomeChartInstance.destroy();
     window.incomeChartInstance = null;

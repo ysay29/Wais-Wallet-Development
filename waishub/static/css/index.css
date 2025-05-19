@@ -688,24 +688,27 @@ to { opacity: 1; transform: translateY(0); }
 }
 
 /* Budget Limit Delete Button Styling */
-.delete-budget-btn {
-  display: none;
-  margin-left: 15px;
-  background: #e74c3c;
+delete-budget-btn {
+  background: #ff4d4f;
   color: #fff;
   border: none;
-  border-radius: 5px;
-  padding: 4px 10px;
+  border-radius: 6px;
+  padding: 6px 14px 6px 10px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(255,77,79,0.08);
 }
-
 .delete-budget-btn:hover {
-  background: #c0392b;
+  background: #d9363e;
 }
-
-.budget-limit-item:hover .delete-budget-btn {
-  display: inline-block;
+.delete-budget-btn .delete-text {
+  font-weight: 500;
+  letter-spacing: 0.5px;
 }
 
 /* Responsive sidebar */

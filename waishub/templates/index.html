@@ -154,9 +154,17 @@
                 <span style="color: red; font-weight: bold; margin-left: 20px;">Overspending Warning</span>
               {% endif %}
               <form method="post" action="{% url 'delete_budget' budget.id %}" class="delete-budget-form" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" class="delete-budget-btn">Delete</button>
-              </form>
+  {% csrf_token %}
+  <button type="submit" class="delete-budget-btn">
+    <span style="display:inline-block;width:16px;height:16px;vertical-align:middle;">
+      <svg viewBox="0 0 20 20" fill="none" style="width:16px;height:16px;vertical-align:middle;">
+        <circle cx="10" cy="10" r="10" fill="#ff4d4f"/>
+        <path d="M7 7l6 6M13 7l-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </span>
+    <span class="delete-text" style="margin-left:4px;">Delete</span>
+  </button>
+</form>
             </div>
           </li>
         {% endfor %}

@@ -8,42 +8,35 @@
   <link rel="stylesheet" href="{% static 'css/transactions.css' %}?v=125">
 </head>
 <body>
-  <!-- Sidebar -->
 <aside class="sidebar">
-  <div>
-    <div class="navbar">
-      <img src="{% static 'assets/logo.png' %}" alt="Logo" class="navbar-logo">
-      <div class="welcome-texts">
-        <p class="hello-text">Hello, {{ user.get_full_name|default:user.username }}! <br> Welcome to</p>
-        <p class="wallet-name">Wais Wallet</p>
+  <div class="navbar">
+    <img src="{% static 'assets/logo.png' %}" alt="Logo" class="navbar-logo" />
+    <div class="welcome-texts">
+      <p class="hello-text">Hello, {{ user.get_full_name|default:user.username }}! <br> Welcome to</p>
+      <p class="wallet-name">Wais Wallet</p>
+    </div>
+  </div>
+  <nav class="nav-links">
+    <a href="{% url 'dashboard' %}" class="active">Dashboard</a>
+    <a href="{% url 'transactions' %}">Transactions</a>
+    <div class="dropdown">
+      <button class="dropbtn">
+        Evaluation
+        <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img" />
+      </button>
+      <div class="dropdown-content">
+        <a href="{% url 'analytics' %}">Analytics</a>
+        <a href="{% url 'totalincome' %}">Total Income</a>
+        <a href="{% url 'totalexpenses' %}">Total Expenses</a>
+        <a href="{% url 'savings' %}">Savings</a>
       </div>
     </div>
-    
-    </div>    
-    <nav class="nav-links">
-      <a href="{% url 'dashboard' %}">Dashboard</a> 
-      <a href="{% url 'add_transaction' %}">Add Transaction</a>  
-      <a href="{% url 'transactions' %} "class="active">Transactions</a>
-    
-      <div class="dropdown">
-        <button class="dropbtn">
-          Evaluation
-          <img src="{% static 'assets/dropdown.png' %}" alt="Dropdown Icon" class="dropdown-img">
-        </button>
-        <div class="dropdown-content">
-          <a href="{% url 'analytics' %}">Analytics</a>
-          <a href="{% url 'totalincome' %}">Total Income</a>
-          <a href="{% url 'totalexpenses' %}">Total Expenses</a>
-          <a href="{% url 'savings' %}">Savings</a>
-        </div>
-      </div>
-    
-      <a href="{% url 'budget' %}">Goals</a>
-      <a href="{% url 'settings' %}">Settings</a>
-      <a href="{% url 'aboutus' %}">About Us</a>
-    </nav>
-    
-<div class="account-section">
+    <a href="{% url 'budget' %}">Budgets</a>
+    <a href="{% url 'settings' %}">Settings</a>
+    <a href="{% url 'aboutus' %}">About Us</a>
+  </nav>
+ 
+  <div class="account-section">
   <div class="account-icon">
     👤
   </div>
@@ -53,7 +46,8 @@
       {% if user.is_authenticated %}
         {{ user.get_full_name|default:user.username }}
         <div>
-          <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+          <a href="{% url 'logout' %}" class="logout-link" id="logout-button"
+>Logout</a>
         </div>
       {% else %}
         <a href="{% url 'login' %}" class="logout-link">Login</a>
@@ -61,9 +55,10 @@
     </div>
   </div>
 </div>
-  
+
 </aside>
 
+</aside>
   <!-- Main Content -->
   <div class="main-content">
     <div class="content-header">Transactions</div>

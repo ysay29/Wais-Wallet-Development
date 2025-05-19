@@ -296,6 +296,13 @@
     fetchDashboardData('date', selectedDate);
   });
 
+// Logout functionality
+document.getElementById("logout-button").addEventListener("click", function () {
+  if (confirm("Are you sure you want to logout?")) {
+    window.location.href = "{% url 'logout' %}";
+  }
+});
+
   // Fetch dashboard data based on the filter
   function fetchDashboardData(filterType, date = null) {
     const url = `/dashboard/filter/?type=${filterType}${date ? `&date=${date}` : ''}`;
@@ -315,106 +322,43 @@
   // Update chart with new data
   function updateChart(chartData) {
     if (!chartData) return;
-    if (!analyticsChart) {
-      // If chart is not initialized, initialize it now
-      const analyticsCtx = document.getElementById('analyticsChart').getContext('2d');
-      analyticsChart = new Chart(analyticsCtx, {
-        type: 'line',
-        data: {
-          labels: chartData.labels,
-          datasets: [
-            {
-              label: 'Income',
-              data: chartData.income,
-              borderColor: 'green',
-              backgroundColor: 'rgba(0,128,0,0.1)',
-              tension: 0.3
-            },
-            {
-              label: 'Expenses',
-              data: chartData.expenses,
-              borderColor: 'red',
-              backgroundColor: 'rgba(255,0,0,0.1)',
-              tension: 0.3
-            },
-            {
-              label: 'Balance',
-              data: chartData.balance,
-              borderColor: 'blue',
-              backgroundColor: 'rgba(0,0,255,0.1)',
-              tension: 0.3
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: value => '₱' + value.toLocaleString()
-              }
-            }
-          },
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
-              }
-            }
-          }
-        }
-      });
-    } else {
-      analyticsChart.data.labels = chartData.labels;
-      analyticsChart.data.datasets[0].data = chartData.income;
-      analyticsChart.data.datasets[1].data = chartData.expenses;
-      analyticsChart.data.datasets[2].data = chartData.balance;
-      analyticsChart.update();
-    }
+    initializeChart(chartData);
   }
 
+  let analyticsChart = null;
 
-  // Logout functionality
-  document.getElementById("logout-button").addEventListener("click", function () {
-    if (confirm("Are you sure you want to logout?")) {
-      window.location.href = "{% url 'logout' %}";
+  function initializeChart(chartData) {
+    const ctx = document.getElementById('analyticsChart').getContext('2d');
+    
+    if (analyticsChart) {
+      analyticsChart.destroy();
     }
-  });
-
-  let analyticsChart = null; // Make chart variable global
-  let currentChartType = 'bar';
-
-  function createAnalyticsChart(type, chartData) {
-    const analyticsCtx = document.getElementById('analyticsChart').getContext('2d');
-    return new Chart(analyticsCtx, {
-      type: type,
+  
+    analyticsChart = new Chart(ctx, {
+      type: document.getElementById('chartTypeSelect').value || 'bar',
       data: {
         labels: chartData.labels,
         datasets: [
           {
             label: 'Income',
             data: chartData.income,
+            backgroundColor: 'rgba(0,128,0,0.5)',
             borderColor: 'green',
-            backgroundColor: type === 'bar' ? 'rgba(0,128,0,0.5)' : 'rgba(0,128,0,0.1)',
-            borderWidth: 2,
-            tension: 0.3
+            borderWidth: 2
           },
           {
-            label: 'Expenses',
+            label: 'Expenses', 
             data: chartData.expenses,
+            backgroundColor: 'rgba(255,0,0,0.5)',
             borderColor: 'red',
-            backgroundColor: type === 'bar' ? 'rgba(255,0,0,0.5)' : 'rgba(255,0,0,0.1)',
-            borderWidth: 2,
-            tension: 0.3
+            borderWidth: 2
           },
           {
             label: 'Balance',
             data: chartData.balance,
-            borderColor: 'blue',
-            backgroundColor: type === 'bar' ? 'rgba(0,0,255,0.5)' : 'rgba(0,0,255,0.1)',
-            borderWidth: 2,
-            tension: 0.3
+            backgroundColor: 'rgba(0,0,255,0.5)',
+            borderColor: 'blue', 
+            borderWidth: 2
           }
         ]
       },
@@ -422,10 +366,6 @@
         responsive: true,
         maintainAspectRatio: false,
         scales: {
-          x: {
-            display: true,
-            title: { display: false }
-          },
           y: {
             beginAtZero: true,
             ticks: {
@@ -434,212 +374,55 @@
           }
         },
         plugins: {
-          tooltip: {
-            callbacks: {
-              label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
-            }
-          },
           legend: {
-            display: true
+            display: true,
+            position: 'top'
           }
         }
       }
     });
   }
 
-  document.getElementById('chartTypeSelect').addEventListener('change', function() {
-    currentChartType = this.value;
-    if (window.lastChartData) {
-      if (analyticsChart) {
-        analyticsChart.destroy();
-      }
-      analyticsChart = createAnalyticsChart(currentChartType, window.lastChartData);
-    }
-  });
-
-  // Initial chart rendering on page load
-  document.addEventListener("DOMContentLoaded", function () {
-    // Use context variables for initial chart (ensure they are valid JSON)
-    let chartData = {
-      labels: JSON.parse('{{ months|escapejs }}'),
-      income: JSON.parse('{{ income_chart|escapejs }}'),
-      expenses: JSON.parse('{{ expenses_chart|escapejs }}'),
-      balance: JSON.parse('{{ balance_chart|escapejs }}')
-    };
-    window.lastChartData = chartData;
-    if (analyticsChart) {
-      analyticsChart.destroy();
-    }
-    analyticsChart = createAnalyticsChart(currentChartType, chartData);
-  });
-
-  // Fetching the data for the Income vs Expenses Chart
-  document.addEventListener("DOMContentLoaded", function () {
+  // Initial load - Make sure this runs first
+  document.addEventListener('DOMContentLoaded', function() {
     try {
-      const analyticsLabels = JSON.parse('{{ months|escapejs }}');
-      const incomeData = JSON.parse('{{ income_chart|escapejs }}');
-      const expenseData = JSON.parse('{{ expenses_chart|escapejs }}');
-      const balanceData = JSON.parse('{{ balance_chart|escapejs }}');
-      console.log('Chart labels:', analyticsLabels);
-      console.log('Chart income:', incomeData);
-      console.log('Chart expenses:', expenseData);
-      console.log('Chart balance:', balanceData);
-
-
-      // If any of the arrays are not the same length, fix them for Chart.js
-      const maxLen = Math.max(analyticsLabels.length, incomeData.length, expenseData.length, balanceData.length);
-      function pad(arr, len) {
-        while (arr.length < len) arr.push(0);
-        return arr;
-      }
-      pad(analyticsLabels, maxLen);
-      pad(incomeData, maxLen);
-      pad(expenseData, maxLen);
-      pad(balanceData, maxLen);
-
-
-      // Fallback: If all arrays are empty, use dummy data to show a visible graph
-      let labels = analyticsLabels;
-      let income = incomeData;
-      let expenses = expenseData;
-      let balance = balanceData;
-      if (
-        (!Array.isArray(labels) || labels.length === 0) ||
-        (!Array.isArray(income) || income.length === 0) ||
-        (!Array.isArray(expenses) || expenses.length === 0) ||
-        (!Array.isArray(balance) || balance.length === 0) ||
-        (income.every(v => v === 0) && expenses.every(v => v === 0) && balance.every(v => v === 0))
-      ) {
-        labels = ["Jan", "Feb", "Mar"];
-        income = [1000, 1200, 900];
-        expenses = [800, 950, 700];
-        balance = [200, 250, 200];
-        console.warn("No chart data found or all values are zero, using fallback data.");
-      }
-
-
-      const analyticsCtx = document.getElementById('analyticsChart').getContext('2d');
-      analyticsChart = new Chart(analyticsCtx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: 'Income',
-              data: income,
-              backgroundColor: 'rgba(0,128,0,0.5)',
-              borderColor: 'green',
-              borderWidth: 2
-            },
-            {
-              label: 'Expenses',
-              data: expenses,
-              backgroundColor: 'rgba(255,0,0,0.5)',
-              borderColor: 'red',
-              borderWidth: 2
-            },
-            {
-              label: 'Balance',
-              data: balance,
-              backgroundColor: 'rgba(0,0,255,0.5)',
-              borderColor: 'blue',
-              borderWidth: 2
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false, // Ensures the chart fills the container
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: value => '₱' + value.toLocaleString()
-              }
-            }
-          },
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
-              }
-            }
-          }
-        }
+      const chartData = {
+        labels: JSON.parse('{{ months|escapejs }}'),
+        income: JSON.parse('{{ income_chart|escapejs }}'),
+        expenses: JSON.parse('{{ expenses_chart|escapejs }}'),
+        balance: JSON.parse('{{ balance_chart|escapejs }}')
+      };
+      
+      console.log('Initial Chart Data:', chartData); // Debug logging
+      initializeChart(chartData);
+      
+      // Handle chart type changes
+      document.getElementById('chartTypeSelect').addEventListener('change', function() {
+        analyticsChart.config.type = this.value;
+        analyticsChart.update();
       });
     } catch (e) {
-      console.error('Error parsing chart data:', e);
-      // Always show a fallback chart if something goes wrong
-      const analyticsCtx = document.getElementById('analyticsChart').getContext('2d');
-      analyticsChart = new Chart(analyticsCtx, {
-        type: 'bar',
-        data: {
-          labels: ["Jan", "Feb", "Mar"],
-          datasets: [
-            {
-              label: 'Income',
-              data: [1000, 1200, 900],
-              backgroundColor: 'rgba(0,128,0,0.5)',
-              borderColor: 'green',
-              borderWidth: 2
-            },
-            {
-              label: 'Expenses',
-              data: [800, 950, 700],
-              backgroundColor: 'rgba(255,0,0,0.5)',
-              borderColor: 'red',
-              borderWidth: 2
-            },
-            {
-              label: 'Balance',
-              data: [200, 250, 200],
-              backgroundColor: 'rgba(0,0,255,0.5)',
-              borderColor: 'blue',
-              borderWidth: 2
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: value => '₱' + value.toLocaleString()
-              }
-            }
-          },
-          plugins: {
-            tooltip: {
-              callbacks: {
-                label: context => `${context.dataset.label}: ₱${context.raw.toLocaleString()}`
-              }
-            }
-          }
-        }
-      });
+      console.error('Error initializing chart:', e);
     }
   });
 
+  // Set default filter to 'month' on initial load (only once)
+  fetchDashboardData('month');
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.getAttribute('data-filter') === 'month') {
+      btn.classList.add('active');
+    }
+  });
 
-    // Set default filter to 'month' on initial load (only once)
-    fetchDashboardData('month');
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.classList.remove('active');
-      if (btn.getAttribute('data-filter') === 'month') {
-        btn.classList.add('active');
-      }
-    });
-
-    // Set default filter to 'month' on initial load
-    fetchDashboardData('month');
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.classList.remove('active');
-      if (btn.getAttribute('data-filter') === 'month') {
-        btn.classList.add('active');
-      }
-    });
+  // Set default filter to 'month' on initial load
+  fetchDashboardData('month');
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.getAttribute('data-filter') === 'month') {
+      btn.classList.add('active');
+    }
+  });
 
   document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.budget-limit-item').forEach(function(item) {

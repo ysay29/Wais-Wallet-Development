@@ -162,7 +162,7 @@
         <path d="M7 7l6 6M13 7l-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
       </svg>
     </span>
-    <span class="delete-text" style="margin-left:4px;">Delete</span>
+    <span class="delete-budget-btn" style="margin-left:4px;">Delete</span>
   </button>
 </form>
             </div>
@@ -176,29 +176,28 @@
 
   <!-- Chart and Calendar -->
   <div class="grid-2">
-    <div class="chart-container">
-      <div class="chart-header">
-        <div>
-          <h4>Monthly Income vs Expenses vs Balance</h4>
-        </div>
-        <div>
-          <select id="chartTypeSelect" style="padding:4px 8px;border-radius:6px;border:1px solid #ccc;">
-            <option value="bar">Bar</option>
-            <option value="line">Line</option>
-          </select>
-          <a href="{% url 'analytics' %}">
-            <img src="{% static 'assets/arrow-up.png' %}" alt="Arrow Icon" style="width:20px;">
-          </a>
-        </div>
+  <div class="chart-container">
+    <div class="chart-header">
+      <div>
+        <h4>Monthly Income vs Expenses vs Balance</h4>
       </div>
-      <div style="width:100%;height:380px;min-height:320px;">
-        <canvas id="analyticsChart" ></canvas>
-      </div>
-      <div id="no-data-message">
-        No transaction data available.
+      <div>
+        <select id="chartTypeSelect" class ="chart-type-select">
+          <option value="bar">Bar</option>
+          <option value="line">Line</option>
+        </select>
+        <a href="{% url 'analytics' %}">
+          <img src="{% static 'assets/arrow-up.png' %}" alt="Arrow Icon" style="width:20px;">
+        </a>
       </div>
     </div>
-
+    <div>
+      <canvas id="analyticsChart"></canvas>
+    </div>
+    <div id="no-data-message">
+      No transaction data available.
+    </div>
+  </div>
     <div class="calendar-container">
       <div class="calendar-header">
         <button id="prevMonth">&lt;</button>
@@ -327,20 +326,20 @@
     );
     const noDataDiv = document.getElementById('no-data-message');
     if (isEmpty) {
-      if (analyticsChart) {
-        analyticsChart.destroy();
-        analyticsChart = null;
+      if (window.analyticsChart) {
+        window.analyticsChart.destroy();
+        window.analyticsChart = null;
       }
       noDataDiv.style.display = 'block';
       return;
     } else {
       noDataDiv.style.display = 'none';
     }
-    if (analyticsChart) {
-      analyticsChart.destroy();
-      analyticsChart = null;
+    if (window.analyticsChart) {
+      window.analyticsChart.destroy();
+      window.analyticsChart = null;
     }
-    analyticsChart = createAnalyticsChart(currentChartType, chartData);
+    window.analyticsChart = createAnalyticsChart(currentChartType, chartData);
   }
 
   // Logout functionality
@@ -415,12 +414,25 @@
     });
   }
 
+  // Chart type selector
   document.getElementById('chartTypeSelect').addEventListener('change', function() {
     currentChartType = this.value;
-    // Re-render chart with the current data
     if (window.lastChartData) {
       updateChart(window.lastChartData);
     }
+  });
+
+  // Initial chart rendering on page load
+  document.addEventListener("DOMContentLoaded", function () {
+    // Use context variables for initial chart (ensure they are valid JSON)
+    let chartData = {
+      labels: JSON.parse('{{ months|escapejs }}'),
+      income: JSON.parse('{{ income_chart|escapejs }}'),
+      expenses: JSON.parse('{{ expenses_chart|escapejs }}'),
+      balance: JSON.parse('{{ balance_chart|escapejs }}')
+    };
+    window.lastChartData = chartData;
+    updateChart(chartData);
   });
 
   // Fetching the data for the Income vs Expenses Chart

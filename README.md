@@ -1,5 +1,5 @@
 # Wais-Wallet-Development
-Wais Wallet is a smart finance app that helps you track expenses, set savings goals, and monitor spending habits with visual insights. Get alerts for bills, overspending, and set custom limits per account. Take control of your finances and build better money habits with ease.
+Wais Wallet is a smart finance app that helps you track expenses, set savings goals, and monitor spending habits with visual insights. Get alerts for bills and overspending, and set custom limits per account. Take control of your finances and build better money habits with ease.
 
 DEVELOPMENT TEAM
 
@@ -55,5 +55,3 @@ This is a collaborative academic project developed by BSCPE 1-2 | Group 1 – Pa
 - Add new dependencies responsibly and update `requirements.txt` using:
   ```bash
   pip freeze > requirements.txt
-
-

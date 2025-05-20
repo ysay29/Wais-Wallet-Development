@@ -144,7 +144,9 @@
 }
 
 .dropdown:hover .dropdown-content { display: flex; }
-
+ 
+  /* Account Section Styling */
+/* Account Section with Icon */
 .account-section {
   display: flex;
   align-items: center;
@@ -220,6 +222,7 @@
 .logout-link:hover {
   color: #fff;
 }
+
 
     .main-content {
       margin-left: 250px; /* Match sidebar width */

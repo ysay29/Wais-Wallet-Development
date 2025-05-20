@@ -144,6 +144,7 @@
 }
 
 .dropdown:hover .dropdown-content { display: flex; }
+ 
 
 .account-section {
   display: flex;
@@ -220,6 +221,7 @@
 .logout-link:hover {
   color: #fff;
 }
+
 
     .main-content {
       margin-left: 250px; /* Match sidebar width */

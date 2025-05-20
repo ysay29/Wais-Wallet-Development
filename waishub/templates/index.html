@@ -10,7 +10,7 @@
   <title>Wais Wallet Dashboard</title>
   <link rel="icon" href="{% static 'assets/favicon.png' %}" sizes="any" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="{% static 'css/index.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/index.css' %}?v=3" />
 </head>
 <body>
 {% if messages %}
@@ -64,8 +64,7 @@
       {% if user.is_authenticated %}
         {{ user.get_full_name|default:user.username }}
         <div>
-          <a href="{% url 'logout' %}" class="logout-link" id="logout-button"
->Logout</a>
+          <a href="{% url 'logout' %}" class="logout-link" id="logout-button">Logout</a>
         </div>
       {% else %}
         <a href="{% url 'login' %}" class="logout-link">Login</a>
@@ -119,7 +118,7 @@
     <p>₱ {{ expenses|floatformat:2 }}</p>
     <div class="change-row">
       {% if expense_change >= 0 %}
-        <img src="{% static 'assets/increase.png' %}" class="arrow-icon" />
+        <img src="{% static 'assets/increase-expenses.png' %}" class="arrow-icon" />
         <span class="decrease" style="color: red;">{{ expense_change|floatformat:1 }}% from last month</span>
       {% else %}
         <img src="{% static 'assets/decrease.png' %}" class="arrow-icon" />
@@ -159,17 +158,9 @@
                 <span style="color: red; font-weight: bold; margin-left: 20px;">Overspending Warning</span>
               {% endif %}
               <form method="post" action="{% url 'delete_budget' budget.id %}" class="delete-budget-form" style="display:inline;">
-  {% csrf_token %}
-  <button type="submit" class="delete-budget-btn">
-    <span style="display:inline-block;width:16px;height:16px;vertical-align:middle;">
-      <svg viewBox="0 0 20 20" fill="none" style="width:16px;height:16px;vertical-align:middle;">
-        <circle cx="10" cy="10" r="10" fill="#ff4d4f"/>
-        <path d="M7 7l6 6M13 7l-6 6" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </span>
-    <span class="delete-budget-btn" style="margin-left:4px;">Delete</span>
-  </button>
-</form>
+                {% csrf_token %}
+                <button type="submit" class="delete-budget-btn">Delete</button>
+              </form>
             </div>
           </li>
         {% endfor %}
@@ -257,16 +248,33 @@
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     const today = new Date();
+    const calendar = document.getElementById('calendar');
+    const monthYear = document.getElementById('monthYear');
     monthYear.textContent = currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+    // Day names
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    calendar.innerHTML = '';
+    for (let d = 0; d < 7; d++) {
+      const dayNameDiv = document.createElement('div');
+      dayNameDiv.textContent = dayNames[d];
+      dayNameDiv.className = 'calendar-day-name';
+      calendar.appendChild(dayNameDiv);
+    }
 
     const firstDayOfMonth = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    calendar.innerHTML = '';
 
+    // Empty slots before first day
     for (let i = 0; i < firstDayOfMonth; i++) {
-      calendar.innerHTML += '<div></div>';
+      const emptyDiv = document.createElement('div');
+      emptyDiv.style.background = 'none';
+      emptyDiv.style.boxShadow = 'none';
+      emptyDiv.style.cursor = 'default';
+      calendar.appendChild(emptyDiv);
     }
 
+    // Days of the month
     for (let i = 1; i <= daysInMonth; i++) {
       const day = document.createElement('div');
       day.textContent = i;

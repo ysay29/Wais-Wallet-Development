@@ -34,7 +34,7 @@ def aboutus(request):
 @login_required(login_url='login')
 def index(request):
     user = request.user
-    today = timezone.now()
+    today = timezone.localdate()  # Use localdate for consistency with filter_dashboard_data
     first_day_this_month = today.replace(day=1)
     first_day_last_month = (first_day_this_month - timedelta(days=1)).replace(day=1)
     last_day_last_month = first_day_this_month - timedelta(days=1)
@@ -64,23 +64,15 @@ def index(request):
     total_income = this_month_incomes.aggregate(Sum('amount'))['amount__sum'] or 0
     total_expenses = this_month_expenses.aggregate(Sum('amount'))['amount__sum'] or 0
 
-    # --- Savings: Use actual savings from savings_summary ---
+    # --- Savings: Use actual savings from Saving model for the current month (like filter_dashboard_data) ---
     from savings.models import Saving
-    from decimal import Decimal
 
-    # Get all savings for this user for the current month
     savings_qs = Saving.objects.filter(
         user=user,
         date__gte=first_day_this_month,
         date__lte=today
     )
-    savings_actual = sum(s.amount for s in savings_qs) or 0
-
-    # Theoretical savings (income - expenses)
-    savings_max = total_income - total_expenses
-
-    # Clamp savings to not exceed (income - expenses)
-    savings = min(savings_actual, savings_max)
+    savings = sum(s.amount for s in savings_qs) or 0
 
     # --- Last month savings for percent change ---
     last_income = last_month_incomes.aggregate(Sum('amount'))['amount__sum'] or 0
@@ -91,15 +83,16 @@ def index(request):
         date__gte=first_day_last_month,
         date__lte=last_day_last_month
     )
-    last_month_savings_actual = sum(s.amount for s in last_month_savings_qs) or 0
-    last_savings_max = last_income - last_expenses
-    last_savings = min(last_month_savings_actual, last_savings_max)
+    last_savings = sum(s.amount for s in last_month_savings_qs) or 0
 
     # Percent changes (avoid division by zero)
     def percent_change(current, previous):
         if previous == 0:
-            return 100.0 if current > 0 else 0.0
-        return ((current - previous) / previous) * 100
+            if current == 0:
+                return 0.0
+            else:
+                return 100.0
+        return ((current - previous) / abs(previous)) * 100
 
     income_change = percent_change(total_income, last_income)
     expense_change = percent_change(total_expenses, last_expenses)
@@ -115,11 +108,12 @@ def index(request):
     from django.db.models.functions import TruncMonth
     # Use Transaction directly for accurate per-user aggregation
     transactions = Transaction.objects.filter(user=user)
+    # Only include months with at least one transaction
     monthly_data = transactions.annotate(
         month=TruncMonth('date')
     ).values('month').order_by('month').annotate(
-        income=Sum('amount', filter=Q(type__iexact='income')),
-        expenses=Sum('amount', filter=Q(type__iexact='expense'))
+        income=Sum('amount', filter=Q(type__iexact='Income')),
+        expenses=Sum('amount', filter=Q(type__iexact='Expense'))
     )
 
     labels = []
@@ -129,12 +123,14 @@ def index(request):
 
     for entry in monthly_data:
         month = entry['month']
-        income_val = entry['income'] or 0
-        expenses_val = entry['expenses'] or 0
-        labels.append(month.strftime('%B %Y'))
-        income_chart.append(float(income_val))
-        expenses_chart.append(float(expenses_val))
-        balance_chart.append(float(income_val) - float(expenses_val))
+        income_val = float(entry['income'] or 0)
+        expenses_val = float(entry['expenses'] or 0)
+        # Only add months that have at least one transaction
+        if income_val > 0 or expenses_val > 0:
+            labels.append(month.strftime('%B %Y'))
+            income_chart.append(income_val)
+            expenses_chart.append(expenses_val)
+            balance_chart.append(income_val - expenses_val)
 
     # Fetch all budgets for the user
     budgets = Budget.objects.filter(user=user).select_related('category')
